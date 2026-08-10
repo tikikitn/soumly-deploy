@@ -130,6 +130,43 @@
 .sm-hero-stat-grid div:first-child { grid-column: 1 / -1; }
 .sm-hero-stat-grid strong { font-size: 30px; letter-spacing: -1px; }
 .sm-hero-stat-grid span { margin-top: 4px; color: var(--sm-muted); font-size: 11px; font-weight: 800; }
+
+/* ---- Family category chips (compact) ---- */
+.sm-family-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sm-family-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line-strong, #e8e6f2);
+  color: var(--navy, #171236);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.sm-family-chip svg { color: var(--violet, #6347f5); flex: none; }
+.sm-family-chip em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--lavender-soft, #efecff);
+  color: var(--violet, #6347f5);
+}
+.sm-family-chip:hover {
+  background: var(--lavender-soft, #efecff);
+  border-color: rgba(99, 71, 245, 0.4);
+  transform: translateY(-1px);
+}
+
 .sm-category-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 15px; }
 .sm-category-card { position: relative; display: grid; min-height: 220px; padding: 24px; align-content: start; gap: 18px; overflow: hidden; border: 1px solid var(--sm-line); border-radius: 19px; background: #fff; transition: transform 180ms ease, box-shadow 180ms ease; }
 .sm-category-card::after { position: absolute; right: -45px; bottom: -55px; width: 130px; height: 130px; border-radius: 50%; background: var(--tone, #eeeaff); content: ""; opacity: .72; }

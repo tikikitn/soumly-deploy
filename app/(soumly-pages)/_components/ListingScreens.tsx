@@ -141,13 +141,16 @@ export function FamilyScreen() {
   const family = getFamilies().find((f) => f.slug === slug);
   if (!family) return <EmptyState title="Famille introuvable" text="Cette famille n’existe pas." action="Voir toutes les catégories" href="/categories" />;
   const familyCategories = getFamilyCategories(slug ?? "");
+  const familyProducts = products.filter((product) =>
+    familyCategories.some((category) => category.slug === product.categorySlug)
+  );
   return (
     <>
-      <section className="sm-page-shell sm-listing-intro"><Breadcrumbs current={family.label} parent="Catégories" /><div className="sm-listing-title-row"><div><span className="sm-category-icon is-large"><SoumlyIcon name={family.icon} size={35} /></span><div><h1>{family.label}</h1><p>{family.categoryCount} catégories, {new Intl.NumberFormat("fr-FR").format(family.productCount)} produits.</p></div></div><span className="sm-result-pill">{family.productCount} produits</span></div></section>
+      <section className="sm-page-shell sm-listing-intro"><Breadcrumbs current={family.label} parent="Catégories" /><div className="sm-listing-title-row"><div><span className="sm-category-icon is-large"><SoumlyIcon name={family.icon} size={35} /></span><div><h1>{family.label}</h1><p>{family.categoryCount} catégories, {new Intl.NumberFormat("fr-FR").format(family.productCount)} produits.</p></div></div><span className="sm-result-pill">{familyProducts.length} produits</span></div></section>
       <section className="sm-page-shell sm-section-block">
-        <div className="sm-category-grid">{familyCategories.map((category, index) => <Link className={`sm-category-card tone-${(index % 4) + 1}`} href={`/categories/${category.slug}`} key={category.slug}><span className="sm-category-icon"><SoumlyIcon name={category.icon} size={26} /></span><div><h3>{category.label}</h3><p>{category.note}</p><strong>{new Intl.NumberFormat("fr-FR").format(category.count)} produits</strong></div><span className="sm-round-arrow">→</span></Link>)}</div>
+        <div className="sm-family-chips">{familyCategories.map((category) => <Link className="sm-family-chip" href={`/categories/${category.slug}`} key={category.slug}><SoumlyIcon name={category.icon} size={15} />{category.label}<em>{category.count}</em></Link>)}</div>
       </section>
-      <div className="sm-page-shell"><TrustStrip /></div>
+      <Catalog baseProducts={familyProducts} />
     </>
   );
 }
