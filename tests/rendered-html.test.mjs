@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 const developmentPreviewMeta = /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
-const multiStoreProduct = "pc-portable-lenovo-v15-g2-ijl-intel-celeron-n4500-8go-256go-ssd";
+const multiStoreProduct = "prim-6797-machine-laver-top-samsung-9-kg-wa90h4400ss-silver";
 
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
@@ -63,10 +63,11 @@ test("product detail renders real merchant comparisons", async () => {
   const html = await response.text();
   assert.equal(response.status, 200);
   assert.match(html, /MEILLEUR PRIX/);
-  assert.match(html, /Tunisianet/);
-  assert.match(html, /Spacenet/);
-  assert.doesNotMatch(html, /Mytek|Wiki|Technopro|ZStore/);
   assert.match(html, /Voir chez/);
+  // Real primini multi-store data: the washing machine has 13 merchants
+  assert.match(html, /Tunisianet/);
+  assert.match(html, /MyTEK/);
+  assert.match(html, /Batam/);
 });
 
 test("legacy product route redirects and unknown routes return 404", async () => {
