@@ -1,31 +1,11 @@
-# Dependencies
 node_modules/
-
-# Build / generated artifacts
-.next/
 dist/
-out/
-*.tsbuildinfo
-tsconfig.tsbuildinfo
-
-# Cloudflare / wrangler
+.next/
+.sites-runtime/
 .wrangler/
-
-# Logs
+.env*
 *.log
-npm-debug.log*
-dev.log
-
-# Env (may contain secrets)
-.env
-.env.local
-
-# OS / editor
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/
-
-# Extracted source archives (duplicate of delivered pages)
-Soumly-pages-comparaison-v2/
-
+*.tsbuildinfo
+*.zip
+*.tar
+*.tar.gz

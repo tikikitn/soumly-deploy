@@ -1,11 +1,13 @@
 interface Fetcher {
-	fetch(request: Request): Promise<Response>;
+  fetch(request: Request): Promise<Response>;
 }
 
-type D1Database = {};
+interface D1Database {
+  readonly __soumlyD1Brand?: "D1Database";
+}
 
 declare module "cloudflare:workers" {
-	export const env: {
-		DB?: D1Database;
-	};
+  export const env: {
+    DB?: D1Database;
+  };
 }

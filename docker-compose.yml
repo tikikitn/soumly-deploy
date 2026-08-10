@@ -3,14 +3,18 @@ services:
     build: .
     container_name: soumly-app
     restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 5173
     networks:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.soumly.rule=Host(\"soumly.online\") || Host(\"www.soumly.online\")"
+      - "traefik.http.routers.soumly.rule=Host(\"${SOUMLY_DOMAIN:-soumly.online}\") || Host(\"www.${SOUMLY_DOMAIN:-soumly.online}\")"
       - "traefik.http.routers.soumly.entrypoints=websecure"
       - "traefik.http.routers.soumly.tls.certresolver=letsencrypt"
-      - "traefik.http.services.soumly.loadbalancer.server.port=80"
+      - "traefik.http.services.soumly.loadbalancer.server.port=5173"
 
 networks:
   web:
