@@ -1408,8 +1408,7 @@ function merchantPrice(value: number, store: string) {
   return Number(normalized.toFixed(3));
 }
 
-function merchantOldPrice(value: number | undefined, price: number, store: string) {
-  if (value === undefined) return price;
+function merchantOldPrice(value: number, price: number, store: string) {
   const normalized = merchantPrice(value, store);
   if (!Number.isFinite(normalized) || normalized < price || normalized > price * 3) return price;
   return normalized;
