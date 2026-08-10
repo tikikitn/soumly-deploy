@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CategoryScreen, FamilyScreen } from "../../_components/ListingScreens";
-import { getCategory, getFamilies } from "../../_data/content";
+import { getCategory, getFamilies } from "../../_data/products.server";
 
 export async function generateMetadata({
 	params,

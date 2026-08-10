@@ -87,7 +87,7 @@ import {
 
 import { useEffect, useState } from "react";
 import Link from "../../components/NativeLink";
-import { formatPrice, type Product } from "../_data/content";
+import { formatPrice, type Product } from "../_data/content.client";
 
 const iconMap = {
 	AirVent,

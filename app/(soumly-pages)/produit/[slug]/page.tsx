@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ProductScreen } from "../../_components/DetailScreens";
-import { getProduct } from "../../_data/content";
+import { getProduct } from "../../_data/products.server";
 
 const BASE = "https://soumly.online";
 
@@ -14,7 +14,9 @@ export async function generateMetadata({
 	if (!product) return { title: "Produit introuvable" };
 
 	const url = `${BASE}/produit/${slug}`;
-	const description = product.description || `${product.name} — Comparez les prix chez ${product.stores} boutiques tunisiennes.`;
+	const description =
+		product.description ||
+		`${product.name} — Comparez les prix chez ${product.stores} boutiques tunisiennes.`;
 
 	return {
 		title: `${product.name} – Comparer les prix | Soumly`,
