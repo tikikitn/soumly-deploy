@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { CategoriesScreen } from "../_components/ListingScreens";
+import { CategoriesListingView } from "../_components/CategoriesListingView";
+import { getCategoryStats } from "../_data/products.server";
 
 export const metadata: Metadata = { title: "Toutes les catégories" };
 
 export default function CategoriesPage() {
-	return <CategoriesScreen />;
+	const stats = getCategoryStats();
+	return <CategoriesListingView {...stats} />;
 }

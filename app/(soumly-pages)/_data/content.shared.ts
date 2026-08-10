@@ -55,6 +55,29 @@ export type FamilyGroup = {
 	categories: { slug: string; label: string }[];
 };
 
+// Lightweight card payload — NEVER send full offer arrays for listing cards.
+export type ProductSummary = {
+	id: string;
+	name: string;
+	image: string;
+	category: string;
+	categorySlug: string;
+	price: number;
+	oldPrice: number;
+	discount: number;
+	stores: number;
+	badge?: string;
+	tag?: string;
+};
+
+export type PaginatedProducts = {
+	products: ProductSummary[];
+	total: number;
+	page: number;
+	pageSize: number;
+	totalPages: number;
+};
+
 export const FAMILY_GROUPS: Record<string, FamilyGroup[]> = {
 	informatique: [
 		{

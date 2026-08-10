@@ -3813,3 +3813,38 @@
 		animation: none;
 	}
 }
+
+/* Phase 2B: server-side pagination */
+.sm-pagination {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	margin: 2rem 0 0.5rem;
+}
+.sm-page-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.4rem;
+	height: 2.4rem;
+	padding: 0 0.75rem;
+	border: 1px solid #e6e4f2;
+	border-radius: 0.75rem;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #4b4870;
+	background: #fff;
+	text-decoration: none;
+	transition: all 0.15s ease;
+}
+.sm-page-link:hover {
+	border-color: #6347f5;
+	color: #6347f5;
+}
+.sm-page-link.is-current {
+	background: #6347f5;
+	border-color: #6347f5;
+	color: #fff;
+}

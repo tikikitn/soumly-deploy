@@ -11,7 +11,10 @@ import {
 import {
 	type Category,
 	FAMILY_DEFINITIONS,
+	FAMILY_GROUPS,
+	type PaginatedProducts,
 	type Product,
+	type ProductSummary,
 	type StoreOffer,
 } from "./content.shared";
 
@@ -1635,4 +1638,101 @@ export function relatedProducts(product: Product, limit = 4) {
 			(candidate) => candidate.id !== product.id && candidate.categorySlug === product.categorySlug,
 		)
 		.slice(0, limit);
+}
+
+// ---- Phase 2B: category/listing server queries ----
+
+export function toSummary(product: Product): ProductSummary {
+	return {
+		id: product.id,
+		name: product.name,
+		image: product.image,
+		category: product.category,
+		categorySlug: product.categorySlug,
+		price: product.price,
+		oldPrice: product.oldPrice,
+		discount: product.discount,
+		stores: product.stores,
+		badge: product.badge,
+		tag: product.tag,
+	};
+}
+
+// Paginated products for one category (server-side slicing — the browser
+// only ever receives the current page's cards).
+export function getCategoryProducts({
+	slug,
+	page = 1,
+	pageSize = 36,
+	sort = "name",
+}: {
+	slug: string;
+	page?: number;
+	pageSize?: number;
+	sort?: string;
+}): PaginatedProducts {
+	const all = products.filter((product) => product.categorySlug === slug);
+	const total = all.length;
+	const totalPages = Math.max(1, Math.ceil(total / pageSize));
+	const safePage = Math.min(Math.max(1, page), totalPages);
+	const sorted = sortProductsServer(all, sort);
+	const start = (safePage - 1) * pageSize;
+	return {
+		products: sorted.slice(start, start + pageSize).map(toSummary),
+		total,
+		page: safePage,
+		pageSize,
+		totalPages,
+	};
+}
+
+// All products of a family (group cards + first page).
+export function getFamilyProducts({
+	slug,
+	page = 1,
+	pageSize = 36,
+	sort = "name",
+}: {
+	slug: string;
+	page?: number;
+	pageSize?: number;
+	sort?: string;
+}): PaginatedProducts {
+	const groups = FAMILY_GROUPS[slug] ?? [];
+	const groupSlugs = new Set(groups.flatMap((group) => group.categories.map((c) => c.slug)));
+	const all = products.filter((product) => groupSlugs.has(product.categorySlug));
+	const total = all.length;
+	const totalPages = Math.max(1, Math.ceil(total / pageSize));
+	const safePage = Math.min(Math.max(1, page), totalPages);
+	const sorted = sortProductsServer(all, sort);
+	const start = (safePage - 1) * pageSize;
+	return {
+		products: sorted.slice(start, start + pageSize).map(toSummary),
+		total,
+		page: safePage,
+		pageSize,
+		totalPages,
+	};
+}
+
+function sortProductsServer(items: Product[], sort: string) {
+	const result = [...items];
+	if (sort === "price-asc") return result.sort((a, b) => a.price - b.price);
+	if (sort === "price-desc") return result.sort((a, b) => b.price - a.price);
+	if (sort === "discount") return result.sort((a, b) => b.discount - a.discount);
+	return result.sort((a, b) => a.name.localeCompare(b.name, "fr"));
+}
+
+// Family metadata for the categories index page (no products needed).
+export function getCategoryStats() {
+	const families = getFamilies();
+	return {
+		families,
+		totalProducts: products.length,
+		totalCategories: categories.length,
+		multiStore: products
+			.filter((product) => product.stores > 1)
+			.slice(0, 4)
+			.map(toSummary),
+	};
 }
