@@ -129,6 +129,21 @@ function ProductDetails({ product }: { product: Product }) {
 		},
 	};
 
+	const breadcrumbJsonLd = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: [
+			{ "@type": "ListItem", position: 1, name: "Accueil", item: "https://soumly.online/" },
+			{
+				"@type": "ListItem",
+				position: 2,
+				name: product.category,
+				item: `https://soumly.online/categories/${product.categorySlug}`,
+			},
+			{ "@type": "ListItem", position: 3, name: product.name },
+		],
+	};
+
 	useEffect(() => {
 		const update = () => setAlertEnabled(readIds("soumly-alerts").includes(product.id));
 		const frame = window.requestAnimationFrame(update);
@@ -154,6 +169,10 @@ function ProductDetails({ product }: { product: Product }) {
 			<script
 				type="application/ld+json"
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+			/>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
 			/>
 			<section className="sm-page-shell sm-product-page-head">
 				<Breadcrumbs
