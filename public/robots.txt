@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /compte
+Disallow: /favoris
+Disallow: /recherche
+
+Sitemap: https://soumly.online/sitemap-index.xml

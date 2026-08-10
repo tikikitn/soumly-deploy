@@ -101,6 +101,34 @@ function ProductDetails({ product }: { product: Product }) {
 	const highestPrice = Math.max(...offers.map((offer) => offer.price));
 	const maximumSaving = highestPrice - bestOffer.price;
 
+	// ---- Schema.org structured data (JSON-LD) for rich Google results ----
+	const productJsonLd = {
+		"@context": "https://schema.org",
+		"@type": "Product",
+		name: product.name,
+		image: product.image ? [product.image] : undefined,
+		description:
+			product.description ||
+			`${product.name} — comparez les prix chez ${product.stores} boutiques tunisiennes.`,
+		sku: product.id,
+		offers: {
+			"@type": "AggregateOffer",
+			lowPrice: bestOffer?.price ?? product.price,
+			highPrice: highestPrice,
+			priceCurrency: "TND",
+			offerCount: offers.length,
+			availability: "https://schema.org/InStock",
+			offers: offers.slice(0, 20).map((offer) => ({
+				"@type": "Offer",
+				price: offer.price,
+				priceCurrency: "TND",
+				availability: "https://schema.org/InStock",
+				seller: { "@type": "Organization", name: offer.store },
+				url: offer.url,
+			})),
+		},
+	};
+
 	useEffect(() => {
 		const update = () => setAlertEnabled(readIds("soumly-alerts").includes(product.id));
 		const frame = window.requestAnimationFrame(update);
@@ -123,6 +151,10 @@ function ProductDetails({ product }: { product: Product }) {
 
 	return (
 		<>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+			/>
 			<section className="sm-page-shell sm-product-page-head">
 				<Breadcrumbs
 					items={[
