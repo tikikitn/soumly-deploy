@@ -43,6 +43,29 @@ export type Category = {
   note: string;
 };
 
+// Category definition used for both curated and generated categories.
+type AnyCategoryDefinition = {
+  raw?: readonly string[];
+  slug: string;
+  label: string;
+  icon: string;
+  count?: number;
+  note?: string;
+};
+
+// Icon names used for generated categories (lucide icons)
+const GENERIC_CATEGORY_ICONS = [
+  "Box", "ShoppingBag", "Tag", "Sparkles", "Layers", "Package",
+  "CircleDot", "Shirt", "Watch", "Home", "Zap", "Wrench",
+] as const;
+
+function humanizeCategory(slug: string) {
+  return slug
+    .split("-")
+    .map((word) => (word.length > 2 ? word[0].toUpperCase() + word.slice(1) : word))
+    .join(" ");
+}
+
 const CATEGORY_DEFINITIONS = [
   { raw: ["596-smartphone-tunisie", "smartphones"], slug: "smartphones", label: "Smartphones", icon: "Smartphone" },
   { raw: ["301-pc-portable-tunisie", "PC Portable", "pc-portables"], slug: "pc-portables", label: "PC portables", icon: "Laptop" },
@@ -56,11 +79,31 @@ const CATEGORY_DEFINITIONS = [
 ] as const;
 
 type CategoryDefinition = (typeof CATEGORY_DEFINITIONS)[number];
-const categoryByRaw: Map<string, CategoryDefinition> = new Map(
+const categoryByRaw: Map<string, AnyCategoryDefinition> = new Map(
   CATEGORY_DEFINITIONS.flatMap((category) =>
     category.raw.map((raw) => [raw, category] as const),
   ),
 );
+
+// Generated definitions for categories found in the data but not declared above.
+const generatedCategories = new Map<string, AnyCategoryDefinition>();
+function categoryFor(rawSlug: string): AnyCategoryDefinition {
+  const known = categoryByRaw.get(rawSlug);
+  if (known) return known;
+  let generated = generatedCategories.get(rawSlug);
+  if (!generated) {
+    const hash = [...rawSlug].reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    generated = {
+      slug: rawSlug,
+      label: humanizeCategory(rawSlug),
+      icon: GENERIC_CATEGORY_ICONS[Math.abs(hash) % GENERIC_CATEGORY_ICONS.length],
+      count: 0,
+      note: "",
+    };
+    generatedCategories.set(rawSlug, generated);
+  }
+  return generated;
+}
 
 const STORE_DETAILS: Record<string, { color: string; delivery: string; availability: string }> = {
   Tunisianet: {
@@ -259,7 +302,7 @@ for (const sourceProduct of sourceProducts) {
 export const products: Product[] = [...groupedProducts.values()]
   .flatMap((group): Product[] => {
     const source = group[0];
-    const category = categoryByRaw.get(source.category);
+    const category = categoryFor(source.category);
     const offers = productOffers(group);
     if (!category || offers.length === 0) return [];
     const bestOffer = offers[0];
@@ -297,16 +340,24 @@ export const products: Product[] = [...groupedProducts.values()]
     return [product];
   });
 
-export const categories: Category[] = CATEGORY_DEFINITIONS.map((definition) => {
-  const count = products.filter((product) => product.categorySlug === definition.slug).length;
-  return {
-    slug: definition.slug,
-    label: definition.label,
-    icon: definition.icon,
-    count,
-    note: `${count} produit${count > 1 ? "s" : ""}`,
-  };
-});
+const allDefinitions = [
+  ...CATEGORY_DEFINITIONS,
+  ...[...generatedCategories.values()],
+];
+
+export const categories: Category[] = allDefinitions
+  .map((definition) => {
+    const count = products.filter((product) => product.categorySlug === definition.slug).length;
+    return {
+      slug: definition.slug,
+      label: definition.label,
+      icon: definition.icon,
+      count,
+      note: `${count} produit${count > 1 ? "s" : ""}`,
+    };
+  })
+  .filter((category) => category.count > 0)
+  .sort((first, second) => second.count - first.count);
 
 export const stores = (["Tunisianet", "Spacenet"] as const).map((name) => {
   const storeProducts = products.filter((product) => product.offers.some((offer) => offer.store === name));
