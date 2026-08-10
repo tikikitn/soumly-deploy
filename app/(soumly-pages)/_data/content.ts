@@ -1801,10 +1801,9 @@ function validMerchantUrl(url: string) {
 }
 
 function merchantPrice(value: number, store: string) {
-	// Tunisianet raw prices are in millimes (e.g. 169000) -> divide by 1000.
-	// Other stores (primini feed) already carry DT values.
-	const normalized = store === "Tunisianet" && value > 1000 ? value / 1000 : value;
-	return Number(normalized.toFixed(3));
+	// All prices come from the primini feed and are already in DT
+	// (millimes conversion applied at scrape time). Do NOT divide.
+	return Number(value.toFixed(3));
 }
 
 function merchantOldPrice(value: number, price: number, store: string) {
