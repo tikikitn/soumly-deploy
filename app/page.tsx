@@ -505,6 +505,7 @@ export default function HomePage() {
                 if (p.categorySlug === "smartphones" || p.categorySlug === "telephone-portables") return 0;
                 if (p.categorySlug === "ordinateurs-portables" || p.categorySlug === "ordinateurs-de-bureau") return 1;
                 if (p.categorySlug === "tablettes" || p.categorySlug === "moniteurs") return 2;
+                if (["peluches", "jouets-pour-bebes", "jouets-d-apprentissage", "hochets", "biberons", "tires-lait", "couches-jetables-pour-bebe", "poussettes-pour-bebe"].includes(p.categorySlug)) return 1;
                 return 3;
               };
               const diff = rank(a) - rank(b);
