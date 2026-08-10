@@ -69,14 +69,14 @@ const categoryIcons: Record<string, IconType> = {
 
 // 8 featured families shown on the homepage (from primini structure)
 const FAMILY_IMAGES: Record<string, string> = {
-  informatique: "/assets/families/informatique.jpg",
-  telephonie: "/assets/families/telephonie.jpg",
-  "sante-beaute": "/assets/families/sante-beaute.jpg",
-  electromenager: "/assets/families/electromenager.jpg",
-  "petit-electromenager": "/assets/families/petit-electromenager.jpg",
-  cuisine: "/assets/families/cuisine.jpg",
-  "maison-jardin": "/assets/families/maison-jardin.jpg",
-  "bebe-enfants": "/assets/families/bebe-enfants.jpg",
+  informatique: "/assets/families/informatique-v2.jpg",
+  telephonie: "/assets/families/telephonie-v2.jpg",
+  "sante-beaute": "/assets/families/sante-beaute-v2.jpg",
+  electromenager: "/assets/families/electromenager-v2.jpg",
+  "petit-electromenager": "/assets/families/petit-electromenager-v2.jpg",
+  cuisine: "/assets/families/cuisine-v2.jpg",
+  "maison-jardin": "/assets/families/maison-jardin-v2.jpg",
+  "bebe-enfants": "/assets/families/bebe-enfants-v2.jpg",
 };
 
 const FEATURED_FAMILIES = [
