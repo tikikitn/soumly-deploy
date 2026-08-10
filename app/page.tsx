@@ -499,6 +499,15 @@ export default function HomePage() {
           }
           const familyProducts = products
             .filter((product) => groupSlugs.has(product.categorySlug))
+            .sort((a, b) => {
+              // Smartphones category first, then other phones, then accessories
+              const rank = (p: (typeof products)[number]) =>
+                p.categorySlug === "smartphones" ? 0 : p.categorySlug === "telephone-portables" ? 1 : 2;
+              const diff = rank(a) - rank(b);
+              if (diff !== 0) return diff;
+              // Within same category: higher price first (more premium devices)
+              return b.price - a.price;
+            })
             .slice(0, 12);
           if (familyProducts.length === 0) return null;
           return (

@@ -68,6 +68,7 @@ export const FAMILY_GROUPS: Record<string, FamilyGroup[]> = {
   ],
   "telephonie": [
     { name: "Accessoires d'équipements de télécommunications", image: "https://cdn.primini.tn/138_87087873-18b8-4f09-b1aa-c8348214c1ee.jpg", categories: [{ slug: "accessoires-pour-smartwatch", label: "Accessoires pour smartwatch" }] },
+    { name: "Smartphones", image: "https://cdn.primini.tn/138_0194252135525-apple-i-phone-12-64go-noir-1.jpg", categories: [{ slug: "smartphones", label: "Smartphones" }, { slug: "telephone-portables", label: "Téléphones portables" }, { slug: "smart-watches", label: "Smartwatches" }, { slug: "montres", label: "Montres" }] },
     { name: "Accessoires Téléphones", image: "https://cdn.primini.tn/138_b277b0bf-7584-42ed-b125-a0c1eefa150a.jpg", categories: [{ slug: "etuis-coques", label: "Etuis et Coques" }, { slug: "car-holder", label: "Car Holder" }, { slug: "docking-stations", label: "Stations d'accueil" }, { slug: "films-protecteurs", label: "Films Protecteurs" }, { slug: "cables-telephone", label: "Câbles" }] },
   ],
   "image-et-son": [
