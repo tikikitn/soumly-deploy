@@ -16,7 +16,7 @@ import {
 import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import Link from "../../components/NativeLink";
-import { categories, getCategory, products, type Product } from "../_data/content";
+import { categories, getCategory, getFamilies, getFamilyCategories, products, type Product } from "../_data/content";
 import { EmptyState, ProductCard, SoumlyIcon } from "./ui";
 
 function Breadcrumbs({ current, parent }: { current: string; parent?: string }) {
@@ -118,17 +118,35 @@ function Catalog({ baseProducts }: { baseProducts: Product[] }) {
 }
 
 export function CategoriesScreen() {
+  const families = getFamilies();
   return (
     <>
       <section className="sm-page-shell sm-inner-hero sm-categories-hero">
-        <div><Breadcrumbs current="Catégories" /><span className="sm-eyebrow"><Sparkles size={15} /> Le catalogue Soumly</span><h1>Explorez les catégories</h1><p>{products.length.toLocaleString("fr-FR")} produits classés dans leurs catégories réelles.</p></div>
-        <div className="sm-hero-stat-grid"><div><strong>{products.length.toLocaleString("fr-FR")}</strong><span>produits référencés</span></div><div><strong>2</strong><span>boutiques sources</span></div><div><strong>{categories.length}</strong><span>catégories</span></div></div>
+        <div><Breadcrumbs current="Catégories" /><span className="sm-eyebrow"><Sparkles size={15} /> Le catalogue Soumly</span><h1>Explorez les catégories</h1><p>{products.length.toLocaleString("fr-FR")} produits classés en {families.length} familles.</p></div>
+        <div className="sm-hero-stat-grid"><div><strong>{products.length.toLocaleString("fr-FR")}</strong><span>produits référencés</span></div><div><strong>{categories.length}</strong><span>catégories</span></div><div><strong>{families.length}</strong><span>familles</span></div></div>
       </section>
       <section className="sm-page-shell sm-section-block">
-        <div className="sm-section-heading"><div><span className="sm-section-kicker">Toutes les catégories</span><h2>Que recherchez-vous ?</h2></div></div>
-        <div className="sm-category-grid">{categories.map((category, index) => <Link className={`sm-category-card tone-${(index % 4) + 1}`} href={`/categories/${category.slug}`} key={category.slug}><span className="sm-category-icon"><SoumlyIcon name={category.icon} size={30} /></span><div><h3>{category.label}</h3><p>{category.note}</p><strong>{new Intl.NumberFormat("fr-FR").format(category.count)} produits</strong></div><span className="sm-round-arrow">→</span></Link>)}</div>
+        <div className="sm-section-heading"><div><span className="sm-section-kicker">Familles</span><h2>Que recherchez-vous ?</h2></div></div>
+        <div className="sm-category-grid">{families.map((family, index) => <Link className={`sm-category-card tone-${(index % 4) + 1}`} href={`/categories/${family.slug}`} key={family.slug}><span className="sm-category-icon"><SoumlyIcon name={family.icon} size={30} /></span><div><h3>{family.label}</h3><p>{family.categoryCount} catégories</p><strong>{new Intl.NumberFormat("fr-FR").format(family.productCount)} produits</strong></div><span className="sm-round-arrow">→</span></Link>)}</div>
       </section>
       <section className="sm-page-shell sm-section-block sm-soft-section"><div className="sm-section-heading"><div><span className="sm-section-kicker">Prix comparés</span><h2>Produits présents dans plusieurs boutiques</h2></div><Link href="/recherche">Voir le catalogue →</Link></div><div className="sm-product-grid sm-grid-four">{products.filter((product) => product.stores > 1).slice(0, 4).map((product) => <ProductCard key={product.id} product={product} />)}</div></section>
+      <div className="sm-page-shell"><TrustStrip /></div>
+    </>
+  );
+}
+
+export function FamilyScreen() {
+  const pathname = usePathname();
+  const slug = pathname.split("/").filter(Boolean).at(-1);
+  const family = getFamilies().find((f) => f.slug === slug);
+  if (!family) return <EmptyState title="Famille introuvable" text="Cette famille n’existe pas." action="Voir toutes les catégories" href="/categories" />;
+  const familyCategories = getFamilyCategories(slug ?? "");
+  return (
+    <>
+      <section className="sm-page-shell sm-listing-intro"><Breadcrumbs current={family.label} parent="Catégories" /><div className="sm-listing-title-row"><div><span className="sm-category-icon is-large"><SoumlyIcon name={family.icon} size={35} /></span><div><h1>{family.label}</h1><p>{family.categoryCount} catégories, {new Intl.NumberFormat("fr-FR").format(family.productCount)} produits.</p></div></div><span className="sm-result-pill">{family.productCount} produits</span></div></section>
+      <section className="sm-page-shell sm-section-block">
+        <div className="sm-category-grid">{familyCategories.map((category, index) => <Link className={`sm-category-card tone-${(index % 4) + 1}`} href={`/categories/${category.slug}`} key={category.slug}><span className="sm-category-icon"><SoumlyIcon name={category.icon} size={26} /></span><div><h3>{category.label}</h3><p>{category.note}</p><strong>{new Intl.NumberFormat("fr-FR").format(category.count)} produits</strong></div><span className="sm-round-arrow">→</span></Link>)}</div>
+      </section>
       <div className="sm-page-shell"><TrustStrip /></div>
     </>
   );
