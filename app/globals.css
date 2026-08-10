@@ -331,7 +331,7 @@ main { min-height: 100vh; overflow: clip; }
 .category-section { padding-top: 28px; }
 .compact-heading { display: none !important; }
 
-/* ---- Family cards (homepage) - primini-style white cards ---- */
+/* ---- Family cards (homepage) - designed image backgrounds ---- */
 .family-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -340,66 +340,78 @@ main { min-height: 100vh; overflow: clip; }
 .family-card {
   position: relative;
   display: flex;
-  min-height: 168px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 18px;
+  min-height: 190px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 14px;
   border-radius: 20px;
-  background: #fff;
-  border: 1px solid var(--line-strong, #e8e6f2);
-  box-shadow: 0 6px 22px rgba(20, 16, 55, 0.08);
+  background-image: var(--family-img);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(99, 71, 245, 0.14);
+  box-shadow: 0 6px 22px rgba(20, 16, 55, 0.10);
   color: inherit;
   text-decoration: none;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .family-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(99, 71, 245, 0.16);
-  border-color: rgba(99, 71, 245, 0.4);
-}
-.family-card-icon {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 13px;
-  background: var(--lavender-soft, #efecff);
-  color: #6347f5;
-}
-.family-card-label {
-  margin-top: 14px;
-  font-size: 15.5px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  color: var(--navy, #171236);
+  box-shadow: 0 16px 36px rgba(99, 71, 245, 0.20);
 }
 .family-card-arrow {
   position: absolute;
-  right: 16px;
-  bottom: 16px;
+  top: 14px;
+  right: 14px;
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border-radius: 50%;
-  background: var(--violet, #6347f5);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--violet, #6347f5);
   font-size: 15px;
-  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: 0 3px 10px rgba(20, 16, 55, 0.12);
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 .family-card:hover .family-card-arrow {
-  background: var(--violet-dark, #5236d6);
+  background: var(--violet, #6347f5);
+  color: #fff;
   transform: translateX(2px);
+}
+.family-card-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 88%;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 14px rgba(20, 16, 55, 0.10);
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy, #171236);
+}
+.family-card-label-icon {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--lavender-soft, #efecff);
+  color: var(--violet, #6347f5);
 }
 @media (max-width: 980px) {
   .family-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 520px) {
   .family-grid { grid-template-columns: 1fr; }
-  .family-card { min-height: 150px; }
+  .family-card { min-height: 170px; }
 }
 
 /* ---- Category pills (primini-style) ---- */

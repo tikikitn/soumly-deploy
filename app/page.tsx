@@ -461,10 +461,13 @@ export default function HomePage() {
               className="family-card"
               key={slug}
               href={`/categories/${slug}`}
+              style={{"--family-img": `url(${FAMILY_IMAGES[slug] ?? ""})`} as React.CSSProperties}
             >
-              <span className="family-card-icon"><Icon size={22} strokeWidth={1.8} /></span>
-              <span className="family-card-label">{label}</span>
               <span className="family-card-arrow">→</span>
+              <span className="family-card-label">
+                <span className="family-card-label-icon"><Icon size={16} strokeWidth={2} /></span>
+                {label}
+              </span>
             </a>
           ))}
         </div>
