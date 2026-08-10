@@ -1492,9 +1492,11 @@ export const products: Product[] = [...groupedProducts.values()]
     if (!category || offers.length === 0) return [];
     const bestOffer = offers[0];
     const oldPrice = Math.max(bestOffer.price, bestOffer.oldPrice);
-    const discount = oldPrice > bestOffer.price
+    const sourceDiscount = typeof source.discount === "number" ? source.discount : 0;
+    const computedDiscount = oldPrice > bestOffer.price
       ? Math.round(((oldPrice - bestOffer.price) / oldPrice) * 100)
       : 0;
+    const discount = Math.max(sourceDiscount, computedDiscount);
     const brand = inferBrand(source.name);
     const product: Product = {
       id: source.id,
