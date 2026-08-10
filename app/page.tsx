@@ -272,9 +272,13 @@ export default function HomePage() {
   }, [query]);
 
   const filteredOffers = useMemo(() => {
-    const promoted = products
-      .filter((product) => product.discount > 0)
-      .sort((first, second) => second.discount - first.discount);
+    // Real discounts first (backed by price data), then best multi-store offers
+    const promoted = [...products]
+      .sort((first, second) => {
+        if ((second.discount > 0) !== (first.discount > 0)) return second.discount > 0 ? 1 : -1;
+        return (second.discount || 0) - (first.discount || 0);
+      })
+      .sort((first, second) => (second.discount || 0) - (first.discount || 0));
     if (activeFilter === "Tout") return promoted.slice(0, 12);
     return promoted.filter((product) => product.category === activeFilter).slice(0, 12);
   }, [activeFilter]);
@@ -510,9 +514,9 @@ export default function HomePage() {
       <section className="products-section page-shell" id="offres" aria-labelledby="offres-title">
         <div className="section-heading">
           <div>
-            <span className="section-kicker">Sélection du jour</span>
-            <h2 id="offres-title">Meilleures offres du jour</h2>
-            <p>Les baisses de prix qui méritent votre attention aujourd&apos;hui.</p>
+            <span className="section-kicker">Sélection</span>
+            <h2 id="offres-title">Les meilleurs prix du catalogue</h2>
+            <p>Des produits référencés chez plusieurs boutiques, au meilleur prix trouvé.</p>
           </div>
           <div className="heading-actions">
             <a href="/categories">Voir tout</a>

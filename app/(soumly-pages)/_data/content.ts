@@ -1492,11 +1492,15 @@ export const products: Product[] = [...groupedProducts.values()]
     if (!category || offers.length === 0) return [];
     const bestOffer = offers[0];
     const oldPrice = Math.max(bestOffer.price, bestOffer.oldPrice);
-    const sourceDiscount = typeof source.discount === "number" ? source.discount : 0;
+    // Only show a discount when it is backed by real price data:
+    // oldPrice must actually be higher than the current price. The
+    // discount coming from primini (sourceDiscount) compares against
+    // aberrant reference prices and produces fake -99% badges, so we
+    // ignore it and compute only from real offers.
     const computedDiscount = oldPrice > bestOffer.price
       ? Math.round(((oldPrice - bestOffer.price) / oldPrice) * 100)
       : 0;
-    const discount = Math.max(sourceDiscount, computedDiscount);
+    const discount = computedDiscount;
     const brand = inferBrand(source.name);
     const product: Product = {
       id: source.id,
