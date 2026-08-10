@@ -2061,8 +2061,13 @@ export function relatedProducts(product: Product, limit = 4) {
 
 export function formatPrice(value: number) {
 	const hasCents = Math.abs(value - Math.round(value)) > 0.0001;
-	return `${new Intl.NumberFormat("fr-TN", {
+	// Regular ASCII space as thousands separator (fr-TN emits a narrow
+	// no-break space that renders as glued digits on some devices).
+	const formatted = new Intl.NumberFormat("fr-TN", {
 		minimumFractionDigits: hasCents ? 2 : 0,
 		maximumFractionDigits: 2,
-	}).format(value)} DT`;
+	})
+		.format(value)
+		.replace(/[\u202f\u00a0]/g, " ");
+	return `${formatted} DT`;
 }
