@@ -5,7 +5,7 @@ import {
 } from "../../products";
 
 export type StoreOffer = {
-  store: "Tunisianet" | "Spacenet";
+  store: string;
   price: number;
   oldPrice: number;
   url: string;
@@ -44,13 +44,13 @@ export type Category = {
 };
 
 const CATEGORY_DEFINITIONS = [
-  { raw: ["596-smartphone-tunisie"], slug: "smartphones", label: "Smartphones", icon: "Smartphone" },
-  { raw: ["301-pc-portable-tunisie", "PC Portable"], slug: "pc-portables", label: "PC portables", icon: "Laptop" },
+  { raw: ["596-smartphone-tunisie", "smartphones"], slug: "smartphones", label: "Smartphones", icon: "Smartphone" },
+  { raw: ["301-pc-portable-tunisie", "PC Portable", "pc-portables"], slug: "pc-portables", label: "PC portables", icon: "Laptop" },
   { raw: ["373-pc-de-bureau"], slug: "pc-de-bureau", label: "PC de bureau", icon: "Monitor" },
-  { raw: ["667-ecran-pc-tunisie"], slug: "ecrans", label: "Écrans", icon: "MonitorPlay" },
-  { raw: ["338-casque-ecouteurs"], slug: "casques-ecouteurs", label: "Casques & écouteurs", icon: "Headphones" },
-  { raw: ["334-souris-informatique"], slug: "souris", label: "Souris", icon: "Mouse" },
-  { raw: ["704-claviers"], slug: "claviers", label: "Claviers", icon: "Keyboard" },
+  { raw: ["667-ecran-pc-tunisie", "ecrans", "moniteurs"], slug: "ecrans", label: "Écrans", icon: "MonitorPlay" },
+  { raw: ["338-casque-ecouteurs", "casques-ecouteurs", "casques", "ecouteurs"], slug: "casques-ecouteurs", label: "Casques & écouteurs", icon: "Headphones" },
+  { raw: ["334-souris-informatique", "souris"], slug: "souris", label: "Souris", icon: "Mouse" },
+  { raw: ["704-claviers", "claviers"], slug: "claviers", label: "Claviers", icon: "Keyboard" },
   { raw: ["457-climatiseur-tunisie-chaud-froid"], slug: "climatiseurs", label: "Climatiseurs", icon: "AirVent" },
   { raw: ["331-sac-a-dos-tunisie"], slug: "sacs-accessoires", label: "Sacs & accessoires", icon: "Backpack" },
 ] as const;
@@ -62,7 +62,7 @@ const categoryByRaw: Map<string, CategoryDefinition> = new Map(
   ),
 );
 
-const STORE_DETAILS = {
+const STORE_DETAILS: Record<string, { color: string; delivery: string; availability: string }> = {
   Tunisianet: {
     color: "#6d4aff",
     delivery: "Voir les conditions de livraison",
@@ -73,7 +73,27 @@ const STORE_DETAILS = {
     delivery: "Voir les conditions de livraison",
     availability: "Disponibilité à confirmer",
   },
-} as const;
+};
+
+// Color palette for additional stores (primini merchant list)
+const STORE_COLORS = [
+  "#6347f5", "#ff4757", "#2ed573", "#1e90ff", "#ffa502", "#a55eea",
+  "#ff6348", "#3742fa", "#7bed9f", "#70a1ff", "#ff6b81", "#f368e0",
+];
+let storeColorIndex = 0;
+function storeColor(store: string) {
+  let hash = 0;
+  for (let i = 0; i < store.length; i++) hash = (hash * 31 + store.charCodeAt(i)) | 0;
+  return STORE_COLORS[Math.abs(hash) % STORE_COLORS.length];
+}
+function getStoreDetails(name: string) {
+  const key = name === "Tunisianet" ? "Tunisianet" : name === "Spacenet" ? "Spacenet" : name;
+  return STORE_DETAILS[key] ?? {
+    color: storeColor(name),
+    delivery: "Voir les conditions de livraison",
+    availability: "Disponibilité à confirmer",
+  };
+}
 
 const GENERIC_TOKENS = new Set([
   "pc", "portable", "ordinateur", "laptop", "tunisie", "de", "du", "la", "le", "les",
@@ -135,31 +155,32 @@ function similarity(first: string, second: string) {
   return shared / Math.max(firstTokens.size, secondTokens.size, 1);
 }
 
-function storeName(offer: SourceOffer): keyof typeof STORE_DETAILS | null {
+function storeName(offer: SourceOffer): string | null {
   const value = simplify(offer.store);
+  if (!value) return null;
   if (value.includes("tunisianet")) return "Tunisianet";
   if (value.includes("spacenet")) return "Spacenet";
-  return null;
+  // Any other merchant: keep its display name (title-cased first word-ish)
+  return offer.store;
 }
 
-function validMerchantUrl(url: string, store: keyof typeof STORE_DETAILS) {
+function validMerchantUrl(url: string, _store: string) {
   try {
     const parsed = new URL(url);
-    if (parsed.protocol !== "https:") return false;
-    return store === "Tunisianet"
-      ? parsed.hostname === "www.tunisianet.com.tn" || parsed.hostname === "tunisianet.com.tn"
-      : parsed.hostname === "spacenet.tn" || parsed.hostname === "www.spacenet.tn";
+    return parsed.protocol === "https:" || parsed.protocol === "http:";
   } catch {
     return false;
   }
 }
 
-function merchantPrice(value: number, store: keyof typeof STORE_DETAILS) {
-  const normalized = store === "Tunisianet" ? value / 1000 : value;
+function merchantPrice(value: number, store: string) {
+  // Tunisianet raw prices are in millimes (e.g. 169000) -> divide by 1000.
+  // Other stores (primini feed) already carry DT values.
+  const normalized = store === "Tunisianet" && value > 1000 ? value / 1000 : value;
   return Number(normalized.toFixed(3));
 }
 
-function merchantOldPrice(value: number, price: number, store: keyof typeof STORE_DETAILS) {
+function merchantOldPrice(value: number, price: number, store: string) {
   const normalized = merchantPrice(value, store);
   if (!Number.isFinite(normalized) || normalized < price || normalized > price * 3) return price;
   return normalized;
@@ -185,11 +206,11 @@ function normalizeOffer(source: SourceOffer, productId: string): (StoreOffer & {
   const merchant = storeName(source);
   if (!merchant || !validMerchantUrl(source.url, merchant)) return null;
   const match = similarity(productId, offerSlug(source.url));
-  if (match < 0.42) return null;
+  if (match < 0.2) return null;
 
   const price = merchantPrice(source.price, merchant);
   if (!Number.isFinite(price) || price <= 0) return null;
-  const details = STORE_DETAILS[merchant];
+  const details = getStoreDetails(merchant);
   return {
     store: merchant,
     price,
@@ -326,9 +347,9 @@ export function relatedProducts(product: Product, limit = 4) {
 }
 
 export function formatPrice(value: number) {
-  const hasMillimes = Math.abs(value - Math.round(value)) > 0.0001;
+  const hasCents = Math.abs(value - Math.round(value)) > 0.0001;
   return `${new Intl.NumberFormat("fr-TN", {
-    minimumFractionDigits: hasMillimes ? 3 : 0,
-    maximumFractionDigits: 3,
+    minimumFractionDigits: hasCents ? 2 : 0,
+    maximumFractionDigits: 2,
   }).format(value)} DT`;
 }
