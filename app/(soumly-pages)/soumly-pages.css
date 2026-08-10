@@ -132,6 +132,102 @@
 .sm-hero-stat-grid span { margin-top: 4px; color: var(--sm-muted); font-size: 11px; font-weight: 800; }
 
 /* ---- Family category chips (compact) ---- */
+
+/* ---- Family group cards (primini style) ---- */
+.sm-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+.sm-group-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--line-strong, #e8e6f2);
+  box-shadow: 0 4px 16px rgba(20, 16, 55, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.sm-group-card:hover {
+  box-shadow: 0 12px 28px rgba(99, 71, 245, 0.14);
+  transform: translateY(-2px);
+}
+.sm-group-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sm-group-card-img {
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 12px;
+  object-fit: cover;
+  background: var(--lavender-soft, #efecff);
+}
+.sm-group-card-fallback {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--lavender-soft, #efecff);
+  color: var(--violet, #6347f5);
+}
+.sm-group-card h2 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy, #171236);
+  line-height: 1.2;
+}
+.sm-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sm-group-list li {
+  margin: 0;
+  padding: 0;
+}
+.sm-group-list a {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: var(--lavender-soft, #efecff);
+  color: var(--navy, #171236);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.sm-group-list a:hover {
+  background: var(--violet, #6347f5);
+  color: #fff;
+}
+.sm-group-more {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--violet, #6347f5);
+  text-decoration: none;
+}
+.sm-group-more:hover {
+  text-decoration: underline;
+}
+@media (max-width: 520px) {
+  .sm-group-grid { grid-template-columns: 1fr; }
+}
+
 .sm-family-chips {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));

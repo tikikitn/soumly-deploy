@@ -16,7 +16,7 @@ import {
 import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import Link from "../../components/NativeLink";
-import { categories, getCategory, getFamilies, getFamilyCategories, products, type Product } from "../_data/content";
+import { categories, getCategory, getFamilies, getFamilyCategories, products, FAMILY_GROUPS, type Product } from "../_data/content";
 import { EmptyState, ProductCard, SoumlyIcon } from "./ui";
 
 function Breadcrumbs({ current, parent }: { current: string; parent?: string }) {
@@ -140,15 +140,27 @@ export function FamilyScreen() {
   const slug = pathname.split("/").filter(Boolean).at(-1);
   const family = getFamilies().find((f) => f.slug === slug);
   if (!family) return <EmptyState title="Famille introuvable" text="Cette famille n’existe pas." action="Voir toutes les catégories" href="/categories" />;
-  const familyCategories = getFamilyCategories(slug ?? "");
-  const familyProducts = products.filter((product) =>
-    familyCategories.some((category) => category.slug === product.categorySlug)
-  );
+  const groups = FAMILY_GROUPS[slug ?? ""] ?? [];
+  const groupSlugs = new Set(groups.flatMap((group) => group.categories.map((category) => category.slug)));
+  const familyProducts = products.filter((product) => groupSlugs.has(product.categorySlug));
   return (
     <>
-      <section className="sm-page-shell sm-listing-intro"><Breadcrumbs current={family.label} parent="Catégories" /><div className="sm-listing-title-row"><div><span className="sm-category-icon is-large"><SoumlyIcon name={family.icon} size={35} /></span><div><h1>{family.label}</h1><p>{family.categoryCount} catégories, {new Intl.NumberFormat("fr-FR").format(family.productCount)} produits.</p></div></div><span className="sm-result-pill">{familyProducts.length} produits</span></div></section>
+      <section className="sm-page-shell sm-listing-intro"><Breadcrumbs current={family.label} parent="Catégories" /><div className="sm-listing-title-row"><div><span className="sm-category-icon is-large"><SoumlyIcon name={family.icon} size={35} /></span><div><h1>{family.label}</h1><p>{groups.length} groupes, {new Intl.NumberFormat("fr-FR").format(familyProducts.length)} produits.</p></div></div><span className="sm-result-pill">{familyProducts.length} produits</span></div></section>
       <section className="sm-page-shell sm-section-block">
-        <div className="sm-family-chips">{familyCategories.map((category) => <Link className="sm-family-chip" href={`/categories/${category.slug}`} key={category.slug}><SoumlyIcon name={category.icon} size={15} />{category.label}<em>{category.count}</em></Link>)}</div>
+        <div className="sm-group-grid">
+          {groups.map((group) => (
+            <div className="sm-group-card" key={group.name}>
+              <div className="sm-group-card-head">
+                {group.image ? <img className="sm-group-card-img" src={group.image} alt={group.name} loading="lazy" width={52} height={52} /> : <span className="sm-group-card-fallback"><SoumlyIcon name={family.icon} size={22} /></span>}
+                <h2>{group.name}</h2>
+              </div>
+              <ul className="sm-group-list">
+                {group.categories.slice(0, 5).map((category) => <li key={category.slug}><Link href={`/categories/${category.slug}`}>{category.label}</Link></li>)}
+              </ul>
+              <Link className="sm-group-more" href={`/categories/${group.categories[0]?.slug ?? ""}`}>Voir plus →</Link>
+            </div>
+          ))}
+        </div>
       </section>
       <Catalog baseProducts={familyProducts} />
     </>
