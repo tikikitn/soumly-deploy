@@ -461,11 +461,22 @@ export default function HomePage() {
               className="family-card"
               key={slug}
               href={`/categories/${slug}`}
-              style={{"--family-bg": `url(${FAMILY_IMAGES[slug] ?? ""})`} as React.CSSProperties}
             >
-              <span className="family-card-icon"><Icon size={26} strokeWidth={1.8} /></span>
+              <span className="family-card-icon"><Icon size={22} strokeWidth={1.8} /></span>
               <span className="family-card-label">{label}</span>
               <span className="family-card-arrow">→</span>
+            </a>
+          ))}
+        </div>
+        <div className="family-pills">
+          {categories.map(({ slug, label, icon: Icon }, index) => (
+            <a
+              className={`family-pill${index === 0 ? " is-active" : ""}`}
+              key={`pill-${slug}`}
+              href={`/categories/${slug}`}
+            >
+              <Icon size={15} strokeWidth={2} />
+              {label}
             </a>
           ))}
         </div>
