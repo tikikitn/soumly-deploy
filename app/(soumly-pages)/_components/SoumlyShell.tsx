@@ -19,7 +19,6 @@ import Link from "../../components/NativeLink";
 
 const navItems = [
   { label: "Catégories", href: "/categories", icon: Grid3X3 },
-  { label: "Promotions", href: "/promotions", icon: Tag },
   { label: "Boutiques", href: "/boutiques", icon: ShoppingBag },
   { label: "Guides d’achat", href: "/guides", icon: BookOpen },
 ];
@@ -111,7 +110,7 @@ export default function SoumlyShell({ children }: { children: React.ReactNode })
             <Link className="sm-logo" href="/">Soumly<span>.</span></Link>
             <p>Comparez les prix des boutiques tunisiennes et trouvez la meilleure offre, simplement.</p>
           </div>
-          <div><h3>Explorer</h3><Link href="/categories">Catégories</Link><Link href="/promotions">Promotions</Link><Link href="/boutiques">Boutiques</Link></div>
+          <div><h3>Explorer</h3><Link href="/categories">Catégories</Link><Link href="/boutiques">Boutiques</Link></div>
           <div><h3>Conseils</h3><Link href="/guides">Guides d’achat</Link><Link href="/recherche">Recherche</Link><Link href="/favoris">Mes favoris</Link></div>
           <div><h3>Soumly</h3><Link href="/a-propos">À propos</Link><Link href="/contact">Contact</Link><Link href="/confidentialite">Confidentialité</Link><Link href="/conditions">Conditions</Link><Link href="/mentions-legales">Mentions légales</Link></div>
         </div>

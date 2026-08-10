@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  BadgePercent,
   ChevronDown,
   Filter,
   RefreshCw,
@@ -10,7 +9,6 @@ import {
   SlidersHorizontal,
   Sparkles,
   Store,
-  Tag,
   X,
 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -205,16 +203,3 @@ export function SearchScreen() {
   );
 }
 
-export function PromotionsScreen() {
-  const promoted = products.filter((product) => product.discount > 0).sort((first, second) => second.discount - first.discount);
-  const promoCategories = categories.filter((category) => promoted.some((product) => product.categorySlug === category.slug));
-  const [active, setActive] = useState("Toutes");
-  const visible = active === "Toutes" ? promoted : promoted.filter((product) => product.category === active);
-  const maximumDiscount = promoted[0]?.discount ?? 0;
-  return (
-    <>
-      <section className="sm-page-shell sm-promo-hero"><div><Breadcrumbs current="Promotions" /><span className="sm-eyebrow"><BadgePercent size={15} /> Réductions détectées</span><h1>Les prix barrés<br />du catalogue.</h1><p>Cette page affiche uniquement les produits dont le dernier relevé contient un ancien prix supérieur au prix actuel.</p><div className="sm-promo-benefits"><span><Tag size={17} /> {promoted.length} promotions</span><span><RefreshCw size={17} /> Dernier relevé importé</span></div></div><div className="sm-deal-card"><span>RÉDUCTION MAXIMALE</span><strong>{maximumDiscount > 0 ? `−${maximumDiscount}%` : "—"}</strong><p>sur les données actuellement disponibles</p><Link href={promoted[0] ? `/produit/${promoted[0].id}` : "/categories"}>Voir le produit →</Link></div></section>
-      <section className="sm-page-shell sm-section-block"><div className="sm-section-heading"><div><span className="sm-section-kicker">Catalogue Soumly</span><h2>Promotions disponibles</h2></div><span className="sm-update-note">Vérifiez le prix final chez le marchand</span></div><div className="sm-filter-chips"><button type="button" className={active === "Toutes" ? "is-active" : ""} onClick={() => setActive("Toutes")}>Toutes</button>{promoCategories.map((category) => <button type="button" key={category.slug} className={active === category.label ? "is-active" : ""} onClick={() => setActive(category.label)}>{category.label}</button>)}</div>{visible.length ? <div className="sm-product-grid sm-grid-four">{visible.map((product) => <ProductCard product={product} key={product.id} />)}</div> : <EmptyState title="Aucune promotion" text="Aucune réduction fiable n’est disponible dans cette catégorie." action="Voir les catégories" href="/categories" />}</section>
-    </>
-  );
-}

@@ -319,7 +319,7 @@ export default function HomePage() {
 
           <nav className="desktop-nav" aria-label="Navigation principale">
             <a href="/categories">Catégories</a>
-            <a href="/promotions">Promotions</a>
+            
             <a href="/guides">Guides d’achat</a>
           </nav>
 
@@ -451,9 +451,7 @@ export default function HomePage() {
             <span className="section-kicker">Explorez facilement</span>
             <h2 id="categories-title">Nos univers</h2>
           </div>
-          <a href="/promotions">
-            Voir tout <ChevronRight size={17} />
-          </a>
+          
         </div>
         <div className="family-grid">
           {categories.map(({ slug, label, icon: Icon }) => (
@@ -560,9 +558,7 @@ export default function HomePage() {
             boutique adaptée à votre budget.
           </p>
         </div>
-        <a href="/promotions">
-          Commencer à comparer <ArrowRight size={18} />
-        </a>
+        
       </section>
 
       <section className="products-section page-shell" id="populaires" aria-labelledby="populaires-title">
@@ -630,9 +626,7 @@ export default function HomePage() {
             <h2 id="stores-title">Boutiques comparées par Soumly</h2>
             <p>Les offres disponibles proviennent actuellement de ces deux marchands tunisiens.</p>
           </div>
-          <a className="text-link" href="/promotions">
-            Voir les offres <ArrowRight size={17} />
-          </a>
+          
         </div>
         <div className="store-grid">
           {storeNames.map((store) => (
@@ -722,7 +716,7 @@ export default function HomePage() {
           <div>
             <h3>Soumly</h3>
             <a href="/categories">Catégories</a>
-            <a href="/promotions">Promotions</a>
+            
             <a href="/guides">Guides d’achat</a>
           </div>
           <div>
@@ -780,9 +774,7 @@ export default function HomePage() {
               <a href="/categories" onClick={() => setMobileMenuOpen(false)}>
                 <Grid3X3 size={20} /> Catégories <ChevronRight size={18} />
               </a>
-              <a href="/promotions" onClick={() => setMobileMenuOpen(false)}>
-                <Tag size={20} /> Promotions <ChevronRight size={18} />
-              </a>
+              
               <a href="/guides" onClick={() => setMobileMenuOpen(false)}>
                 <BookOpen size={20} /> Guides d&apos;achat <ChevronRight size={18} />
               </a>
