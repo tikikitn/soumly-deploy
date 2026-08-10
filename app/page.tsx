@@ -16,6 +16,10 @@ import {
   Home,
   Keyboard,
   Laptop,
+  ToyBrick,
+  CookingPot,
+  Microwave,
+  Refrigerator,
   Menu,
   Monitor,
   MonitorPlay,
@@ -41,6 +45,7 @@ import {
   useState,
   useEffect,
 } from "react";
+import type * as React from "react";
 import {
   categories as catalogCategories,
   formatPrice,
@@ -62,10 +67,30 @@ const categoryIcons: Record<string, IconType> = {
   Backpack,
 };
 
-const categories = catalogCategories.map((category) => ({
-  ...category,
-  iconComponent: categoryIcons[category.icon] ?? Grid3X3,
-}));
+// 8 featured families shown on the homepage (from primini structure)
+const FAMILY_IMAGES: Record<string, string> = {
+  informatique: "/assets/families/informatique.jpg",
+  telephonie: "/assets/families/telephonie.jpg",
+  "sante-beaute": "/assets/families/sante-beaute.jpg",
+  electromenager: "/assets/families/electromenager.jpg",
+  "petit-electromenager": "/assets/families/petit-electromenager.jpg",
+  cuisine: "/assets/families/cuisine.jpg",
+  "maison-jardin": "/assets/families/maison-jardin.jpg",
+  "bebe-enfants": "/assets/families/bebe-enfants.jpg",
+};
+
+const FEATURED_FAMILIES = [
+  { slug: "informatique", label: "Informatique", icon: Laptop },
+  { slug: "telephonie", label: "Téléphonie", icon: Smartphone },
+  { slug: "electromenager", label: "Gros électroménager", icon: Refrigerator },
+  { slug: "petit-electromenager", label: "Petit électroménager", icon: Microwave },
+  { slug: "cuisine", label: "Cuisine", icon: CookingPot },
+  { slug: "sante-beaute", label: "Beauté & Santé", icon: Sparkles },
+  { slug: "maison-jardin", label: "Maison & Jardin", icon: Home },
+  { slug: "bebe-enfants", label: "Bébé & Enfants", icon: ToyBrick },
+];
+
+const categories = FEATURED_FAMILIES;
 
 const storeNames = ["Tunisianet", "Spacenet"];
 const offerFilters = ["Tout", ...catalogCategories.map((category) => category.label)];
@@ -424,23 +449,23 @@ export default function HomePage() {
         <div className="section-heading compact-heading">
           <div>
             <span className="section-kicker">Explorez facilement</span>
-            <h2 id="categories-title">Toutes les catégories</h2>
+            <h2 id="categories-title">Nos univers</h2>
           </div>
           <a href="/promotions">
             Voir tout <ChevronRight size={17} />
           </a>
         </div>
-        <div className="category-rail">
-          {categories.map(({ label, slug, iconComponent: Icon }) => (
+        <div className="family-grid">
+          {categories.map(({ slug, label, icon: Icon }) => (
             <a
-              className="category-item"
-              key={label}
+              className="family-card"
+              key={slug}
               href={`/categories/${slug}`}
+              style={{"--family-bg": `url(${FAMILY_IMAGES[slug] ?? ""})`} as React.CSSProperties}
             >
-              <span>
-                <Icon size={27} strokeWidth={1.8} />
-              </span>
-              {label}
+              <span className="family-card-icon"><Icon size={26} strokeWidth={1.8} /></span>
+              <span className="family-card-label">{label}</span>
+              <span className="family-card-arrow">→</span>
             </a>
           ))}
         </div>
