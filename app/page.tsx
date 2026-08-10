@@ -93,7 +93,7 @@ const FEATURED_FAMILIES = [
 const categories = FEATURED_FAMILIES;
 
 const storeNames = ["Tunisianet", "Spacenet"];
-const offerFilters = ["Tout", ...catalogCategories.map((category) => category.label)];
+const offerFilters = ["Tout", ...new Set(catalogCategories.map((category) => category.label))];
 
 function readFavorites() {
   if (typeof window === "undefined") return new Set<string>();
@@ -195,7 +195,7 @@ function ProductCard({
           <div className="rating-row">
             <Stars rating={product.rating} />
             <span>
-              {product.rating > 0 ? `${product.rating.toFixed(1).replace(".", ",")}${product.reviews > 0 ? ` (${product.reviews})` : ""}` : "Aucun avis importé"}
+              {product.rating > 0 ? `${product.rating.toFixed(1).replace(".", ",")}${product.reviews > 0 ? ` (${product.reviews})` : ""}` : null}
             </span>
           </div>
           <strong className="current-price">{formatPrice(product.price)}</strong>

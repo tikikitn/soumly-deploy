@@ -127,7 +127,7 @@ function ProductDetails({ product }: { product: Product }) {
             <span className="sm-product-brand">{product.brand}</span>
             <h1>{product.name}</h1>
             <div className="sm-product-rating">
-              {product.rating > 0 ? <><Stars rating={product.rating} /><b>{product.rating.toFixed(1).replace(".", ",")}</b><span>{product.reviews} avis</span></> : <span>Aucun avis marchand importé</span>}
+              {product.rating > 0 ? <><Stars rating={product.rating} /><b>{product.rating.toFixed(1).replace(".", ",")}</b><span>{product.reviews} avis</span></> : null}
               <span>·</span>
               <span>{offers.length} boutique{offers.length > 1 ? "s" : ""} référencée{offers.length > 1 ? "s" : ""}</span>
             </div>

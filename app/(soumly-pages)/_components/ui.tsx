@@ -272,7 +272,7 @@ export function ProductCard({ product, compact = false }: { product: Product; co
           {product.name}
         </Link>
         <div className="sm-rating-row">
-          {product.rating > 0 ? <><Stars rating={product.rating} compact /><span>{product.rating.toFixed(1).replace(".", ",")} ({product.reviews})</span></> : <span>Aucun avis importé</span>}
+          {product.rating > 0 ? <><Stars rating={product.rating} compact /><span>{product.rating.toFixed(1).replace(".", ",")} ({product.reviews})</span></> : null}
         </div>
         <div className="sm-price-row">
           <strong>{formatPrice(product.price)}</strong>
