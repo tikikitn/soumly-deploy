@@ -20,7 +20,8 @@
 			"!**/public",
 			"!**/.sites-runtime",
 			"!**/Soumly-pages-comparaison-v2",
-			"!**/vendor"
+			"!**/vendor",
+			"!**/app/products.ts"
 		]
 	},
 	"formatter": {

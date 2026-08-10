@@ -1791,7 +1791,7 @@ function storeName(offer: SourceOffer): string | null {
 	return offer.store;
 }
 
-function validMerchantUrl(url: string, _store: string) {
+function validMerchantUrl(url: string) {
 	try {
 		const parsed = new URL(url);
 		return parsed.protocol === "https:" || parsed.protocol === "http:";
@@ -1834,7 +1834,7 @@ function normalizeOffer(
 	productId: string,
 ): (StoreOffer & { similarity: number }) | null {
 	const merchant = storeName(source);
-	if (!merchant || !validMerchantUrl(source.url, merchant)) return null;
+	if (!merchant || !validMerchantUrl(source.url)) return null;
 	const match = similarity(productId, offerSlug(source.url));
 	if (match < 0.2) return null;
 

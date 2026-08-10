@@ -30,7 +30,7 @@ import {
 	X,
 } from "lucide-react";
 import type * as React from "react";
-import { type FormEvent, type RefObject, useEffect, useMemo, useRef, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
 	categories as catalogCategories,
 	FAMILY_GROUPS,
@@ -114,7 +114,7 @@ function Stars({ rating }: { rating: number }) {
 function ProductArtwork({ src, alt, className }: { src: string; alt: string; className?: string }) {
 	return (
 		// Product cut-outs are local reference assets and intentionally bypass optimization.
-		// eslint-disable-next-line @next/next/no-img-element
+
 		<img className={className} src={src} alt={alt} loading="lazy" />
 	);
 }
@@ -181,15 +181,9 @@ function ProductCard({
 	);
 }
 
-function RailControls({
-	railRef,
-	label,
-}: {
-	railRef: RefObject<HTMLDivElement | null>;
-	label: string;
-}) {
+function RailControls({ getRail, label }: { getRail: () => HTMLDivElement | null; label: string }) {
 	const scroll = (direction: number) => {
-		railRef.current?.scrollBy({ left: direction * 620, behavior: "smooth" });
+		getRail()?.scrollBy({ left: direction * 620, behavior: "smooth" });
 	};
 
 	return (
@@ -404,7 +398,7 @@ export default function HomePage() {
 
 				<div className="hero-visual" role="img" aria-label="Produits populaires sur Soumly">
 					{/* Local approved Soumly visual reference. */}
-					{/* eslint-disable-next-line @next/next/no-img-element */}
+					{}
 					<img src="/assets/hero-products.png" alt="Téléphone, casque, ordinateur et air fryer" />
 					<div className="hero-price-note">
 						<TrendingPriceIcon />
@@ -518,7 +512,7 @@ export default function HomePage() {
 								<div className="heading-actions">
 									<a href={`/categories/${slug}`}>Voir tout</a>
 									<RailControls
-										railRef={{ current: familyRails.current[slug] ?? null }}
+										getRail={() => familyRails.current[slug] ?? null}
 										label={`Faire défiler les produits ${label}`}
 									/>
 								</div>
@@ -577,7 +571,7 @@ export default function HomePage() {
 					</div>
 					<div className="heading-actions">
 						<a href="/categories">Voir tout</a>
-						<RailControls railRef={offersRail} label="Faire défiler les offres" />
+						<RailControls getRail={() => offersRail.current} label="Faire défiler les offres" />
 					</div>
 				</div>
 
@@ -634,7 +628,10 @@ export default function HomePage() {
 					</div>
 					<div className="heading-actions">
 						<a href="/categories">Explorer</a>
-						<RailControls railRef={popularRail} label="Faire défiler les produits populaires" />
+						<RailControls
+							getRail={() => popularRail.current}
+							label="Faire défiler les produits populaires"
+						/>
 					</div>
 				</div>
 

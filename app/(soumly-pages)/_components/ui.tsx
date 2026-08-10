@@ -262,7 +262,7 @@ export function ProductCard({ product, compact = false }: { product: Product; co
 					<Heart size={21} fill={favorite ? "currentColor" : "none"} />
 				</button>
 				<Link href={`/produit/${product.id}`} aria-label={`Voir ${product.name}`}>
-					{/* eslint-disable-next-line @next/next/no-img-element */}
+					{}
 					<img src={product.image} alt={product.name} loading="lazy" />
 				</Link>
 			</div>
