@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { ProductScreen } from "../../_components/DetailScreens";
-import { getProduct } from "../../_data/products.server";
+import Link from "next/link";
+import { ProductDetailView } from "../../_components/ProductDetailView";
+import { getProduct, relatedProducts } from "../../_data/products.server";
 
 const BASE = "https://soumly.online";
 
@@ -40,6 +41,18 @@ export async function generateMetadata({
 	};
 }
 
-export default function ProductPage() {
-	return <ProductScreen />;
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+	const { slug } = await params;
+	const product = getProduct(slug);
+	if (!product) {
+		return (
+			<div style={{ padding: "4rem 1.5rem", textAlign: "center" }}>
+				<h1>Produit introuvable</h1>
+				<p>Ce produit n&rsquo;existe pas ou n&rsquo;est plus référencé.</p>
+				<Link href="/categories">Retour aux catégories</Link>
+			</div>
+		);
+	}
+	const related = relatedProducts(product, 4);
+	return <ProductDetailView product={product} related={related} />;
 }

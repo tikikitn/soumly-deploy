@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AccountScreen } from "../_components/DetailScreens";
+import { AccountScreen } from "../_components/MiscScreens";
 
 export const metadata: Metadata = { title: "Mon espace" };
 

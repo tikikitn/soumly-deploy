@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GuideArticleScreen } from "../../_components/DetailScreens";
+import { GuideArticleScreen } from "../../_components/MiscScreens";
 import { guides } from "../../_data/content.client";
 
 export async function generateMetadata({

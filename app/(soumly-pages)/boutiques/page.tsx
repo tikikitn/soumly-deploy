@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StoresScreen } from "../_components/DetailScreens";
+import { StoresScreen } from "../_components/MiscScreens";
 
 export const metadata: Metadata = { title: "Boutiques référencées" };
 

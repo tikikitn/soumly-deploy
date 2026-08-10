@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FavoritesScreen } from "../_components/DetailScreens";
+import { FavoritesScreen } from "../_components/MiscScreens";
 
 export const metadata: Metadata = { title: "Mes favoris" };
 

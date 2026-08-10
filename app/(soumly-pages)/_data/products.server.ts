@@ -11,7 +11,6 @@ import {
 import {
 	type Category,
 	FAMILY_DEFINITIONS,
-	guides,
 	type Product,
 	type StoreOffer,
 } from "./content.shared";
@@ -1426,7 +1425,7 @@ function merchantPrice(value: number) {
 	return Number(value.toFixed(3));
 }
 
-function merchantOldPrice(value: number, price: number, store: string) {
+function merchantOldPrice(value: number, price: number) {
 	const normalized = merchantPrice(value);
 	if (!Number.isFinite(normalized) || normalized < price || normalized > price * 3) return price;
 	return normalized;
@@ -1463,7 +1462,7 @@ function normalizeOffer(
 	return {
 		store: merchant,
 		price,
-		oldPrice: merchantOldPrice(source.oldPrice, price, merchant),
+		oldPrice: merchantOldPrice(source.oldPrice, price),
 		url: source.url,
 		color: details.color,
 		delivery: details.delivery,
