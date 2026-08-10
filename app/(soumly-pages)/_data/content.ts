@@ -2061,7 +2061,11 @@ export function getCategory(slug?: string) {
 }
 
 export function getProduct(slug?: string) {
-	return products.find((product) => product.id === slug) ?? null;
+	if (!slug) return null;
+	// Accept both legacy "prim-<id>-<slug>" URLs and the new clean
+	// "<id>-<slug>" form (prim- prefix dropped from product ids).
+	const clean = slug.replace(/^prim-/, "");
+	return products.find((product) => product.id === clean || product.id === slug) ?? null;
 }
 
 export function relatedProducts(product: Product, limit = 4) {
