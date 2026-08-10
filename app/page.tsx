@@ -501,8 +501,12 @@ export default function HomePage() {
             .filter((product) => groupSlugs.has(product.categorySlug))
             .sort((a, b) => {
               // Smartphones category first, then other phones, then accessories
-              const rank = (p: (typeof products)[number]) =>
-                p.categorySlug === "smartphones" ? 0 : p.categorySlug === "telephone-portables" ? 1 : 2;
+              const rank = (p: (typeof products)[number]) => {
+                if (p.categorySlug === "smartphones" || p.categorySlug === "telephone-portables") return 0;
+                if (p.categorySlug === "ordinateurs-portables" || p.categorySlug === "ordinateurs-de-bureau") return 1;
+                if (p.categorySlug === "tablettes" || p.categorySlug === "moniteurs") return 2;
+                return 3;
+              };
               const diff = rank(a) - rank(b);
               if (diff !== 0) return diff;
               // Within same category: higher price first (more premium devices)
