@@ -48,6 +48,8 @@ import {
 import type * as React from "react";
 import {
   categories as catalogCategories,
+  FAMILY_GROUPS,
+  FAMILY_LABELS,
   formatPrice,
   products,
   type Product,
@@ -486,6 +488,46 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <section className="family-rails-section" aria-label="Produits par famille">
+        {categories.map(({ slug, label }) => {
+          const groupSlugs = new Set(
+            (FAMILY_GROUPS[slug] ?? []).flatMap((group) => group.categories.map((category) => category.slug))
+          );
+          if (groupSlugs.size === 0) {
+            catalogCategories.filter((category) => category.family === slug).forEach((category) => groupSlugs.add(category.slug));
+          }
+          const familyProducts = products
+            .filter((product) => groupSlugs.has(product.categorySlug))
+            .slice(0, 12);
+          if (familyProducts.length === 0) return null;
+          return (
+            <div className="page-shell family-rail-block" key={`rail-${slug}`}>
+              <div className="section-heading compact-heading">
+                <div>
+                  <span className="section-kicker">Famille</span>
+                  <h2>{label}</h2>
+                </div>
+                <div className="heading-actions">
+                  <a href={`/categories/${slug}`}>Voir tout</a>
+                </div>
+              </div>
+              <div className="product-rail">
+                {familyProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    isFavorite={favorites.has(product.id)}
+                    onFavorite={() => toggleFavorite(product)}
+                    onCompare={() => setSelectedProduct(product)}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+
 
       <section className="trust-strip page-shell" aria-label="Avantages Soumly">
         <div>

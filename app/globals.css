@@ -1141,3 +1141,18 @@ select:focus-visible,
 :focus:not(:focus-visible) {
   outline: none;
 }
+
+/* ---- Per-family product rails (homepage) ---- */
+.family-rails-section {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  margin: 42px 0 8px;
+}
+.family-rail-block .section-heading {
+  margin-bottom: 16px;
+}
+.family-rail-block .product-rail {
+  margin: 0 -16px;
+  padding: 4px 16px 8px;
+}
