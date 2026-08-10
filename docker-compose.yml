@@ -1,0 +1,17 @@
+services:
+  soumly:
+    build: .
+    container_name: soumly-app
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.soumly.rule=Host(\"soumly.online\") || Host(\"www.soumly.online\")"
+      - "traefik.http.routers.soumly.entrypoints=websecure"
+      - "traefik.http.routers.soumly.tls.certresolver=letsencrypt"
+      - "traefik.http.services.soumly.loadbalancer.server.port=80"
+
+networks:
+  web:
+    external: true
