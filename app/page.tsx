@@ -247,6 +247,7 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toast, setToast] = useState("");
   const offersRail = useRef<HTMLDivElement>(null);
+  const familyRails = useRef<Record<string, HTMLDivElement | null>>({});
   const popularRail = useRef<HTMLDivElement>(null);
   const maximumDiscount = Math.max(0, ...products.map((product) => product.discount));
 
@@ -524,9 +525,18 @@ export default function HomePage() {
                 </div>
                 <div className="heading-actions">
                   <a href={`/categories/${slug}`}>Voir tout</a>
+                  <RailControls
+                    railRef={{ current: familyRails.current[slug] ?? null }}
+                    label={`Faire défiler les produits ${label}`}
+                  />
                 </div>
               </div>
-              <div className="product-rail">
+              <div
+                className="product-rail"
+                ref={(node) => {
+                  familyRails.current[slug] = node;
+                }}
+              >
                 {familyProducts.map((product) => (
                   <ProductCard
                     key={product.id}
