@@ -1,30 +1,21 @@
 {
-  "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": [
-    "build/sites-vite-plugin.ts",
-    "worker/index.ts",
-    "tests/**/*.test.mjs"
-  ],
-  "ignore": [
-    "Soumly-pages-comparaison-v2/**",
-    "drizzle/meta/**",
-    "references/**",
-    "deploy/**",
-    "scripts/**",
-    "examples/**",
-    "app/chatgpt-auth.ts",
-    "app/products.ts"
-  ],
-  "ignoreDependencies": [
-    "cloudflare",
-    "tailwindcss",
-    "@cloudflare/vite-plugin"
-  ],
-  "vite": {
-    "config": ["vite.config.ts"]
-  },
-  "typescript": {
-    "pathAlias": { "@/*": ["./*"] }
-  }
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": ["build/sites-vite-plugin.ts", "worker/index.ts", "tests/**/*.test.mjs"],
+	"ignore": [
+		"Soumly-pages-comparaison-v2/**",
+		"drizzle/meta/**",
+		"references/**",
+		"deploy/**",
+		"scripts/**",
+		"examples/**",
+		"app/chatgpt-auth.ts",
+		"app/products.ts"
+	],
+	"ignoreDependencies": ["cloudflare", "tailwindcss", "@cloudflare/vite-plugin"],
+	"vite": {
+		"config": ["vite.config.ts"]
+	},
+	"typescript": {
+		"pathAlias": { "@/*": ["./*"] }
+	}
 }
-

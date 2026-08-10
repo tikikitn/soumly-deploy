@@ -1,56 +1,64 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "includes": [
-      "**",
-      "!**/node_modules",
-      "!**/dist",
-      "!**/.next",
-      "!**/out",
-      "!**/coverage",
-      "!**/.wrangler",
-      "!**/*.tsbuildinfo",
-      "!**/next-env.d.ts",
-      "!**/drizzle/meta",
-      "!**/public",
-      "!**/.sites-runtime",
-      "!**/Soumly-pages-comparaison-v2",
-      "!**/vendor"
-    ]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab",
-    "lineWidth": 100
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "preset": "recommended",
-      "suspicious": {
-        "noExplicitAny": "off"
-      },
-      "style": {
-        "noNonNullAssertion": "off"
-      }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
-    }
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
+	"$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"includes": [
+			"**",
+			"!**/node_modules",
+			"!**/dist",
+			"!**/.next",
+			"!**/out",
+			"!**/coverage",
+			"!**/.wrangler",
+			"!**/*.tsbuildinfo",
+			"!**/next-env.d.ts",
+			"!**/drizzle/meta",
+			"!**/public",
+			"!**/.sites-runtime",
+			"!**/Soumly-pages-comparaison-v2",
+			"!**/vendor"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 100
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noDocumentCookie": "off"
+			},
+			"style": {
+				"noNonNullAssertion": "off",
+				"noDescendingSpecificity": "off"
+			},
+			"performance": {
+				"noImgElement": "off"
+			},
+			"complexity": {
+				"noImportantStyles": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
 }
