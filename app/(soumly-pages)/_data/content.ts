@@ -1856,9 +1856,13 @@ function normalizeOffer(
 function productOffers(group: SourceProduct[]) {
 	const productId = group[0].id;
 	const bestByStore = new Map<string, StoreOffer & { similarity: number }>();
+	const rejected: SourceOffer[] = [];
 	for (const rawOffer of group.flatMap((product) => product.offers ?? [])) {
 		const offer = normalizeOffer(rawOffer, productId);
-		if (!offer) continue;
+		if (!offer) {
+			rejected.push(rawOffer);
+			continue;
+		}
 		const current = bestByStore.get(offer.store);
 		if (
 			!current ||
@@ -1867,6 +1871,16 @@ function productOffers(group: SourceProduct[]) {
 		) {
 			bestByStore.set(offer.store, offer);
 		}
+	}
+	// Fallback: if every offer was rejected by the URL-similarity guard
+	// (merchant URLs often use their own naming), keep the cheapest one
+	// so the product does not silently disappear from the catalog.
+	if (bestByStore.size === 0 && rejected.length > 0) {
+		const fallback = rejected.reduce((cheapest, offer) =>
+			(offer.price ?? Infinity) < (cheapest.price ?? Infinity) ? offer : cheapest,
+		);
+		const normalized = normalizeOffer(fallback, productId);
+		if (normalized) bestByStore.set(normalized.store, normalized);
 	}
 	return [...bestByStore.values()]
 		.map(
