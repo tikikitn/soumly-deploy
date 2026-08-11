@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import Analytics from "./components/analytics";
 
 export const metadata: Metadata = {
 	title: "Soumly – Comparateur de prix en Tunisie",
@@ -20,7 +21,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 			<head>
 				<meta name="codex-preview" content="development" />
 			</head>
-			<body suppressHydrationWarning>{children}</body>
+			<body suppressHydrationWarning>
+				{children}
+				<Analytics />
+			</body>
 		</html>
 	);
 }
