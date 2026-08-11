@@ -1205,7 +1205,7 @@ const STORE_DETAILS: Record<
 		availability: "Disponibilité à confirmer",
 		logo: "/assets/stores/tunisianet-v2.webp",
 	},
-	Spacenet: {
+	SpaceNet: {
 		color: "#ef3f4f",
 		delivery: "Voir les conditions de livraison",
 		availability: "Disponibilité à confirmer",
@@ -1681,21 +1681,66 @@ export function getFamilyCategories(familySlug: string) {
 	return categories.filter((category) => category.family === familySlug);
 }
 
-export const stores = (["Tunisianet", "Spacenet"] as const).map((name) => {
+// Top stores by offer count (drives the /boutiques page).
+// Order = commercial relevance; logos come from STORE_DETAILS when available.
+export const TOP_STORES = [
+	"SpaceNet",
+	"MyTEK",
+	"Tunisianet",
+	"Best Buy Tunisie",
+	"Carthago Informatique",
+	"Tdiscount",
+	"Batam",
+	"Oxtek",
+	"Gamer Shop",
+	"Tunewtec",
+	"QSNET",
+	"PARAHOUSE",
+	"Iminfo",
+	"MaPara Tunisie",
+	"Parashop",
+	"Paraelfarabi",
+	"Jumbo",
+	"Bill",
+	"Paraessentiel",
+	"Pcomme Para",
+	"Paraexpert",
+	"Eden Pharma",
+	"Techgate",
+	"FK Informatique",
+] as const;
+
+function storeInitials(name: string): string {
+	const words = name.split(/[ &+.-]+/).filter(Boolean);
+	if (words.length >= 2) return words[0][0] + words[1][0];
+	return name.slice(0, 2).toUpperCase();
+}
+
+function storeUrl(name: string): string {
+	const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+	return `https://www.${slug}.tn/`;
+}
+
+export const stores = TOP_STORES.map((name) => {
 	const storeProducts = products.filter((product) =>
 		product.offers.some((offer) => offer.store === name),
 	);
 	const representedCategories = [...new Set(storeProducts.map((product) => product.category))];
+	const MAX_CATEGORIES = 8;
+	const shownCategories = representedCategories.slice(0, MAX_CATEGORIES);
+	const hiddenCount = representedCategories.length - shownCategories.length;
+	const categoriesLabel =
+		shownCategories.join(" · ") + (hiddenCount > 0 ? ` · +${hiddenCount} autres` : "");
 	return {
 		name,
-		initials: name === "Tunisianet" ? "TN" : "SN",
-		color: STORE_DETAILS[name].color,
-		logo: STORE_DETAILS[name].logo,
+		initials: storeInitials(name),
+		color: getStoreDetails(name).color,
+		logo: getStoreDetails(name).logo,
 		rating: 0,
 		reviews: 0,
 		offers: storeProducts.length,
-		categories: representedCategories.join(" · "),
-		url: name === "Tunisianet" ? "https://www.tunisianet.com.tn/" : "https://spacenet.tn/",
+		categories: categoriesLabel,
+		url: storeUrl(name),
 	};
 });
 
