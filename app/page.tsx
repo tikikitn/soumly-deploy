@@ -6,7 +6,7 @@ import { getHomepageData } from "./(soumly-pages)/_data/products.server";
 import HomeClient from "./HomeClient";
 
 const BASE_URL = "https://soumly.online";
-const OG_IMAGE = `${BASE_URL}/og-image.png`;
+const OG_IMAGE = `${BASE_URL}/og-image-v2.png`;
 
 export const metadata: Metadata = {
 	title: "Soumly – Comparateur de prix en Tunisie",
