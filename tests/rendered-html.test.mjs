@@ -47,7 +47,7 @@ test("homepage exposes the cleaned French catalog", async () => {
 test("category, search, store and legal routes render", async () => {
 	for (const path of [
 		"/categories",
-		"/categories/pc-portables",
+		"/categories/ordinateurs-portables",
 		"/recherche?q=Lenovo%20V15",
 		"/boutiques",
 		"/guides",

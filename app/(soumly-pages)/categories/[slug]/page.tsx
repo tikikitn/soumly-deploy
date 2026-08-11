@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { CategoryListingView, FamilyListingView } from "../../_components/ListingViews";
 import {
 	getCategory,
@@ -61,14 +62,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 	}
 
 	const category = getCategory(slug);
-	if (!category) {
-		return (
-			<div style={{ padding: "4rem 1.5rem", textAlign: "center" }}>
-				<h1>Catégorie introuvable</h1>
-				<p>Cette catégorie n&rsquo;existe pas.</p>
-			</div>
-		);
-	}
+	if (!category) notFound();
 
 	const result = getCategoryProducts({ slug, page, sort });
 	return <CategoryListingView category={category} result={result} slug={slug} />;
