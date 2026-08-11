@@ -1,6 +1,13 @@
 // Google Analytics 4 — global analytics component.
 // Loads gtag after the page becomes interactive (afterInteractive) so it
-// never blocks initial render. Tracks page views on route changes.
+// never blocks initial render.
+//
+// Page-view strategy: automatic page_view from gtag('config') is DISABLED
+// (send_page_view: false). Exactly ONE page_view is sent manually:
+//   - on initial load (via useEffect after hydration)
+//   - on each client-side navigation (usePathname/useSearchParams change)
+// This avoids the duplicate page_view that would otherwise fire on the
+// first load (config auto-page_view + manual effect).
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
@@ -24,8 +31,7 @@ export default function Analytics() {
 
 	useEffect(() => {
 		const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
-		// Defer to after hydration; gtag may not be ready on the very first
-		// navigation tick (the script itself fires the initial page_view).
+		// Defer one frame so gtag is ready after the config script runs.
 		const frame = window.requestAnimationFrame(() => sendPageView(url));
 		return () => window.cancelAnimationFrame(frame);
 	}, [pathname, searchParams]);
@@ -41,7 +47,10 @@ export default function Analytics() {
 					window.dataLayer = window.dataLayer || [];
 					function gtag(){dataLayer.push(arguments);}
 					gtag('js', new Date());
-					gtag('config', '${GA_ID}', { page_path: window.location.pathname });
+					gtag('config', '${GA_ID}', {
+						send_page_view: false,
+						page_path: window.location.pathname
+					});
 				`}
 			</Script>
 		</>
