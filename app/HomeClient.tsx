@@ -39,7 +39,7 @@ import {
 } from "./(soumly-pages)/_data/content.shared";
 
 const FAMILY_IMAGES: Record<string, string> = {
-	informatique: "/assets/families/informatique-v2.jpg",
+	informatique: "/assets/families/informatique-v3.webp",
 	telephonie: "/assets/families/telephonie-v2.jpg",
 	"sante-beaute": "/assets/families/sante-beaute-v2.jpg",
 	electromenager: "/assets/families/electromenager-v2.jpg",
