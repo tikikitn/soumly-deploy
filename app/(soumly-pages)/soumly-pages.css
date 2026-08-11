@@ -2212,95 +2212,146 @@
 	gap: 16px;
 }
 .sm-store-card {
-	display: grid;
-	padding: 23px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 26px 20px 20px;
 	border: 1px solid var(--sm-line);
-	border-radius: 18px;
-	background: #fff;
+	border-radius: 20px;
+	background: linear-gradient(180deg, #fff 0%, var(--sm-lavender-soft) 130%);
+	text-align: center;
 	transition:
 		transform 180ms ease,
 		box-shadow 180ms ease;
 }
 .sm-store-card:hover {
 	box-shadow: var(--sm-shadow-soft);
-	transform: translateY(-3px);
+	transform: translateY(-4px);
 }
-.sm-store-card-top {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 10px;
+.sm-store-logo-wrap {
+	display: grid;
+	width: 84px;
+	height: 84px;
+	margin-bottom: 12px;
+	place-items: center;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 8px 24px rgba(99, 71, 245, 0.14);
 }
 .sm-store-logo {
 	display: grid;
-	width: 50px;
-	height: 50px;
+	width: 62px;
+	height: 62px;
 	place-items: center;
-	border-radius: 14px;
-	color: #fff;
-	font-size: 21px;
-	font-weight: 900;
-}
-.sm-store-card-top > button {
-	display: grid;
-	width: 35px;
-	height: 35px;
-	cursor: pointer;
-	place-items: center;
-	border: 1px solid var(--sm-line);
 	border-radius: 50%;
+	color: #fff;
+	font-size: 24px;
+	font-weight: 900;
+	overflow: hidden;
+}
+.sm-store-logo-img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 	background: #fff;
 }
-.sm-store-card h3 {
-	margin: 18px 0 7px;
-	font-size: 21px;
-}
-.sm-store-rating {
-	display: flex;
+.sm-store-badge {
+	display: inline-flex;
 	align-items: center;
-	gap: 6px;
-	color: var(--sm-muted);
+	gap: 5px;
+	padding: 4px 11px;
+	border-radius: 999px;
+	background: rgba(99, 71, 245, 0.1);
+	color: var(--sm-violet);
 	font-size: 9px;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
 }
-.sm-store-rating b {
-	color: var(--sm-navy);
-}
-.sm-store-card > p {
-	margin: 14px 0;
-	color: var(--sm-muted);
-	font-size: 11px;
+.sm-store-card h3 {
+	margin: 10px 0 14px;
+	font-size: 20px;
+	letter-spacing: -0.4px;
 }
 .sm-store-stats {
 	display: grid;
-	margin-bottom: 17px;
+	width: 100%;
+	margin-bottom: 14px;
 	grid-template-columns: 1fr 1fr;
-	border: 1px solid var(--sm-line);
-	border-radius: 10px;
+	gap: 8px;
 }
 .sm-store-stats span {
 	display: grid;
-	min-height: 53px;
-	padding: 9px;
+	min-height: 62px;
+	padding: 8px;
 	place-items: center;
-	color: var(--sm-muted);
-	font-size: 8px;
-}
-.sm-store-stats span + span {
-	border-left: 1px solid var(--sm-line);
+	border: 1px solid var(--sm-line);
+	border-radius: 14px;
+	background: #fff;
 }
 .sm-store-stats b {
 	color: var(--sm-navy);
-	font-size: 10px;
+	font-size: 19px;
+	line-height: 1.1;
 }
-.sm-store-card > a {
+.sm-store-stats small {
+	color: var(--sm-muted);
+	font-size: 9px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+.sm-store-chips {
 	display: flex;
-	padding-top: 14px;
-	align-items: center;
-	justify-content: space-between;
-	border-top: 1px solid var(--sm-line);
+	flex-wrap: wrap;
+	min-height: 28px;
+	margin-bottom: 18px;
+	gap: 6px;
+	justify-content: center;
+}
+.sm-store-chips .sm-chip {
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: #fff;
+	border: 1px solid var(--sm-line);
+	color: var(--sm-muted);
+	font-size: 9px;
+	font-weight: 600;
+}
+.sm-store-chips .sm-chip-more {
+	background: rgba(99, 71, 245, 0.08);
+	border-color: transparent;
 	color: var(--sm-violet);
+	font-weight: 800;
+}
+.sm-store-cta {
+	display: grid;
+	width: 46px;
+	height: 46px;
+	margin-bottom: 10px;
+	place-items: center;
+	border-radius: 50%;
+	background: var(--sm-violet);
+	color: #fff;
+	box-shadow: 0 8px 20px rgba(99, 71, 245, 0.32);
+	transition:
+		transform 180ms ease,
+		box-shadow 180ms ease;
+}
+.sm-store-cta:hover {
+	transform: scale(1.08);
+	box-shadow: 0 10px 26px rgba(99, 71, 245, 0.4);
+}
+.sm-store-visit {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	color: var(--sm-muted);
 	font-size: 10px;
-	font-weight: 900;
+	font-weight: 700;
+	transition: color 180ms ease;
+}
+.sm-store-visit:hover {
+	color: var(--sm-violet);
 }
 .sm-partner-banner > div > svg {
 	color: var(--sm-violet);

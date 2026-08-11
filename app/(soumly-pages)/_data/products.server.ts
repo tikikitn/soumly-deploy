@@ -1726,11 +1726,8 @@ export const stores = TOP_STORES.map((name) => {
 		product.offers.some((offer) => offer.store === name),
 	);
 	const representedCategories = [...new Set(storeProducts.map((product) => product.category))];
-	const MAX_CATEGORIES = 8;
-	const shownCategories = representedCategories.slice(0, MAX_CATEGORIES);
-	const hiddenCount = representedCategories.length - shownCategories.length;
-	const categoriesLabel =
-		shownCategories.join(" · ") + (hiddenCount > 0 ? ` · +${hiddenCount} autres` : "");
+	const chips = representedCategories.slice(0, 4);
+	const categoryCount = representedCategories.length;
 	return {
 		name,
 		initials: storeInitials(name),
@@ -1739,7 +1736,8 @@ export const stores = TOP_STORES.map((name) => {
 		rating: 0,
 		reviews: 0,
 		offers: storeProducts.length,
-		categories: categoriesLabel,
+		categories: chips,
+		categoryCount,
 		url: storeUrl(name),
 	};
 });

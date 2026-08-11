@@ -71,7 +71,8 @@ export type StoreSummary = {
 	initials: string;
 	color: string;
 	offers: number;
-	categories: string;
+	categories: string[];
+	categoryCount: number;
 	url: string;
 	logo?: string;
 };
@@ -138,7 +139,7 @@ export function StoresScreen({ stores }: { stores: StoreSummary[] }) {
 				<div className="sm-stores-grid">
 					{visible.map((storeItem) => (
 						<article className="sm-store-card" key={storeItem.name}>
-							<div className="sm-store-card-top">
+							<div className="sm-store-logo-wrap">
 								<span className="sm-store-logo" style={{ background: storeItem.color }}>
 									{storeItem.logo ? (
 										<img
@@ -150,23 +151,44 @@ export function StoresScreen({ stores }: { stores: StoreSummary[] }) {
 										storeItem.initials
 									)}
 								</span>
-								<span className="sm-section-kicker">Source active</span>
 							</div>
+							<span className="sm-store-badge">Source active</span>
 							<h3>{storeItem.name}</h3>
-							<p>{storeItem.categories}</p>
 							<div className="sm-store-stats">
 								<span>
-									<b>{storeItem.offers}</b> produits référencés
+									<b>{storeItem.offers}</b>
+									<small>produits</small>
+								</span>
+								<span>
+									<b>{storeItem.categoryCount}</b>
+									<small>familles</small>
 								</span>
 							</div>
-							<div className="sm-summary-actions">
-								<Link href={`/recherche?boutique=${encodeURIComponent(storeItem.name)}`}>
-									Voir les produits <ChevronRight size={16} />
-								</Link>
-								<a href={storeItem.url} target="_blank" rel="noopener noreferrer">
-									Visiter la boutique <ExternalLink size={15} />
-								</a>
+							<div className="sm-store-chips">
+								{storeItem.categories.slice(0, 3).map((cat) => (
+									<span className="sm-chip" key={cat}>
+										{cat}
+									</span>
+								))}
+								{storeItem.categoryCount > 3 ? (
+									<span className="sm-chip sm-chip-more">+{storeItem.categoryCount - 3}</span>
+								) : null}
 							</div>
+							<Link
+								className="sm-store-cta"
+								href={`/recherche?boutique=${encodeURIComponent(storeItem.name)}`}
+								aria-label={`Voir les produits ${storeItem.name}`}
+							>
+								<ChevronRight size={20} />
+							</Link>
+							<a
+								className="sm-store-visit"
+								href={storeItem.url}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Visiter la boutique <ExternalLink size={13} />
+							</a>
 						</article>
 					))}
 				</div>
