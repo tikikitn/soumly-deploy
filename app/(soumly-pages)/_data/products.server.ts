@@ -1701,6 +1701,13 @@ export function getFamilyProducts({
 }): PaginatedProducts {
 	const groups = FAMILY_GROUPS[slug] ?? [];
 	const groupSlugs = new Set(groups.flatMap((group) => group.categories.map((c) => c.slug)));
+	// Fallback: when a family has no FAMILY_GROUPS entry (e.g. bebe-enfants),
+	// derive its category slugs from the generated categories (same as homepage).
+	if (groupSlugs.size === 0) {
+		for (const category of categories) {
+			if (category.family === slug) groupSlugs.add(category.slug);
+		}
+	}
 	const all = products.filter((product) => groupSlugs.has(product.categorySlug));
 	const total = all.length;
 	const totalPages = Math.max(1, Math.ceil(total / pageSize));
