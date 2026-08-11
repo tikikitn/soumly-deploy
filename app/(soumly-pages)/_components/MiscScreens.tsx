@@ -73,6 +73,7 @@ export type StoreSummary = {
 	offers: number;
 	categories: string;
 	url: string;
+	logo?: string;
 };
 
 function summaryToProduct(summary: ProductSummary): Product {
@@ -139,7 +140,15 @@ export function StoresScreen({ stores }: { stores: StoreSummary[] }) {
 						<article className="sm-store-card" key={storeItem.name}>
 							<div className="sm-store-card-top">
 								<span className="sm-store-logo" style={{ background: storeItem.color }}>
-									{storeItem.initials}
+									{storeItem.logo ? (
+										<img
+											src={storeItem.logo}
+											alt={`Logo ${storeItem.name}`}
+											className="sm-store-logo-img"
+										/>
+									) : (
+										storeItem.initials
+									)}
 								</span>
 								<span className="sm-section-kicker">Source active</span>
 							</div>

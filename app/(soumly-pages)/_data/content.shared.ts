@@ -8,6 +8,7 @@ export type StoreOffer = {
 	oldPrice: number;
 	url: string;
 	color: string;
+	logo?: string;
 	delivery: string;
 	availability: string;
 	updatedAt: string;

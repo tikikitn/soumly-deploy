@@ -1195,16 +1195,92 @@ function categoryFor(rawSlug: string): AnyCategoryDefinition {
 	return generated;
 }
 
-const STORE_DETAILS: Record<string, { color: string; delivery: string; availability: string }> = {
+const STORE_DETAILS: Record<
+	string,
+	{ color: string; delivery: string; availability: string; logo?: string }
+> = {
 	Tunisianet: {
 		color: "#6d4aff",
 		delivery: "Voir les conditions de livraison",
 		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/tunisianet-v2.webp",
 	},
 	Spacenet: {
 		color: "#ef3f4f",
 		delivery: "Voir les conditions de livraison",
 		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/spacenet-v2.webp",
+	},
+	MyTEK: {
+		color: "#1e90ff",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	"Best Buy Tunisie": {
+		color: "#ffa502",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	"Carthago Informatique": {
+		color: "#3742fa",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	Tdiscount: {
+		color: "#ff4757",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	Batam: {
+		color: "#2ed573",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	Oxtek: {
+		color: "#a55eea",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/oxtek-v2.webp",
+	},
+	"Gamer Shop": {
+		color: "#ff6348",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/gamershop-v2.webp",
+	},
+	Tunewtec: {
+		color: "#70a1ff",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/tunewtec.webp",
+	},
+	QSNET: {
+		color: "#7bed9f",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/qsnet-v2.webp",
+	},
+	Iminfo: {
+		color: "#f368e0",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	Jumbo: {
+		color: "#ff6b81",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+	},
+	Techgate: {
+		color: "#1e90ff",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/techgate-v2.webp",
+	},
+	PARAHOUSE: {
+		color: "#a55eea",
+		delivery: "Voir les conditions de livraison",
+		availability: "Disponibilité à confirmer",
+		logo: "/assets/stores/parahouse-v2.webp",
 	},
 };
 
@@ -1469,6 +1545,7 @@ function normalizeOffer(
 		oldPrice: merchantOldPrice(source.oldPrice, price),
 		url: source.url,
 		color: details.color,
+		logo: details.logo,
 		delivery: details.delivery,
 		availability: details.availability,
 		updatedAt: "Prix issu du dernier relevé importé",
@@ -1613,6 +1690,7 @@ export const stores = (["Tunisianet", "Spacenet"] as const).map((name) => {
 		name,
 		initials: name === "Tunisianet" ? "TN" : "SN",
 		color: STORE_DETAILS[name].color,
+		logo: STORE_DETAILS[name].logo,
 		rating: 0,
 		reviews: 0,
 		offers: storeProducts.length,

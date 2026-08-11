@@ -331,7 +331,17 @@ function ProductDetails({
 								</span>
 							</div>
 							<div className="sm-best-store">
-								<span style={{ background: bestOffer.color }}>{bestOffer.store[0]}</span>
+								<span style={{ background: bestOffer.color }}>
+									{bestOffer.logo ? (
+										<img
+											src={bestOffer.logo}
+											alt={`Logo ${bestOffer.store}`}
+											className="sm-store-logo-img"
+										/>
+									) : (
+										bestOffer.store[0]
+									)}
+								</span>
 								<div>
 									<strong>{bestOffer.store}</strong>
 									<small>Boutique référencée</small>
@@ -376,7 +386,17 @@ function ProductDetails({
 											</span>
 										) : null}
 										<div className="sm-store-brand">
-											<span style={{ background: offer.color }}>{offer.store[0]}</span>
+											<span style={{ background: offer.color }}>
+												{offer.logo ? (
+													<img
+														src={offer.logo}
+														alt={`Logo ${offer.store}`}
+														className="sm-store-logo-img"
+													/>
+												) : (
+													offer.store[0]
+												)}
+											</span>
 											<div>
 												<strong>{offer.store}</strong>
 												<small>Boutique référencée</small>
