@@ -17,6 +17,7 @@ import {
 	Truck,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { guardOutboundClick, trackOutboundStoreClick } from "../../components/analytics";
 import Link from "../../components/NativeLink";
 import { formatPrice, type Product } from "../_data/content.shared";
 import { ProductCard, Stars, useFavorite } from "./ui";
@@ -360,6 +361,17 @@ function ProductDetails({
 								rel="noopener noreferrer"
 								className="sm-best-offer-button"
 								aria-label={`Voir ${product.name} chez ${bestOffer.store}`}
+								onClick={(event) => {
+									if (guardOutboundClick(event.currentTarget)) return;
+									trackOutboundStoreClick({
+										product_id: product.id,
+										product_name: product.name,
+										store_name: bestOffer.store,
+										price: bestOffer.price,
+										category: product.category,
+										destination_url: bestOffer.url,
+									});
+								}}
 							>
 								Voir chez {bestOffer.store} <ExternalLink size={16} />
 							</a>
@@ -426,6 +438,17 @@ function ProductDetails({
 											rel="noopener noreferrer"
 											className="sm-offer-button"
 											aria-label={`Voir ${product.name} chez ${offer.store}`}
+											onClick={(event) => {
+												if (guardOutboundClick(event.currentTarget)) return;
+												trackOutboundStoreClick({
+													product_id: product.id,
+													product_name: product.name,
+													store_name: offer.store,
+													price: offer.price,
+													category: product.category,
+													destination_url: offer.url,
+												});
+											}}
 										>
 											Voir chez {offer.store} <ExternalLink size={15} />
 										</a>
