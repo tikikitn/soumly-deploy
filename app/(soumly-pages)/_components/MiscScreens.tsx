@@ -1,10 +1,9 @@
 // Soumly miscellaneous screens (stores, guides, favorites, account).
-// NOTE: still imports the full catalog (Phase 2B blocker) — not used by the
-// product detail route.
+// Phase 2E: NO catalog imports — stores arrive as props, favorites resolve
+// via the by-ids API, guides/account are static.
 "use client";
 
 import {
-	ArrowRight,
 	Bell,
 	BookOpen,
 	ChevronRight,
@@ -15,13 +14,11 @@ import {
 	ShieldCheck,
 	ShoppingBag,
 	Store,
-	Tag,
 	UserRound,
 } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "../../components/NativeLink";
-import { guides, products, stores } from "../_data/content";
+import { guides, type Product, type ProductSummary } from "../_data/content.client";
 import { EmptyState, ProductCard, SoumlyIcon } from "./ui";
 
 function Breadcrumbs({ items }: { items: Array<{ label: string; href?: string }> }) {
@@ -69,9 +66,40 @@ function writeIds(key: string, ids: string[]) {
 	window.dispatchEvent(new CustomEvent(`soumly:${key}`));
 }
 
-export function StoresScreen() {
-	const searchParams = useSearchParams();
-	const [query, setQuery] = useState(searchParams.get("q") ?? "");
+export type StoreSummary = {
+	name: string;
+	initials: string;
+	color: string;
+	offers: number;
+	categories: string;
+	url: string;
+};
+
+function summaryToProduct(summary: ProductSummary): Product {
+	return {
+		id: summary.id,
+		name: summary.name,
+		brand: "",
+		category: summary.category,
+		categorySlug: summary.categorySlug,
+		image: summary.image,
+		price: summary.price,
+		oldPrice: summary.oldPrice,
+		rating: 0,
+		reviews: 0,
+		stores: summary.stores,
+		discount: summary.discount,
+		badge: summary.badge,
+		tag: summary.tag,
+		description: "",
+		specs: [],
+		offers: [],
+	};
+}
+
+export function StoresScreen({ stores }: { stores: StoreSummary[] }) {
+	const searchParams = useSearchParamsSafe();
+	const [query, setQuery] = useState(searchParams);
 	const visible = stores.filter((storeItem) =>
 		`${storeItem.name} ${storeItem.categories}`.toLowerCase().includes(query.toLowerCase()),
 	);
@@ -84,7 +112,9 @@ export function StoresScreen() {
 						<Store size={15} /> Sources actives
 					</span>
 					<h1>Boutiques référencées</h1>
-					<p>Soumly compare actuellement les offres importées de Tunisianet et Spacenet.</p>
+					<p>
+						Soumly compare actuellement les offres importées des boutiques tunisiennes partenaires.
+					</p>
 				</div>
 				<div className="sm-shield-visual">
 					<Store size={64} />
@@ -134,6 +164,16 @@ export function StoresScreen() {
 			</section>
 		</>
 	);
+}
+
+function useSearchParamsSafe(): string {
+	const [value, setValue] = useState("");
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const frame = window.requestAnimationFrame(() => setValue(params.get("q") ?? ""));
+		return () => window.cancelAnimationFrame(frame);
+	}, []);
+	return value;
 }
 
 export function GuidesScreen() {
@@ -186,7 +226,7 @@ export function GuidesScreen() {
 								<h2>{guide.title}</h2>
 								<p>{guide.excerpt}</p>
 								<Link href={`/guides/${guide.slug}`}>
-									Lire le guide <ArrowRight size={16} />
+									Lire le guide <ChevronRight size={16} />
 								</Link>
 							</div>
 						</article>
@@ -198,104 +238,97 @@ export function GuidesScreen() {
 }
 
 export function GuideArticleScreen() {
-	const pathname = usePathname();
-	const slug = pathname.split("/").filter(Boolean).at(-1);
+	const [slug, setSlug] = useState("");
+	useEffect(() => {
+		const parts = window.location.pathname.split("/").filter(Boolean);
+		const frame = window.requestAnimationFrame(() => setSlug(parts.at(-1) ?? ""));
+		return () => window.cancelAnimationFrame(frame);
+	}, []);
 	const guide = guides.find((item) => item.slug === slug);
-	if (!guide)
+	if (!guide) {
 		return (
 			<EmptyState
 				title="Guide introuvable"
-				text="Ce guide n’est pas disponible."
+				text="Ce guide n’existe pas."
 				action="Voir tous les guides"
 				href="/guides"
 			/>
 		);
+	}
 	return (
-		<article className="sm-page-shell sm-article-layout">
-			<header className="sm-article-head">
-				<Breadcrumbs
-					items={[{ label: "Guides d’achat", href: "/guides" }, { label: guide.title }]}
-				/>
-				<span className="sm-section-kicker">{guide.category}</span>
-				<h1>{guide.title}</h1>
-				<p>{guide.excerpt}</p>
-				<div>
-					<span>
-						<Clock3 size={15} /> {guide.readTime} de lecture
-					</span>
-				</div>
-			</header>
-			<div className="sm-article-hero-art">
-				<SoumlyIcon name={guide.icon} size={92} />
-				<span>LE GUIDE SOUMLY</span>
+		<section className="sm-page-shell sm-guide-article">
+			<Breadcrumbs items={[{ label: "Guides", href: "/guides" }, { label: guide.title }]} />
+			<span className="sm-eyebrow">
+				<BookOpen size={15} /> Guide d’achat
+			</span>
+			<h1>{guide.title}</h1>
+			<p className="sm-guide-article-excerpt">{guide.excerpt}</p>
+			<div className="sm-guide-article-body">
+				<p>
+					Avant de comparer les prix, commencez par définir vos besoins : usage principal, budget et
+					critères indispensables.
+				</p>
+				<p>
+					Sur Soumly, chaque fiche produit réunit les offres de plusieurs boutiques tunisiennes afin
+					de comparer des références équivalentes.
+				</p>
+				<p>Vérifiez toujours le prix final et la disponibilité chez le marchand avant d’acheter.</p>
 			</div>
-			<div className="sm-article-body-grid">
-				<aside className="sm-toc">
-					<strong>Dans ce guide</strong>
-					<a href="#besoin">1. Définir votre besoin</a>
-					<a href="#criteres">2. Vérifier la référence</a>
-					<a href="#budget">3. Calculer le coût total</a>
-					<a href="#comparaison">4. Comparer les offres</a>
-				</aside>
-				<div className="sm-article-copy">
-					<p className="sm-lead">
-						Le meilleur choix est celui qui correspond à votre usage, votre budget et vos priorités
-						— pas forcément le produit le plus cher.
-					</p>
-					<section id="besoin">
-						<h2>1. Commencez par votre besoin réel</h2>
-						<p>
-							Listez les usages les plus importants et séparez les fonctions indispensables de
-							celles qui sont simplement agréables à avoir.
-						</p>
-						<div className="sm-tip-box">
-							<span>Conseil Soumly</span>
-							<p>Comparez des produits de gamme et de configuration équivalentes.</p>
-						</div>
-					</section>
-					<section id="criteres">
-						<h2>2. Vérifiez la référence exacte</h2>
-						<p>
-							Un même nom commercial peut désigner plusieurs configurations. Contrôlez le
-							processeur, la mémoire, le stockage, la taille, la couleur et les accessoires inclus.
-						</p>
-					</section>
-					<section id="budget">
-						<h2>3. Calculez le coût total</h2>
-						<p>
-							Ajoutez au prix du produit les frais de livraison et les accessoires indispensables.
-							Vérifiez également la durée et les conditions de garantie.
-						</p>
-					</section>
-					<section id="comparaison">
-						<h2>4. Comparez avant de valider</h2>
-						<p>
-							Consultez chaque fiche marchande, confirmez le stock et le prix final, puis choisissez
-							l’offre la plus adaptée.
-						</p>
-						<Link className="sm-primary-button" href="/categories">
-							Explorer les catégories <ArrowRight size={17} />
-						</Link>
-					</section>
-				</div>
-			</div>
-		</article>
+			<Link className="sm-secondary-button" href="/guides">
+				Tous les guides
+			</Link>
+		</section>
 	);
 }
 
 export function FavoritesScreen() {
 	const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+	const [products, setProducts] = useState<ProductSummary[]>([]);
+	const [loading, setLoading] = useState(false);
+
 	useEffect(() => {
 		const update = () => setFavoriteIds(readIds("soumly-favorites"));
-		update();
+		const frame = window.requestAnimationFrame(update);
 		window.addEventListener("soumly:soumly-favorites", update);
 		window.addEventListener("soumly:favorites", update);
 		return () => {
+			window.cancelAnimationFrame(frame);
 			window.removeEventListener("soumly:soumly-favorites", update);
 			window.removeEventListener("soumly:favorites", update);
 		};
 	}, []);
-	const favoriteProducts = products.filter((product) => favoriteIds.includes(product.id));
+
+	// Resolve ids server-side — only requested products come back.
+	useEffect(() => {
+		if (favoriteIds.length === 0) {
+			const frame = window.requestAnimationFrame(() => {
+				setProducts([]);
+				setLoading(false);
+			});
+			return () => window.cancelAnimationFrame(frame);
+		}
+		const controller = new AbortController();
+		const frame = window.requestAnimationFrame(() => setLoading(true));
+		fetch("/api/products/by-ids", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ ids: favoriteIds }),
+			signal: controller.signal,
+		})
+			.then((response) => response.json())
+			.then((payload: { products: ProductSummary[] }) => {
+				setProducts(payload.products ?? []);
+				setLoading(false);
+			})
+			.catch(() => {
+				setLoading(false);
+			});
+		return () => {
+			controller.abort();
+			window.cancelAnimationFrame(frame);
+		};
+	}, [favoriteIds]);
+
 	const clear = () => {
 		writeIds("soumly-favorites", []);
 		setFavoriteIds([]);
@@ -313,16 +346,18 @@ export function FavoritesScreen() {
 						<p>Produits enregistrés localement sur cet appareil.</p>
 					</div>
 				</div>
-				{favoriteProducts.length ? (
+				{products.length ? (
 					<button className="sm-secondary-button" type="button" onClick={clear}>
 						Tout retirer
 					</button>
 				) : null}
 			</div>
-			{favoriteProducts.length ? (
+			{loading ? (
+				<p className="sm-loading-note">Chargement de vos favoris…</p>
+			) : products.length ? (
 				<div className="sm-product-grid sm-grid-four">
-					{favoriteProducts.map((product) => (
-						<ProductCard product={product} key={product.id} />
+					{products.map((summary) => (
+						<ProductCard product={summaryToProduct(summary)} key={summary.id} />
 					))}
 				</div>
 			) : (
@@ -398,20 +433,11 @@ export function AccountScreen() {
 							<ShoppingBag size={24} />
 						</span>
 						<h2>Mon tableau de bord</h2>
-						<p>Accédez directement à vos préférences.</p>
+						<p>Retrouvez ici vos favoris et vos alertes de prix, enregistrés sur cet appareil.</p>
 					</div>
-					<div className="sm-account-actions">
-						<Link className="sm-primary-button sm-full-button" href="/favoris">
-							<Heart size={18} /> Voir mes favoris ({favoriteCount})
-						</Link>
-						<Link className="sm-secondary-button sm-full-button" href="/categories">
-							<Tag size={18} /> Explorer les produits
-						</Link>
-					</div>
-					<div className="sm-demo-note">
-						<ShieldCheck size={16} /> Un véritable compte synchronisé nécessitera ultérieurement un
-						service d’authentification.
-					</div>
+					<Link className="sm-primary-button" href="/favoris">
+						Mes favoris <ChevronRight size={17} />
+					</Link>
 				</div>
 			</div>
 		</section>

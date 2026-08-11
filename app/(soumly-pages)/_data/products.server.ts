@@ -1899,3 +1899,14 @@ export function searchProductsPaginated({
 		totalPages,
 	};
 }
+
+// Phase 2E: resolve a bounded set of product ids to lightweight summaries.
+// Preserves requested order, ignores missing ids, caps at 100.
+export function getProductsByIds(ids: string[]): ProductSummary[] {
+	const unique = [...new Set(ids)].slice(0, 100);
+	const byId = new Map(products.map((product) => [product.id, product]));
+	return unique
+		.map((id) => byId.get(id))
+		.filter((product): product is Product => Boolean(product))
+		.map(toSummary);
+}

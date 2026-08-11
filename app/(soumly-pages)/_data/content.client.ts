@@ -11,6 +11,8 @@ export {
 	type FamilyGroup,
 	formatPrice,
 	guides,
+	type PaginatedProducts,
 	type Product,
+	type ProductSummary,
 	type StoreOffer,
 } from "./content.shared";
