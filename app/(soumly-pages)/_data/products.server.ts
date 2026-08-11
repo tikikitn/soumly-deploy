@@ -12,6 +12,7 @@ import {
 	type Category,
 	FAMILY_DEFINITIONS,
 	FAMILY_GROUPS,
+	FAMILY_LABELS,
 	type PaginatedProducts,
 	type Product,
 	type ProductSummary,
@@ -1735,4 +1736,111 @@ export function getCategoryStats() {
 			.slice(0, 4)
 			.map(toSummary),
 	};
+}
+
+// ---- Phase 2C: homepage server data ----
+
+// Homepage featured families (order matters — matches the current UI).
+const HOMEPAGE_FAMILIES = [
+	"informatique",
+	"telephonie",
+	"electromenager",
+	"petit-electromenager",
+	"cuisine",
+	"sante-beaute",
+	"maison-jardin",
+	"bebe-enfants",
+];
+
+export function getHomepageData() {
+	const families = getFamilies();
+	const catalogCategories = categories;
+	// Rails: for each featured family, rank products like the old client logic.
+	const categoryRank = (slug: string) => {
+		if (slug === "smartphones" || slug === "telephone-portables") return 0;
+		if (slug === "ordinateurs-portables" || slug === "ordinateurs-de-bureau") return 1;
+		if (slug === "tablettes" || slug === "moniteurs") return 2;
+		if (
+			[
+				"peluches",
+				"jouets-pour-bebes",
+				"jouets-d-apprentissage",
+				"hochets",
+				"biberons",
+				"tires-lait",
+				"couches-jetables-pour-bebe",
+				"poussettes-pour-bebe",
+			].includes(slug)
+		)
+			return 1;
+		return 3;
+	};
+
+	const familyRails = HOMEPAGE_FAMILIES.map((slug) => {
+		const groups = FAMILY_GROUPS[slug] ?? [];
+		const groupSlugs = new Set(groups.flatMap((group) => group.categories.map((c) => c.slug)));
+		if (groupSlugs.size === 0) {
+			for (const category of catalogCategories) {
+				if (category.family === slug) groupSlugs.add(category.slug);
+			}
+		}
+		const railProducts = products
+			.filter((product) => groupSlugs.has(product.categorySlug))
+			.sort((a, b) => {
+				const diff = categoryRank(a.categorySlug) - categoryRank(b.categorySlug);
+				if (diff !== 0) return diff;
+				return b.price - a.price;
+			})
+			.slice(0, 12)
+			.map(toSummary);
+		return { slug, label: FAMILY_LABELS[slug] ?? slug, products: railProducts };
+	}).filter((rail) => rail.products.length > 0);
+
+	// Offer filters: derived from the featured families' categories (same as before).
+	const familySlugs = new Set(HOMEPAGE_FAMILIES);
+	const offerFilters = [
+		"Tout",
+		...new Set(catalogCategories.filter((c) => familySlugs.has(c.family)).map((c) => c.label)),
+	];
+
+	// Offers by category: keep the client filter working WITHOUT the full catalog.
+	// We send 12 best offers per filter label (deduped).
+	const promoted = [...products].sort((a, b) => (b.discount || 0) - (a.discount || 0));
+	const offersByCategory: Record<string, ProductSummary[]> = {};
+	for (const label of offerFilters) {
+		const pool = label === "Tout" ? promoted : promoted.filter((p) => p.category === label);
+		offersByCategory[label] = pool.slice(0, 12).map(toSummary);
+	}
+
+	// Popular rail: multi-store products.
+	const popular = products
+		.filter((product) => product.stores > 1)
+		.slice(0, 12)
+		.map(toSummary);
+
+	// Max discount for the hero badge.
+	const maximumDiscount = Math.max(0, ...products.map((product) => product.discount));
+
+	return {
+		families,
+		familyRails,
+		offerFilters,
+		offersByCategory,
+		popular,
+		maximumDiscount,
+	};
+}
+
+// ---- Phase 2C: server-side search suggestions (autocomplete) ----
+export function searchProducts(query: string, limit = 8) {
+	const normalized = query.trim().toLowerCase();
+	if (normalized.length < 2) return [] as ProductSummary[];
+	const starts = products.filter((product) => product.name.toLowerCase().startsWith(normalized));
+	const contains = products.filter(
+		(product) =>
+			!product.name.toLowerCase().startsWith(normalized) &&
+			(product.name.toLowerCase().includes(normalized) ||
+				product.category.toLowerCase().includes(normalized)),
+	);
+	return starts.concat(contains).slice(0, limit).map(toSummary);
 }
