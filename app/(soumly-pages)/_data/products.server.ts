@@ -1973,13 +1973,109 @@ export function normalizeSearch(value: string): string {
 
 function searchMatches(product: Product, normalized: string): boolean {
 	const haystack = normalizeSearch(`${product.name} ${product.category}`);
-	return haystack.includes(normalized);
+	// Token-based: every query word must match (AND), so "samsung s24"
+	// matches "Samsung Galaxy S24" (words are independent).
+	const tokens = normalized.split(" ").filter(Boolean);
+	return tokens.every((token) => haystack.includes(token));
 }
 
 // Shared search core: rank matches (starts-with first, then contains),
 // then slice. Used by both autocomplete and the results page.
+// Known brands for typo correction ("sumsung" -> "samsung").
+const BRAND_CORRECTIONS = [
+	"samsung",
+	"apple",
+	"xiaomi",
+	"huawei",
+	"oppo",
+	"realme",
+	"infinix",
+	"tecno",
+	"nokia",
+	"hp",
+	"lenovo",
+	"dell",
+	"asus",
+	"acer",
+	"msi",
+	"toshiba",
+	"sony",
+	"lg",
+	"panasonic",
+	"philips",
+	"bosch",
+	"tefal",
+	"moulinex",
+	"rowenta",
+	"braun",
+	"kenwood",
+	"canon",
+	"epson",
+	"brother",
+	"jbl",
+	"logitech",
+	"razer",
+	"corsair",
+	"gigabyte",
+	"tcl",
+	"hisense",
+	"whirlpool",
+	"beko",
+	"condor",
+	"karcher",
+	"dyson",
+	"makita",
+	"dewalt",
+	"seagate",
+	"sandisk",
+	"kingston",
+];
+
+function levenshtein(a: string, b: string): number {
+	const m = a.length;
+	const n = b.length;
+	if (m === 0) return n;
+	if (n === 0) return m;
+	const dp: number[] = [];
+	for (let i = 0; i <= n; i += 1) dp[i] = i;
+	for (let i = 1; i <= m; i += 1) {
+		let prev = dp[0];
+		dp[0] = i;
+		for (let j = 1; j <= n; j += 1) {
+			const tmp = dp[j];
+			dp[j] = Math.min(dp[j] + 1, dp[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
+			prev = tmp;
+		}
+	}
+	return dp[n];
+}
+
+// Correct brand typos: any token within edit distance 2 of a known brand
+// is replaced by the brand.
+function correctQueryTypos(value: string): string {
+	const tokens = value.split(" ").filter(Boolean);
+	return tokens
+		.map((token) => {
+			const t = token.toLowerCase();
+			if (t.length < 3) return token;
+			if (BRAND_CORRECTIONS.includes(t)) return token;
+			let best = token;
+			let bestDist = 2;
+			for (const brand of BRAND_CORRECTIONS) {
+				const d = levenshtein(t, brand);
+				// <= includes transpositions (appel -> apple = 2 edits)
+				if (d <= bestDist) {
+					bestDist = d;
+					best = brand;
+				}
+			}
+			return best;
+		})
+		.join(" ");
+}
+
 export function searchProducts(query: string, limit = 8) {
-	const normalized = normalizeSearch(query);
+	const normalized = normalizeSearch(correctQueryTypos(query));
 	if (normalized.length < 2) return [] as ProductSummary[];
 	const starts = products.filter((product) => product.name.toLowerCase().startsWith(normalized));
 	const contains = products.filter(
@@ -2001,7 +2097,7 @@ export function searchProductsPaginated({
 	pageSize?: number;
 	sort?: string;
 }): PaginatedProducts {
-	const normalized = normalizeSearch(query);
+	const normalized = normalizeSearch(correctQueryTypos(query));
 	if (normalized.length < 2) {
 		return { products: [], total: 0, page: 1, pageSize, totalPages: 1 };
 	}
