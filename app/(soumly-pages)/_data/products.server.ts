@@ -1910,3 +1910,200 @@ export function getProductsByIds(ids: string[]): ProductSummary[] {
 		.filter((product): product is Product => Boolean(product))
 		.map(toSummary);
 }
+// ---- SEO-3A: approved brand registry + brand queries (SERVER ONLY) ----
+
+// Canonical brand registry — ONLY approved brands generate SEO pages.
+// Aliases resolve internally to ONE canonical slug. Unknown inferred
+// brands must NEVER auto-create routes.
+export const APPROVED_BRANDS: Record<
+	string,
+	{
+		label: string;
+		aliases: RegExp[];
+	}
+> = {
+	samsung: {
+		label: "Samsung",
+		aliases: [/\bsamsung\b/i],
+	},
+	apple: {
+		label: "Apple",
+		aliases: [
+			/\bapple\b/i,
+			/\biphone\b/i,
+			/\bipad\b/i,
+			/\bmacbook\b/i,
+			/\bimac\b/i,
+			/\bairpods\b/i,
+		],
+	},
+	xiaomi: {
+		label: "Xiaomi",
+		aliases: [/\bxiaomi\b/i, /\bredmi\b/i, /\bpoco\b/i],
+	},
+	hp: {
+		label: "HP",
+		aliases: [/\bhp\b/i, /\bhewlett/i],
+	},
+	lenovo: {
+		label: "Lenovo",
+		aliases: [/\blenovo\b/i, /\bthinkpad\b/i, /\bideapad\b/i, /\blegion\b/i, /\byoga\b/i],
+	},
+	asus: {
+		label: "Asus",
+		aliases: [/\basus\b/i, /\brog\b/i, /\btuf\b/i, /\bzenbook\b/i, /\bvivobook\b/i],
+	},
+	dell: {
+		label: "Dell",
+		aliases: [/\bdell\b/i, /\bxps\b/i, /\binspiron\b/i, /\blatitude\b/i, /\bvostro\b/i],
+	},
+	msi: {
+		label: "MSI",
+		aliases: [/\bmsi\b/i, /\bmsi-/i],
+	},
+	canon: {
+		label: "Canon",
+		aliases: [/\bcanon\b/i, /\bpixma\b/i, /\bi-sensys\b/i],
+	},
+	epson: {
+		label: "Epson",
+		aliases: [/\bepson\b/i, /\becotank\b/i, /\bworkforce\b/i],
+	},
+};
+
+export function isApprovedBrand(slug: string): boolean {
+	return slug in APPROVED_BRANDS;
+}
+
+export function getApprovedBrands() {
+	return Object.entries(APPROVED_BRANDS).map(([slug, def]) => {
+		const matched = products.filter((p) => def.aliases.some((re) => re.test(p.name)));
+		const withOffers = matched.filter((p) => p.offers.length > 0);
+		const priceMin = withOffers.length ? Math.min(...withOffers.map((p) => p.price)) : 0;
+		const storeSet = new Set<string>();
+		for (const p of withOffers) for (const o of p.offers) storeSet.add(o.store);
+		const catMap = new Map<string, number>();
+		for (const p of matched) catMap.set(p.categorySlug, (catMap.get(p.categorySlug) ?? 0) + 1);
+		const categories = [...catMap.entries()]
+			.map(([slug, count]) => ({ slug, label: humanizeCategory(slug), count }))
+			.sort((a, b) => b.count - a.count)
+			.slice(0, 12);
+		return {
+			slug,
+			label: def.label,
+			productCount: matched.length,
+			offerCount: withOffers.reduce((sum, p) => sum + p.offers.length, 0),
+			storeCount: storeSet.size,
+			minPrice: priceMin,
+			categories,
+		};
+	});
+}
+
+// Brand page data (server-side, no catalog to client).
+export function getBrandPageData(slug: string) {
+	const def = APPROVED_BRANDS[slug];
+	if (!def) return null;
+	const matched = products.filter((p) => def.aliases.some((re) => re.test(p.name)));
+	const withOffers = matched.filter((p) => p.offers.length > 0);
+	const storeSet = new Set<string>();
+	for (const p of withOffers) for (const o of p.offers) storeSet.add(o.store);
+	const priceMin = withOffers.length ? Math.min(...withOffers.map((p) => p.price)) : 0;
+	const priceMax = withOffers.length ? Math.max(...withOffers.map((p) => p.price)) : 0;
+	const catMap = new Map<string, number>();
+	for (const p of matched) catMap.set(p.categorySlug, (catMap.get(p.categorySlug) ?? 0) + 1);
+	const categories = [...catMap.entries()]
+		.map(([slug, count]) => ({ slug, label: humanizeCategory(slug), count }))
+		.sort((a, b) => b.count - a.count)
+		.slice(0, 12);
+	const deals = [...withOffers]
+		.filter((p) => p.discount > 0)
+		.sort((a, b) => b.discount - a.discount)
+		.slice(0, 12)
+		.map(toSummary);
+	return {
+		slug,
+		label: def.label,
+		productCount: matched.length,
+		offerCount: withOffers.reduce((sum, p) => sum + p.offers.length, 0),
+		storeCount: storeSet.size,
+		minPrice: priceMin,
+		maxPrice: priceMax,
+		categories,
+		deals,
+	};
+}
+
+// Paginated brand products (36/page, server-sliced).
+export function getBrandProducts({
+	slug,
+	page = 1,
+	pageSize = 36,
+}: {
+	slug: string;
+	page?: number;
+	pageSize?: number;
+}): PaginatedProducts | null {
+	const def = APPROVED_BRANDS[slug];
+	if (!def) return null;
+	const all = products.filter((p) => def.aliases.some((re) => re.test(p.name)));
+	const withOffers = all.filter((p) => p.offers.length > 0);
+	const total = withOffers.length;
+	const totalPages = Math.max(1, Math.ceil(total / pageSize));
+	const safePage = Math.min(Math.max(1, page), totalPages);
+	const sorted = [...withOffers].sort((a, b) => a.price - b.price);
+	const start = (safePage - 1) * pageSize;
+	return {
+		products: sorted.slice(start, start + pageSize).map(toSummary),
+		total,
+		page: safePage,
+		pageSize,
+		totalPages,
+	};
+}
+
+// Brand × Category page (server-sliced).
+export function getBrandCategoryData({
+	brand,
+	category,
+	page = 1,
+	pageSize = 36,
+}: {
+	brand: string;
+	category: string;
+	page?: number;
+	pageSize?: number;
+}): { data: PaginatedProducts; categoryLabel: string; brandLabel: string } | null {
+	const def = APPROVED_BRANDS[brand];
+	if (!def) return null;
+	const categoryDef = getCategory(category);
+	if (!categoryDef) return null;
+	const all = products.filter(
+		(p) => def.aliases.some((re) => re.test(p.name)) && p.categorySlug === category,
+	);
+	const withOffers = all.filter((p) => p.offers.length > 0);
+	const total = withOffers.length;
+	const totalPages = Math.max(1, Math.ceil(total / pageSize));
+	const safePage = Math.min(Math.max(1, page), totalPages);
+	const sorted = [...withOffers].sort((a, b) => a.price - b.price);
+	const start = (safePage - 1) * pageSize;
+	return {
+		data: {
+			products: sorted.slice(start, start + pageSize).map(toSummary),
+			total,
+			page: safePage,
+			pageSize,
+			totalPages,
+		},
+		categoryLabel: categoryDef.label,
+		brandLabel: def.label,
+	};
+}
+// SEO-3A: detect an APPROVED brand from a product name (server-side only).
+// Returns null when confidence is uncertain (no alias match).
+export function detectBrand(name: string): string | null {
+	for (const [slug, def] of Object.entries(APPROVED_BRANDS)) {
+		if (def.aliases.some((re) => re.test(name))) return slug;
+	}
+	return null;
+}

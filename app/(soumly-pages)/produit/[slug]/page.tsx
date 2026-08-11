@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailView } from "../../_components/ProductDetailView";
-import { getProduct, relatedProducts } from "../../_data/products.server";
+import {
+	APPROVED_BRANDS,
+	detectBrand,
+	getProduct,
+	relatedProducts,
+} from "../../_data/products.server";
 
 const BASE = "https://soumly.online";
 
@@ -46,5 +51,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 	const product = getProduct(slug);
 	if (!product) notFound();
 	const related = relatedProducts(product, 4);
-	return <ProductDetailView product={product} related={related} />;
+	const brandSlug = detectBrand(product.name);
+	const brandLabel = brandSlug ? APPROVED_BRANDS[brandSlug].label : null;
+	return (
+		<ProductDetailView
+			product={product}
+			related={related}
+			brandSlug={brandSlug}
+			brandLabel={brandLabel}
+		/>
+	);
 }

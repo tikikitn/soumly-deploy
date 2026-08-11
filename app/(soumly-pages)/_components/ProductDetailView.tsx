@@ -66,11 +66,38 @@ function writeIds(key: string, ids: string[]) {
 	window.dispatchEvent(new CustomEvent(`soumly:${key}`));
 }
 
-export function ProductDetailView({ product, related }: { product: Product; related: Product[] }) {
-	return <ProductDetails product={product} related={related} />;
+export function ProductDetailView({
+	product,
+	related,
+	brandSlug,
+	brandLabel,
+}: {
+	product: Product;
+	related: Product[];
+	brandSlug?: string | null;
+	brandLabel?: string | null;
+}) {
+	return (
+		<ProductDetails
+			product={product}
+			related={related}
+			brandSlug={brandSlug}
+			brandLabel={brandLabel}
+		/>
+	);
 }
 
-function ProductDetails({ product, related }: { product: Product; related: Product[] }) {
+function ProductDetails({
+	product,
+	related,
+	brandSlug,
+	brandLabel,
+}: {
+	product: Product;
+	related: Product[];
+	brandSlug?: string | null;
+	brandLabel?: string | null;
+}) {
 	const { favorite, toggle } = useFavorite(product.id);
 	const [alertEnabled, setAlertEnabled] = useState(false);
 	const offers = product.offers;
@@ -417,7 +444,12 @@ function ProductDetails({ product, related }: { product: Product; related: Produ
 						<span className="sm-section-kicker">Dans la même catégorie</span>
 						<h2>Produits similaires</h2>
 					</div>
-					<Link href={`/categories/${product.categorySlug}`}>Voir la catégorie →</Link>
+					<div className="sm-heading-links">
+						{brandSlug && brandLabel ? (
+							<Link href={`/marques/${brandSlug}`}>Voir les produits {brandLabel} →</Link>
+						) : null}
+						<Link href={`/categories/${product.categorySlug}`}>Voir la catégorie →</Link>
+					</div>
 				</div>
 				<div className="sm-product-grid sm-grid-four">
 					{related.map((item) => (
