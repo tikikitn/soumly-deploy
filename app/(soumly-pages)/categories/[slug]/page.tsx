@@ -8,6 +8,8 @@ import {
 	getFamilyProducts,
 } from "../../_data/products.server";
 
+const BASE = "https://soumly.online";
+
 type PageProps = {
 	params: Promise<{ slug: string }>;
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -31,19 +33,34 @@ function parseSort(value: unknown): string {
 	return "name";
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
 	const { slug } = await params;
+	const sp = await searchParams;
 	const family = getFamilies().find((f) => f.slug === slug);
+	const page = parsePage(sp.page);
+
 	if (family) {
+		const url =
+			page > 1
+				? `${BASE}/categories/${family.slug}?page=${page}`
+				: `${BASE}/categories/${family.slug}`;
 		return {
 			title: `${family.label} – Comparer les prix`,
 			description: `${family.label} : ${family.categoryCount} catégories, ${family.productCount} produits.`,
+			alternates: { canonical: url },
 		};
 	}
 	const category = getCategory(slug);
-	return category
-		? { title: `${category.label} – Comparer les prix`, description: category.note }
-		: { title: "Catégorie introuvable" };
+	if (!category) return { title: "Catégorie introuvable" };
+	const url =
+		page > 1
+			? `${BASE}/categories/${category.slug}?page=${page}`
+			: `${BASE}/categories/${category.slug}`;
+	return {
+		title: `${category.label} – Comparer les prix`,
+		description: category.note,
+		alternates: { canonical: url },
+	};
 }
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
@@ -58,6 +75,9 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 	if (isFamily) {
 		const family = families.find((f) => f.slug === slug)!;
 		const result = getFamilyProducts({ slug, page, sort });
+		// Out-of-range pages must not create duplicate crawlable URLs:
+		// page > totalPages → real 404 (prevents ?page=999 clones).
+		if (page > result.totalPages) notFound();
 		return <FamilyListingView family={family} result={result} slug={slug} />;
 	}
 
@@ -65,5 +85,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 	if (!category) notFound();
 
 	const result = getCategoryProducts({ slug, page, sort });
+	if (page > result.totalPages) notFound();
 	return <CategoryListingView category={category} result={result} slug={slug} />;
 }

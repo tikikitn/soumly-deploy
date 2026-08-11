@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://soumly.online/</loc></url>
-  <url><loc>https://soumly.online/categories</loc></url>
-  <url><loc>https://soumly.online/boutiques</loc></url>
-  <url><loc>https://soumly.online/guides</loc></url>
   <url><loc>https://soumly.online/a-propos</loc></url>
-  <url><loc>https://soumly.online/contact</loc></url>
+  <url><loc>https://soumly.online/boutiques</loc></url>
   <url><loc>https://soumly.online/categories/acces-et-controles</loc></url>
   <url><loc>https://soumly.online/categories/accessoires-de-bain-pour-bebes</loc></url>
   <url><loc>https://soumly.online/categories/accessoires-de-camera-camescope</loc></url>
@@ -51,9 +48,7 @@
   <url><loc>https://soumly.online/categories/ballons-de-football</loc></url>
   <url><loc>https://soumly.online/categories/bancs-de-musculation</loc></url>
   <url><loc>https://soumly.online/categories/barbecue-bb-qs</loc></url>
-  <url><loc>https://soumly.online/categories/barres-d-halteres</loc></url>
   <url><loc>https://soumly.online/categories/barrettes-memoires</loc></url>
-  <url><loc>https://soumly.online/categories/batons-supports-pour-selfies</loc></url>
   <url><loc>https://soumly.online/categories/batterie-pc-portable</loc></url>
   <url><loc>https://soumly.online/categories/baumes-a-levres</loc></url>
   <url><loc>https://soumly.online/categories/bavoirs-pour-bebes</loc></url>
@@ -253,7 +248,6 @@
   <url><loc>https://soumly.online/categories/lave-vaisselles</loc></url>
   <url><loc>https://soumly.online/categories/lecteurs-graveurs-optiques</loc></url>
   <url><loc>https://soumly.online/categories/litieres-et-effractions-pour-chiens-et-chats</loc></url>
-  <url><loc>https://soumly.online/categories/livres-et-pages-a-colorier</loc></url>
   <url><loc>https://soumly.online/categories/logiciels-systemes-dexploitation</loc></url>
   <url><loc>https://soumly.online/categories/lots-de-casseroles</loc></url>
   <url><loc>https://soumly.online/categories/lumieres-de-nuit-pour-bebe</loc></url>
@@ -305,7 +299,9 @@
   <url><loc>https://soumly.online/categories/peintures-pour-loisir</loc></url>
   <url><loc>https://soumly.online/categories/pellicules-polaroid</loc></url>
   <url><loc>https://soumly.online/categories/pese-personnes</loc></url>
+  <url><loc>https://soumly.online/categories/petit-electromenager</loc></url>
   <url><loc>https://soumly.online/categories/petites-pieces-et-boites-a-outils</loc></url>
+  <url><loc>https://soumly.online/categories/photo-camera</loc></url>
   <url><loc>https://soumly.online/categories/pieces-et-accessoires-d-equipements-audiovisuels</loc></url>
   <url><loc>https://soumly.online/categories/piles-domestiques</loc></url>
   <url><loc>https://soumly.online/categories/pinceaux-pour-maquillage-du-visage</loc></url>
@@ -372,7 +368,6 @@
   <url><loc>https://soumly.online/categories/shampoings-cheveux</loc></url>
   <url><loc>https://soumly.online/categories/shampoings-cheveux-beaute</loc></url>
   <url><loc>https://soumly.online/categories/sieges-auto-bebe</loc></url>
-  <url><loc>https://soumly.online/categories/sieges-de-toilette-pour-bébé</loc></url>
   <url><loc>https://soumly.online/categories/sieges-pour-jeux-videos</loc></url>
   <url><loc>https://soumly.online/categories/smart-watches</loc></url>
   <url><loc>https://soumly.online/categories/soin-de-la-peau-de-l-apos-enfant</loc></url>
@@ -434,8 +429,13 @@
   <url><loc>https://soumly.online/categories/vitamines-et-complements-alimentaires</loc></url>
   <url><loc>https://soumly.online/categories/wireless-access-points</loc></url>
   <url><loc>https://soumly.online/categories/zone-de-la-bouche-et-des-levres</loc></url>
-  <url><loc>https://soumly.online/categories/image-et-son</loc></url>
-  <url><loc>https://soumly.online/categories/photo-camera</loc></url>
-  <url><loc>https://soumly.online/categories/petit-electromenager</loc></url>
-  <url><loc>https://soumly.online/categories/sante-beaute</loc></url>
+  <url><loc>https://soumly.online/contact</loc></url>
+  <url><loc>https://soumly.online/guides</loc></url>
+  <url><loc>https://soumly.online/categories</loc></url>
+  <url><loc>https://soumly.online/guides/casque-ou-ecouteurs</loc></url>
+  <url><loc>https://soumly.online/guides/choisir-pc-portable</loc></url>
+  <url><loc>https://soumly.online/guides/choisir-smartphone-2026</loc></url>
+  <url><loc>https://soumly.online/guides/climatiseur-economique</loc></url>
+  <url><loc>https://soumly.online/guides/comparer-prix-en-ligne</loc></url>
+  <url><loc>https://soumly.online/guides/comprendre-ecrans</loc></url>
 </urlset>
