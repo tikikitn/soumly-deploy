@@ -280,7 +280,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 	}, [query]);
 
 	const filteredOffers = useMemo(() => {
-		const pool = offersByCategory[activeFilter] ?? offersByCategory["Tout"] ?? [];
+		const pool = offersByCategory[activeFilter as string] ?? offersByCategory["Tout"] ?? [];
 		return pool.map(summaryToProduct);
 	}, [activeFilter, offersByCategory]);
 

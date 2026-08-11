@@ -1804,7 +1804,6 @@ export function getHomepageData() {
 	];
 
 	// Offers by category: keep the client filter working WITHOUT the full catalog.
-	// We send 12 best offers per filter label (deduped).
 	const promoted = [...products].sort((a, b) => (b.discount || 0) - (a.discount || 0));
 	const offersByCategory: Record<string, ProductSummary[]> = {};
 	for (const label of offerFilters) {
@@ -1831,16 +1830,72 @@ export function getHomepageData() {
 	};
 }
 
-// ---- Phase 2C: server-side search suggestions (autocomplete) ----
+// ---- Phase 2C/2D: search ----
+
+// Safe search normalization: lowercase + strip accents + collapse whitespace.
+export function normalizeSearch(value: string): string {
+	return value
+		.trim()
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/\s+/g, " ")
+		.slice(0, 80);
+}
+
+function searchMatches(product: Product, normalized: string): boolean {
+	const haystack = normalizeSearch(`${product.name} ${product.category}`);
+	return haystack.includes(normalized);
+}
+
+// Shared search core: rank matches (starts-with first, then contains),
+// then slice. Used by both autocomplete and the results page.
 export function searchProducts(query: string, limit = 8) {
-	const normalized = query.trim().toLowerCase();
+	const normalized = normalizeSearch(query);
 	if (normalized.length < 2) return [] as ProductSummary[];
 	const starts = products.filter((product) => product.name.toLowerCase().startsWith(normalized));
 	const contains = products.filter(
 		(product) =>
-			!product.name.toLowerCase().startsWith(normalized) &&
-			(product.name.toLowerCase().includes(normalized) ||
-				product.category.toLowerCase().includes(normalized)),
+			!product.name.toLowerCase().startsWith(normalized) && searchMatches(product, normalized),
 	);
 	return starts.concat(contains).slice(0, limit).map(toSummary);
+}
+
+// Paginated search for the /recherche results page (server-side slicing).
+export function searchProductsPaginated({
+	query,
+	page = 1,
+	pageSize = 36,
+	sort = "relevance",
+}: {
+	query: string;
+	page?: number;
+	pageSize?: number;
+	sort?: string;
+}): PaginatedProducts {
+	const normalized = normalizeSearch(query);
+	if (normalized.length < 2) {
+		return { products: [], total: 0, page: 1, pageSize, totalPages: 1 };
+	}
+	const starts = products.filter((product) => product.name.toLowerCase().startsWith(normalized));
+	const contains = products.filter(
+		(product) =>
+			!product.name.toLowerCase().startsWith(normalized) && searchMatches(product, normalized),
+	);
+	let all = starts.concat(contains);
+	if (sort === "price-asc") all = [...all].sort((a, b) => a.price - b.price);
+	else if (sort === "price-desc") all = [...all].sort((a, b) => b.price - a.price);
+	else if (sort === "discount") all = [...all].sort((a, b) => b.discount - a.discount);
+
+	const total = all.length;
+	const totalPages = Math.max(1, Math.ceil(total / pageSize));
+	const safePage = Math.min(Math.max(1, page), totalPages);
+	const start = (safePage - 1) * pageSize;
+	return {
+		products: all.slice(start, start + pageSize).map(toSummary),
+		total,
+		page: safePage,
+		pageSize,
+		totalPages,
+	};
 }
