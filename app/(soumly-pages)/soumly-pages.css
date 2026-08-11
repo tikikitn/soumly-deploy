@@ -3848,3 +3848,8 @@
 	border-color: #6347f5;
 	color: #fff;
 }
+
+/* Catalog results span full width when no filter panel is rendered. */
+.sm-catalog-results {
+	grid-column: 1 / -1;
+}
