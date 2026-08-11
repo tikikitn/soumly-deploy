@@ -40,13 +40,13 @@ import {
 
 const FAMILY_IMAGES: Record<string, string> = {
 	informatique: "/assets/families/informatique-v3.webp",
-	telephonie: "/assets/families/telephonie-v2.jpg",
-	"sante-beaute": "/assets/families/sante-beaute-v2.jpg",
-	electromenager: "/assets/families/electromenager-v2.jpg",
-	"petit-electromenager": "/assets/families/petit-electromenager-v2.jpg",
-	cuisine: "/assets/families/cuisine-v2.jpg",
-	"maison-jardin": "/assets/families/maison-jardin-v2.jpg",
-	"bebe-enfants": "/assets/families/bebe-enfants-v2.jpg",
+	telephonie: "/assets/families/telephonie-v3.webp",
+	"sante-beaute": "/assets/families/sante-beaute-v3.webp",
+	electromenager: "/assets/families/electromenager-v3.webp",
+	"petit-electromenager": "/assets/families/petit-electromenager-v3.webp",
+	cuisine: "/assets/families/cuisine-v3.webp",
+	"maison-jardin": "/assets/families/maison-jardin-v3.webp",
+	"bebe-enfants": "/assets/families/bebe-enfants-v3.webp",
 };
 
 const FEATURED_ICONS: Record<string, typeof Laptop> = {
