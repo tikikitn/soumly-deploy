@@ -161,6 +161,27 @@ function ProductDetails({
 		};
 	}, [product.id]);
 
+	// Recently viewed: store a lightweight reference on visit (SSR-safe).
+	useEffect(() => {
+		const RECENT_KEY = "soumly-recents";
+		const RECENT_MAX = 12;
+		try {
+			const raw = window.localStorage.getItem(RECENT_KEY);
+			const parsed: unknown = raw ? JSON.parse(raw) : [];
+			const current = Array.isArray(parsed)
+				? parsed.filter((item): item is string => typeof item === "string")
+				: [];
+			const next = [product.id, ...current.filter((id) => id !== product.id)].slice(
+				0,
+				RECENT_MAX,
+			);
+			window.localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+			window.dispatchEvent(new Event("soumly:recents"));
+		} catch {
+			// storage unavailable — ignore
+		}
+	}, [product.id]);
+
 	const toggleAlert = () => {
 		const current = new Set<string>(readIds("soumly-alerts"));
 		if (current.has(product.id)) current.delete(product.id);
