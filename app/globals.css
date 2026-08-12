@@ -2442,3 +2442,19 @@ select:focus-visible,
 	}
 }
 
+/* Homepage only: prices in clear red */
+#accueil .current-price {
+	color: #e11d2e;
+}
+/* Homepage only: prices in clear red */
+#accueil .price-row strong {
+	color: #ff4757;
+}
+/* Homepage only: store count in violet */
+#accueil .store-count {
+	color: #6347f5;
+}
+/* Homepage only: store count in violet */
+#accueil .product-stores {
+	color: #6347f5;
+}
