@@ -2044,23 +2044,39 @@ const BRAND_CORRECTIONS = [
 	"kingston",
 ];
 
+// Damerau-Levenshtein: adjacent transpositions count as ONE edit, so
+// "appel" -> "apple" = 1, while "gamer" -> "razer" = 2 (two substitutions).
+// Threshold 1 in correctQueryTypos then catches real brand typos without
+// corrupting common words.
 function levenshtein(a: string, b: string): number {
 	const m = a.length;
 	const n = b.length;
 	if (m === 0) return n;
 	if (n === 0) return m;
-	const dp: number[] = [];
-	for (let i = 0; i <= n; i += 1) dp[i] = i;
+	const dp: number[][] = Array.from({ length: m + 1 }, () =>
+		new Array<number>(n + 1).fill(0),
+	);
+	for (let i = 0; i <= m; i += 1) dp[i][0] = i;
+	for (let j = 0; j <= n; j += 1) dp[0][j] = j;
 	for (let i = 1; i <= m; i += 1) {
-		let prev = dp[0];
-		dp[0] = i;
 		for (let j = 1; j <= n; j += 1) {
-			const tmp = dp[j];
-			dp[j] = Math.min(dp[j] + 1, dp[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
-			prev = tmp;
+			const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+			dp[i][j] = Math.min(
+				dp[i - 1][j] + 1,
+				dp[i][j - 1] + 1,
+				dp[i - 1][j - 1] + cost,
+			);
+			if (
+				i > 1 &&
+				j > 1 &&
+				a[i - 1] === b[j - 2] &&
+				a[i - 2] === b[j - 1]
+			) {
+				dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + 1);
+			}
 		}
 	}
-	return dp[n];
+	return dp[m][n];
 }
 
 // Correct brand typos: any token within edit distance 2 of a known brand
@@ -2073,10 +2089,9 @@ function correctQueryTypos(value: string): string {
 			if (t.length < 3) return token;
 			if (BRAND_CORRECTIONS.includes(t)) return token;
 			let best = token;
-			let bestDist = 2;
+			let bestDist = 1;
 			for (const brand of BRAND_CORRECTIONS) {
 				const d = levenshtein(t, brand);
-				// <= includes transpositions (appel -> apple = 2 edits)
 				if (d <= bestDist) {
 					bestDist = d;
 					best = brand;
