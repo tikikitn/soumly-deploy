@@ -26,11 +26,11 @@ function parsePage(value: unknown): number {
 function parseSort(value: unknown): string {
 	if (
 		typeof value === "string" &&
-		["price-asc", "price-desc", "discount", "name"].includes(value)
+		["price-asc", "price-desc", "discount", "popular", "name"].includes(value)
 	) {
 		return value;
 	}
-	return "name";
+	return "popular";
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {

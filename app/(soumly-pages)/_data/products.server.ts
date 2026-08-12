@@ -1786,7 +1786,7 @@ export function getCategoryProducts({
 	slug,
 	page = 1,
 	pageSize = 36,
-	sort = "name",
+	sort = "popular",
 }: {
 	slug: string;
 	page?: number;
@@ -1813,7 +1813,7 @@ export function getFamilyProducts({
 	slug,
 	page = 1,
 	pageSize = 36,
-	sort = "name",
+	sort = "popular",
 }: {
 	slug: string;
 	page?: number;
@@ -1849,6 +1849,14 @@ function sortProductsServer(items: Product[], sort: string) {
 	if (sort === "price-asc") return result.sort((a, b) => a.price - b.price);
 	if (sort === "price-desc") return result.sort((a, b) => b.price - a.price);
 	if (sort === "discount") return result.sort((a, b) => b.discount - a.discount);
+	if (sort === "popular") {
+		return result.sort(
+			(a, b) =>
+				b.stores - a.stores ||
+				b.discount - a.discount ||
+				a.price - b.price,
+		);
+	}
 	return result.sort((a, b) => a.name.localeCompare(b.name, "fr"));
 }
 

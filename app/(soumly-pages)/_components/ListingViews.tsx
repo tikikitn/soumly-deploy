@@ -37,6 +37,14 @@ function sortProducts(items: ProductSummary[], sort: string) {
 	if (sort === "price-asc") return result.sort((a, b) => a.price - b.price);
 	if (sort === "price-desc") return result.sort((a, b) => b.price - a.price);
 	if (sort === "discount") return result.sort((a, b) => b.discount - a.discount);
+	if (sort === "popular") {
+		return result.sort(
+			(a, b) =>
+				b.stores - a.stores ||
+				b.discount - a.discount ||
+				a.price - b.price,
+		);
+	}
 	return result.sort((a, b) => a.name.localeCompare(b.name, "fr"));
 }
 
@@ -205,7 +213,7 @@ function Catalog({
 					<label>
 						Trier par{" "}
 						<select value={sort} onChange={(event) => setSort(event.target.value)}>
-							<option value="name">Nom</option>
+							<option value="popular">Pertinence</option>
 							<option value="price-asc">Prix croissant</option>
 							<option value="price-desc">Prix décroissant</option>
 							<option value="discount">Réduction</option>
