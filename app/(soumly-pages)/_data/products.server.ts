@@ -1917,7 +1917,12 @@ export function getHomepageData() {
 			.sort((a, b) => {
 				const diff = categoryRank(a.categorySlug) - categoryRank(b.categorySlug);
 				if (diff !== 0) return diff;
-				return b.price - a.price;
+				// Popularity first: more stores = more demand.
+				if (b.stores !== a.stores) return b.stores - a.stores;
+				// Then discounted products.
+				if (b.discount !== a.discount) return b.discount - a.discount;
+				// Then lowest price.
+				return a.price - b.price;
 			})
 			.slice(0, 12)
 			.map(toSummary);
