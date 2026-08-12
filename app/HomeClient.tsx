@@ -10,12 +10,14 @@ import {
 	CheckCircle2,
 	ChevronRight,
 	CookingPot,
+	Dumbbell,
 	Grid3X3,
 	Heart,
 	Home,
 	Laptop,
 	Menu,
 	Microwave,
+	PawPrint,
 	RefreshCw,
 	Refrigerator,
 	Search,
@@ -31,6 +33,7 @@ import {
 	X,
 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { CATALOG_UNIVERSES } from "../lib/catalog-navigation";
 import {
 	type Family,
 	formatPrice,
@@ -48,6 +51,45 @@ const FAMILY_IMAGES: Record<string, string> = {
 	"maison-jardin": "/assets/families/maison-jardin-v3.webp",
 	"bebe-enfants": "/assets/families/bebe-enfants-v3.webp",
 };
+
+const UNIVERSE_IMAGES: Record<string, string> = {
+	"high-tech": "/assets/universes/01-high-tech.webp",
+	electromenager: "/assets/universes/02-electromenager.webp",
+	"maison-cuisine": "/assets/universes/03-maison-cuisine.webp",
+	"beaute-bien-etre": "/assets/universes/04-beaute-bien-etre.webp",
+	"mode-accessoires": "/assets/universes/05-mode-accessoires.webp",
+	"bebe-enfants": "/assets/universes/06-bebe-enfants.webp",
+	"sport-fitness": "/assets/universes/07-sport-fitness.webp",
+	"bureau-papeterie": "/assets/universes/08-bureau-papeterie.webp",
+	animaux: "/assets/universes/09-animaux.webp",
+};
+
+function UniverseIcon({ name }: { name: string }) {
+	const size = 16;
+	const stroke = 2;
+	switch (name) {
+		case "high-tech":
+			return <Laptop size={size} strokeWidth={stroke} />;
+		case "electromenager":
+			return <Refrigerator size={size} strokeWidth={stroke} />;
+		case "maison-cuisine":
+			return <Home size={size} strokeWidth={stroke} />;
+		case "beaute-bien-etre":
+			return <Sparkles size={size} strokeWidth={stroke} />;
+		case "mode-accessoires":
+			return <ShoppingBag size={size} strokeWidth={stroke} />;
+		case "bebe-enfants":
+			return <ToyBrick size={size} strokeWidth={stroke} />;
+		case "sport-fitness":
+			return <Dumbbell size={size} strokeWidth={stroke} />;
+		case "bureau-papeterie":
+			return <BookOpen size={size} strokeWidth={stroke} />;
+		case "animaux":
+			return <PawPrint size={size} strokeWidth={stroke} />;
+		default:
+			return <Grid3X3 size={size} strokeWidth={stroke} />;
+	}
+}
 
 const FEATURED_ICONS: Record<string, typeof Laptop> = {
 	informatique: Laptop,
@@ -470,22 +512,43 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 					</div>
 				</div>
 				<div className="family-grid">
-					{categories.map(({ slug, label, icon: Icon }) => (
+					{CATALOG_UNIVERSES.map((universe, index) => (
 						<a
-							className="family-card"
-							key={slug}
-							href={`/categories/${slug}`}
-							style={{ "--family-img": `url(${FAMILY_IMAGES[slug] ?? ""})` } as React.CSSProperties}
+							className={`family-card uni-card uni-tone-${(index % 4) + 1}`}
+							key={universe.slug}
+							href={`/univers/${universe.slug}`}
+							style={{ "--family-img": `url(${UNIVERSE_IMAGES[universe.slug] ?? ""})` } as React.CSSProperties}
 						>
 							<span className="family-card-arrow">→</span>
 							<span className="family-card-label">
 								<span className="family-card-label-icon">
-									<Icon size={16} strokeWidth={2} />
+									<UniverseIcon name={universe.slug} />
 								</span>
-								{label}
+								{universe.label}
 							</span>
+							<span className="uni-card-tagline">{universe.tagline}</span>
 						</a>
 					))}
+					<a className="family-card guides-promo-card" href="/guides" aria-label="Guides d’achat">
+						<span className="family-card-arrow">→</span>
+						<span className="guides-promo-visual" aria-hidden="true">
+							<span className="guides-promo-glass">
+								<Search size={22} strokeWidth={2.2} />
+							</span>
+							<span className="guides-promo-shapes">
+								<span className="g-shape g-shape-1" />
+								<span className="g-shape g-shape-2" />
+								<span className="g-shape g-shape-3" />
+							</span>
+						</span>
+						<span className="guides-promo-body">
+							<span className="guides-promo-title">Guides d’achat</span>
+							<span className="guides-promo-desc">
+								Nos conseils pour choisir le bon produit au meilleur prix.
+							</span>
+							<span className="guides-promo-cta">Découvrir les guides</span>
+						</span>
+					</a>
 				</div>
 				<div className="family-pills">
 					{categories.map(({ slug, label, icon: Icon }, index) => (

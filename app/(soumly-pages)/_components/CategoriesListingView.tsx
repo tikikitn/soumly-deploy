@@ -1,8 +1,9 @@
-// Add CategoriesListingView (index page) to ListingViews.tsx
-// Receives family stats from server — no catalog import.
+// Categories index — NEW: 9 navigation universes above the taxonomy.
+// Non-destructive: existing families still reachable via "Voir toutes les familles".
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { CATALOG_UNIVERSES } from "../../../lib/catalog-navigation";
 import Link from "../../components/NativeLink";
 import type { Family, Product, ProductSummary } from "../_data/content.shared";
 import { ProductCard, SoumlyIcon } from "./ui";
@@ -38,6 +39,19 @@ export function CategoriesListingView({
 		offers: [],
 	}));
 
+	// icon per universe (reuse Soumly icon set)
+	const universeIcon: Record<string, string> = {
+		"high-tech": "Laptop",
+		electromenager: "Refrigerator",
+		"maison-cuisine": "Home",
+		"beaute-bien-etre": "Sparkles",
+		"mode-accessoires": "Shirt",
+		"bebe-enfants": "ToyBrick",
+		"sport-fitness": "Dumbbell",
+		"bureau-papeterie": "FolderOpen",
+		animaux: "PawPrint",
+	};
+
 	return (
 		<>
 			<section className="sm-page-shell sm-inner-hero sm-categories-hero">
@@ -45,9 +59,10 @@ export function CategoriesListingView({
 					<span className="sm-eyebrow">
 						<Sparkles size={15} /> Le catalogue Soumly
 					</span>
-					<h1>Explorez les catégories</h1>
+					<h1>Explorez nos univers</h1>
 					<p>
-						{totalProducts.toLocaleString("fr-FR")} produits classés en {families.length} familles.
+						{totalProducts.toLocaleString("fr-FR")} produits classés en 9 univers — des catégories
+						pratiques pour trouver rapidement la bonne affaire.
 					</p>
 				</div>
 				<div className="sm-hero-stat-grid">
@@ -60,33 +75,38 @@ export function CategoriesListingView({
 						<span>catégories</span>
 					</div>
 					<div>
-						<strong>{families.length}</strong>
-						<span>familles</span>
+						<strong>9</strong>
+						<span>univers</span>
 					</div>
 				</div>
 			</section>
+
 			<section className="sm-page-shell sm-section-block">
 				<div className="sm-section-heading">
 					<div>
-						<span className="sm-section-kicker">Familles</span>
+						<span className="sm-section-kicker">Univers</span>
 						<h2>Que recherchez-vous ?</h2>
 					</div>
 				</div>
 				<div className="sm-category-grid">
-					{families.map((family, index) => (
+					{CATALOG_UNIVERSES.map((universe, index) => (
 						<Link
 							className={`sm-category-card tone-${(index % 4) + 1}`}
-							href={`/categories/${family.slug}`}
-							key={family.slug}
+							href={`/univers/${universe.slug}`}
+							key={universe.slug}
 						>
 							<span className="sm-category-icon">
-								<SoumlyIcon name={family.icon} size={30} />
+								<SoumlyIcon name={universeIcon[universe.slug] ?? "Sparkles"} size={30} />
 							</span>
 							<div>
-								<h3>{family.label}</h3>
-								<p>{family.categoryCount} catégories</p>
+								<h3>{universe.label}</h3>
+								<p className="sm-universe-tagline">{universe.tagline}</p>
 								<strong>
-									{new Intl.NumberFormat("fr-FR").format(family.productCount)} produits
+									{universe.subUniverses.reduce(
+										(total, sub) => total + sub.categorySlugs.length,
+										0,
+									)}{" "}
+									catégories
 								</strong>
 							</div>
 							<span className="sm-round-arrow">→</span>
@@ -94,6 +114,24 @@ export function CategoriesListingView({
 					))}
 				</div>
 			</section>
+
+			<section className="sm-page-shell sm-section-block">
+				<div className="sm-section-heading">
+					<div>
+						<span className="sm-section-kicker">Familles classiques</span>
+						<h2>Voir les familles existantes</h2>
+					</div>
+				</div>
+				<div className="sm-chip-row">
+					{families.map((family) => (
+						<Link className="sm-chip" href={`/categories/${family.slug}`} key={family.slug}>
+							{family.label}
+							<ArrowRight size={13} />
+						</Link>
+					))}
+				</div>
+			</section>
+
 			{multiFull.length ? (
 				<section className="sm-page-shell sm-section-block sm-soft-section">
 					<div className="sm-section-heading">

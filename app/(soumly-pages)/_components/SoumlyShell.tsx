@@ -3,6 +3,7 @@
 
 import {
 	BookOpen,
+	ChevronRight,
 	Grid3X3,
 	Heart,
 	Home,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
+import { CATALOG_UNIVERSES } from "../../../lib/catalog-navigation";
 import Link from "../../components/NativeLink";
 
 const navItems = [
@@ -26,6 +28,7 @@ export default function SoumlyShell({ children }: { children: React.ReactNode })
 	const pathname = usePathname();
 	const [query, setQuery] = useState("");
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [catalogOpen, setCatalogOpen] = useState(false);
 	const [favoriteCount, setFavoriteCount] = useState(0);
 
 	useEffect(() => {
@@ -68,15 +71,43 @@ export default function SoumlyShell({ children }: { children: React.ReactNode })
 						Soumly<span>.</span>
 					</Link>
 					<nav className="sm-desktop-nav" aria-label="Navigation principale">
-						{navItems.map((item) => (
-							<Link
-								key={item.href}
-								className={pathname.startsWith(item.href) ? "is-active" : ""}
-								href={item.href}
-							>
-								{item.label}
-							</Link>
-						))}
+						{navItems.map((item) =>
+							item.href === "/categories" ? (
+								<div className="sm-nav-mega" key={item.href}>
+									<Link
+										className={pathname.startsWith(item.href) ? "is-active" : ""}
+										href={item.href}
+									>
+										{item.label}
+									</Link>
+									<div className="sm-mega-panel" role="menu">
+										<div className="sm-mega-head">
+											<Link href="/categories">Tous les univers</Link>
+										</div>
+										<div className="sm-mega-grid">
+											{CATALOG_UNIVERSES.map((universe) => (
+												<Link
+													className="sm-mega-item"
+													href={`/univers/${universe.slug}`}
+													key={universe.slug}
+												>
+													<strong>{universe.label}</strong>
+													<span>{universe.tagline}</span>
+												</Link>
+											))}
+										</div>
+									</div>
+								</div>
+							) : (
+								<Link
+									key={item.href}
+									className={pathname.startsWith(item.href) ? "is-active" : ""}
+									href={item.href}
+								>
+									{item.label}
+								</Link>
+							),
+						)}
 					</nav>
 					<search className="sm-header-search">
 						<form onSubmit={submitSearch}>
@@ -138,6 +169,28 @@ export default function SoumlyShell({ children }: { children: React.ReactNode })
 								</Link>
 							);
 						})}
+						<button
+							type="button"
+							className="sm-drawer-accordion"
+							onClick={() => setCatalogOpen((open) => !open)}
+							aria-expanded={catalogOpen}
+						>
+							<Grid3X3 size={19} /> Univers
+							<ChevronRight size={16} className={catalogOpen ? "is-rotated" : ""} />
+						</button>
+						{catalogOpen ? (
+							<div className="sm-drawer-sub">
+								{CATALOG_UNIVERSES.map((universe) => (
+									<Link
+										key={universe.slug}
+										href={`/univers/${universe.slug}`}
+										onClick={() => setMenuOpen(false)}
+									>
+										{universe.label}
+									</Link>
+								))}
+							</div>
+						) : null}
 					</nav>
 				) : null}
 			</header>

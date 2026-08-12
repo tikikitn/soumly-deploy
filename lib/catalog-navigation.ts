@@ -1,0 +1,425 @@
+// Catalog navigation layer — 9 universes above the existing taxonomy.
+// NON-DESTRUCTIVE: existing families/categories/slugs untouched.
+// Generated from the real category inventory (928 categories).
+
+export type CatalogSubUniverse = {
+	slug: string;
+	label: string;
+	categorySlugs: string[];
+};
+
+export type CatalogUniverse = {
+	slug: string;
+	label: string;
+	tagline: string;
+	popular: string[];
+	subUniverses: CatalogSubUniverse[];
+};
+
+export const CATALOG_UNIVERSES: CatalogUniverse[] = [
+	{
+		slug: "high-tech",
+		label: "High-Tech",
+		tagline: "Ordinateurs · Smartphones · TV · Audio · Photo",
+		popular: ["Ordinateurs", "Smartphones", "TV", "Audio", "Photo"],
+		subUniverses: [
+			{
+				slug: "telephones",
+				label: "Téléphones",
+				categorySlugs: ["powerbank", "telephones-fixes", "microphones", "cables-telephone", "smartphones", "etuis-coques", "car-holder", "etuis-et-housses-d-appareils-photo", "films-protecteurs", "accessoires-telephones"],
+			},
+			{
+				slug: "ordinateurs",
+				label: "Ordinateurs",
+				categorySlugs: ["ordinateurs-portables", "ordinateurs-de-bureau", "serveurs", "refroidissement-laptop", "chargeurs-de-telephones-portables", "telephone-portables", "serveurs-nas", "refroidissement-d-ordinateur", "batterie-pc-portable", "enceintes-portables", "radios-portables", "docking-stations", "stations-d-accueil-ordinateurs", "protections-d-ecran-de-telephone-portable", "cables-pour-ordinateurs-et-peripheriques", "cables-de-telephones-portables", "ordinateurs"],
+			},
+			{
+				slug: "photo-video",
+				label: "Photo & Vidéo",
+				categorySlugs: ["camera-lenses", "appareils-photo-numeriques", "camescopes", "camera-tripods", "accessoires-de-camera-camescope", "pellicules-polaroid"],
+			},
+			{
+				slug: "tablettes-montres",
+				label: "Tablettes & montres",
+				categorySlugs: ["tablettes", "tablettes-graphiques"],
+			},
+			{
+				slug: "composants-pc",
+				label: "Composants PC",
+				categorySlugs: ["processeurs", "barrettes-memoires", "disques-durs-externes", "cle-usb", "computer-cases", "disques-durs", "disques-ssd", "alimentation-pc", "refroidissement-cpu", "boitiers-d-equipement-reseau", "boitiers-de-disques-de-stockage", "stockages"],
+			},
+			{
+				slug: "ecrans-peripheriques",
+				label: "Écrans & périphériques",
+				categorySlugs: ["moniteurs", "hubs-et-switches", "souris", "claviers", "ensemble-clavier-et-souris", "tapis-de-souris", "game-controllers", "webcams", "usb-hubs", "supports", "supports-d-ecrans", "batons-supports-pour-selfies"],
+			},
+			{
+				slug: "impression",
+				label: "Impression",
+				categorySlugs: ["imprimantes", "imprimantes-jets-d-encres", "consommables", "scanners", "imprimantes-laser", "recharges-d-encre-pour-imprimante", "cartouches-de-toner", "imprimantes-pour-etiquettes", "tambours-d-imprimante", "materiel-pour-imprimante", "accessoires-imprimantes-et-scanners", "papiers-imprimante"],
+			},
+			{
+				slug: "jeux-videos",
+				label: "Jeux vidéo",
+				categorySlugs: ["consoles-de-jeux", "accessoires-de-console-de-jeux", "jeux-videos", "sieges-pour-jeux-videos"],
+			},
+			{
+				slug: "reseau",
+				label: "Réseau",
+				categorySlugs: ["onduleurs", "cameras-de-surveillance", "wireless-access-points", "cables-video-et-adaptateurs", "piles-domestiques", "routeurs", "systemes-de-surveillance", "cables-antivol", "acces-et-controles"],
+			},
+			{
+				slug: "tv-audio",
+				label: "TV & Audio",
+				categorySlugs: ["ecouteurs", "haut-parleurs", "casques", "televiseurs", "digital-tv-boxes", "projecteurs", "tv-accessories", "recepteurs-tv", "haut-parleurs-conf\\u00e9rence", "home-cinema-systems", "cables-audio", "equipements-de-scene-et-de-studio", "pieces-et-accessoires-d-equipements-audiovisuels", "platines"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["divers", "alimentations-d-energie-non-interruptibles", "logiciels-systemes-dexploitation", "logiciels", "lecteurs-graveurs-optiques", "cables-de-reseau", "cables-hdmi", "computer-chargers", "cartes-memoires", "computer-backpack", "cartes-graphiques", "cartes-mere", "changeurs-de-genre-de-cable", "cables-lightning", "batteries", "appareils-electroniques", "informatique", "nourriture-boissons-tabac", "protections-pour-circuit", "composants", "image-et-son"],
+			},
+		],
+	},
+	{
+		slug: "electromenager",
+		label: "Électroménager",
+		tagline: "Réfrigérateurs · Lavage · Aspirateurs · Air Fryers",
+		popular: ["Réfrigérateurs", "Lavage", "Aspirateurs", "Air Fryers"],
+		subUniverses: [
+			{
+				slug: "froid",
+				label: "Froid",
+				categorySlugs: ["refrigerateurs", "congelateurs", "cave-a-vin"],
+			},
+			{
+				slug: "lavage",
+				label: "Lavage",
+				categorySlugs: ["machine-a-laver", "seche-linges", "lave-vaisselles"],
+			},
+			{
+				slug: "cuisson",
+				label: "Cuisson",
+				categorySlugs: ["fours", "hottes-aspirantes", "micro-ondes", "cuisinieres", "plaques-de-cuisson", "autocuiseurs-pour-cuisiniere"],
+			},
+			{
+				slug: "petit-dejeuner",
+				label: "Petit déjeuner",
+				categorySlugs: ["moulins-a-cafe", "machines-a-cafe", "presse-agrumes", "bouilloires", "centrifugeuses-et-presse-agrumes", "grille-pains", "espresso-machine", "capsules-et-dosettes-de-cafe"],
+			},
+			{
+				slug: "preparation-culinaire",
+				label: "Préparation culinaire",
+				categorySlugs: ["batteurs", "appareils-de-cuisson", "mixeurs", "robot-petrin", "blenders", "hachoirs", "robots-multifonction", "cocotte-minute", "cuiseur-a-vapeur", "cuiseurs-a-riz", "cuiseurs-a-oeufs", "machine-a-pain", "yaourtieres", "sorbetieres"],
+			},
+			{
+				slug: "cuisson-rapide",
+				label: "Cuisson rapide",
+				categorySlugs: ["gaufriers", "friteuses", "appareil-a-raclette", "grill-panini", "crepieres"],
+			},
+			{
+				slug: "entretien-maison",
+				label: "Entretien de la maison",
+				categorySlugs: ["aspirateurs", "fer-a-repasser", "aspirateurs-de-table", "nettoyeur-haute-pression", "robots-aspirateurs", "defroisseurs", "accessoires-de-nettoyeur-a-pression", "aspirateurs-balai"],
+			},
+			{
+				slug: "confort",
+				label: "Confort",
+				categorySlugs: ["climatiseurs", "radiateurs-electriques", "chauffage-a-gaz", "radiateur-bain-huile", "ventilateurs", "chauffe-bain", "fontaine-eau-fraiche", "chauffage-refroidissement-et-qualite-de-l-air", "purificateurs-d-air-liquides", "chauffages"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["seche-cheveux", "balances-de-cuisine", "lisseurs", "brosse-soufflante-chauffante", "fers-a-boucler", "appareils-a-emballage-sous-vide", "appareils-anti-moustiques-insectes", "machines-a-coudre", "tables-de-repassage", "appareils-electriques", "groupes-electrogenes"],
+			},
+		],
+	},
+	{
+		slug: "maison-cuisine",
+		label: "Maison & Cuisine",
+		tagline: "Cuisine · Mobilier · Bricolage · Jardin",
+		popular: ["Cuisine", "Mobilier", "Bricolage", "Jardin"],
+		subUniverses: [
+			{
+				slug: "cuisine",
+				label: "Cuisine",
+				categorySlugs: ["barbecue-bb-qs", "moules-a-gaufres", "cookware", "poeles", "moules-a-gateaux", "casseroles-a-sauce", "casseroles", "tasses", "marmites", "gourdes", "couteaux-de-poche", "vaisselles", "assiettes", "ustensiles-de-cuisine-gadgets", "verres-et-tasses", "couteaux-electriques", "pinces", "couverts-et-coutellerie", "recipients-alimentaires-pour-enfants", "lots-de-casseroles", "tamis-de-cuisine", "couteaux-de-cuisine", "plats", "fouets", "ustensiles-de-cuisine"],
+			},
+			{
+				slug: "mobilier",
+				label: "Mobilier",
+				categorySlugs: ["meubles-de-salon", "lampes-de-table", "fauteuils", "ensembles-de-meubles-de-jardin", "chaises-restaurant", "fauteuils-pour-enfants", "tables-de-camping", "ensembles-de-meubles-pour-enfants", "tableaux", "chaises-de-camping", "meubles-pour-la-maison", "matelas-gonflable"],
+			},
+			{
+				slug: "bricolage",
+				label: "Bricolage",
+				categorySlugs: ["marteaux-rotatifs", "boites-a-outils", "forets", "meuleuses-d-angle", "ponceuses-portatives", "tournevis-manuels", "machines-electriques-a-souder", "perceuses", "scies-sauteuses", "visseuses-electriques-et-visseuses-a-percussion", "outils-sans-fil", "cles-a-fourche", "petites-pieces-et-boites-a-outils"],
+			},
+			{
+				slug: "jardin",
+				label: "Jardin",
+				categorySlugs: ["piscines-hors-sol", "tondeuses-a-gazon", "flotteurs-de-plage-et-de-piscine", "arroseurs", "arrosages-et-irrigations-de-jardin", "parasols-de-terrasse", "tailles-haie-electriques", "accessoires-pour-piscine", "jouets-de-piscine"],
+			},
+			{
+				slug: "decoration",
+				label: "Décoration",
+				categorySlugs: ["brosses-et-supports-pour-toilettes", "torches-et-lampes-de-poche", "accessoires-de-decoration-d-interieur", "decors-muraux", "eclairage-exterieur", "lampes-de-camping", "ampoules-led", "couvertures-de-lit", "eclairages-de-plafond", "sieges-de-toilette-pour-b\\u00e9b\\u00e9", "lumieres-de-nuit-pour-bebe"],
+			},
+			{
+				slug: "rangement",
+				label: "Rangement",
+				categorySlugs: ["placards-et-armoires-de-chambre-a-coucher", "pots-rangement"],
+			},
+			{
+				slug: "salle-bain",
+				label: "Salle de bain",
+				categorySlugs: ["eviers", "tringles-a-rideaux-de-douche", "robinets", "robinets-de-salle-de-bain"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["faits-tout", "machines-et-fours-a-pizzas", "portes-savon", "distributeurs-de-savon", "instruments-de-mesure-de-la-distance", "systemes-videophone", "raccords-des-tuyaux-d-eau", "pompes-a-eaux", "coffres-forts", "pistolets-eau-buses", "poubelles", "mobilier-de-bureau", "boites-hermetiques-alimentaires", "detartrants", "peintures-pour-loisir", "glacieres", "pistolets-a-peinture", "accessoires-et-materiel-menagers", "eponges", "lessives"],
+			},
+		],
+	},
+	{
+		slug: "beaute-bien-etre",
+		label: "Beauté & Bien-être",
+		tagline: "Soins · Cheveux · Parfums · Maquillage",
+		popular: ["Soins", "Cheveux", "Parfums", "Maquillage"],
+		subUniverses: [
+			{
+				slug: "visage",
+				label: "Visage",
+				categorySlugs: ["cremes-solaires", "accessoires-pour-visage", "masques-visage", "toniques-et-soin-apaisant-visage", "serums-visage", "crayons-pour-les-yeux", "cremes-pour-le-visage", "cremes-corporelles-hydratants", "gels-nettoyants-visage", "cremes-hydratantes-pour-le-visage", "demaquillants-visage", "cremes-pour-les-yeux", "cremes-et-hydratants-pour-le-visage", "creme-mains", "nettoyant", "cremes-et-gels-pour-les-yeux", "cremes-corporelles-soin", "visage-pour-hommes", "gommages-pour-le-visage", "serums-capillaires-soins", "masques-pour-le-visage", "exfoliants-pour-le-visage", "mousses-nettoyantes-pour-le-visage", "cremes-et-hydratants-pour-le-corps", "cremes-teintees", "produits-nettoyants-et-lavants-visage", "produits-de-soins-des-yeux", "soins-visage-pour-enfants", "demaquillants-yeux", "soin-visage", "demaquillant-et-nettoyant", "pinceaux-pour-maquillage-du-visage"],
+			},
+			{
+				slug: "corps",
+				label: "Corps",
+				categorySlugs: ["epilateurs", "rasoirs-et-tondeuses", "produits-rasage", "deodorants-et-antitranspirants", "laits-corporels", "huiles-pour-le-corps", "produits-apres-rasage", "laits-pour-le-corps", "savons-solides", "cellulite-et-vergetures", "soins-du-corps-pour-enfants", "soin-des-pieds", "savons-liquides", "rasage", "gels-lubrifiants-erotisme", "bain-moussant-pour-douche", "gommages-pour-le-corps", "accessoires-pour-corps", "protection-contre-le-rayonnement-solaire-pour-le-corps", "deodorants-et-anti-transpirants", "corps", "erotisme-corps"],
+			},
+			{
+				slug: "cheveux",
+				label: "Cheveux",
+				categorySlugs: ["peignes-et-brosses-cheveux", "shampoings-cheveux-beaute", "huiles-cheveux", "apres-shampoings-baumes", "shampoings-cheveux", "masques-cheveux", "couleurs-de-cheveux", "cheveux-pour-enfant", "cheveux", "protection-solaire-cheveux", "apres-shampoings", "soins-pour-barbe", "masques-pour-cheveux", "laques-cheveux", "cheveux-hommes", "produits-de-soins-de-cheveux-de-bebe", "produits-de-coiffure", "shampoings", "colorations-cheveux", "accessoires-pour-cheveux", "materiel-de-coiffure"],
+			},
+			{
+				slug: "parfums",
+				label: "Parfums",
+				categorySlugs: ["eaux-de-parfum", "parfums-beaute", "eaux-de-parfum-pour-femme", "coffrets-cadeaux-de-parfum", "parfums-pour-enfants", "parfums-et-maquillage-pour-enfants", "eaux-de-parfum-pour-homme", "parfums-unisexes", "parfums-pour-femme", "accessoires-parfums"],
+			},
+			{
+				slug: "maquillage",
+				label: "Maquillage",
+				categorySlugs: ["fards-a-paupieres", "rouges-a-levres", "crayons-a-levres", "fond-de-teint", "mascaras", "correcteurs", "fards", "poudres", "brillants-a-levres", "vernis-a-ongles", "crayons-sourcils", "baumes-a-levres", "mascaras-et-gels-sourcils", "fixateur-de-maquillage", "palettes-de-fards-a-paupieres", "outils-de-maquillage", "zone-de-la-bouche-et-des-levres"],
+			},
+			{
+				slug: "sante-bien-etre",
+				label: "Santé & bien-être",
+				categorySlugs: ["pese-personnes", "relaxation", "thermometres", "tensiometres-pression-arterielle", "soins-de-sante", "vitamines-et-complements-alimentaires", "dentifrices", "equipement-medical", "sante-beaute", "preservatifs", "dentifrices-dents", "soins-interdentaires"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["brosses-a-dents-electriques", "eaux-de-toilette", "outils-de-soins-personnels", "gels-dents-gencives", "bains-de-bouche-et-sprays-buccaux", "gels-douche-bain", "eaux-micellaires", "gommages-corporels", "produits-solaires-pour-enfants", "gels-de-toilette-intime", "coffrets-pour-femme", "protection-contre-le-rayonnement-solaire", "gels-douches", "brosses-a-dents-nettoyage", "soin-sans-rincage", "blanchiment-des-dents", "produits-de-traitements-dermatologiques-corporels", "produits-de-traitement-oculaire", "brosses-a-dents-electrique", "eaux-de-toilette-femme", "soin-de-la-peau-de-l-apos-enfant", "brosses-a-dents", "produits-de-soins-pour-la-peau", "eaux-de-toilette-homme", "produits-de-soins-de-la-peau", "accessoires-pour-dents", "styling"],
+			},
+		],
+	},
+	{
+		slug: "mode-accessoires",
+		label: "Mode & Accessoires",
+		tagline: "Femme · Homme · Chaussures · Sacs · Montres",
+		popular: ["Mode Femme", "Mode Homme", "Chaussures", "Sacs"],
+		subUniverses: [
+			{
+				slug: "mode-homme",
+				label: "Mode Homme",
+				categorySlugs: ["pantalons", "chemises-et-hauts"],
+			},
+			{
+				slug: "chaussures",
+				label: "Chaussures",
+				categorySlugs: ["chaussures-de-sport-a-la-mode", "claquettes-et-tongs", "chaussures"],
+			},
+			{
+				slug: "sacs",
+				label: "Sacs",
+				categorySlugs: ["sacoches-ordinateurs-portables", "valises", "sacs-a-dos", "sacs-a-mains-et-sacs-en-bandouliere", "sac-a-dos-scolaire", "bagages"],
+			},
+			{
+				slug: "montres",
+				label: "Montres",
+				categorySlugs: ["montres"],
+			},
+			{
+				slug: "bijoux",
+				label: "Bijoux",
+				categorySlugs: ["bracelets", "colliers"],
+			},
+			{
+				slug: "lunettes",
+				label: "Lunettes",
+				categorySlugs: ["lunettes-de-natation", "lunettes-de-soleil"],
+			},
+			{
+				slug: "accessoires",
+				label: "Accessoires",
+				categorySlugs: ["chapeaux"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["smart-watches", "accessoires-pour-smartwatch", "chaussettes"],
+			},
+		],
+	},
+	{
+		slug: "bebe-enfants",
+		label: "Bébé & Enfants",
+		tagline: "Repas · Jeux · Puériculture",
+		popular: ["Repas & allaitement", "Jeux & éveil", "Hygiène"],
+		subUniverses: [
+			{
+				slug: "repas-allaitement",
+				label: "Repas & allaitement",
+				categorySlugs: ["tetines-pour-bebe", "biberons", "chauffe-biberons", "tetines-pour-biberons", "biberons-et-vaisselle-pour-bebes", "bavoirs-pour-bebes"],
+			},
+			{
+				slug: "jeux-eveil",
+				label: "Jeux & éveil",
+				categorySlugs: ["jeux", "jouets-de-construction", "piscines-de-jeux-pour-enfants", "jouets-et-jeux-d-eveil-d-adresse", "equipements-et-jeux-de-recreation-et-sportifs", "equipements-pour-terrain-de-jeux", "jouets-musicaux", "jouets-d-apprentissage", "jeux-de-societe", "jouets-pour-bebes", "jeux-d-imitation", "coffrets-de-sciences-pour-enfant", "jouets-a-chevaucher", "jouets-interactifs", "puzzles", "hochets", "jouets-electroniques-pour-enfants", "jouets-sets-de-jeux", "poupees", "peluches", "tapis-d-eveil-et-de-jeux-pour-bebes", "figurines-pour-enfants", "jouets"],
+			},
+			{
+				slug: "hygiene-soin",
+				label: "Hygiène & soin",
+				categorySlugs: ["couches-jetables-pour-bebe", "accessoires-de-bain-pour-bebes", "couches-jetables", "baignoires-pour-bebes"],
+			},
+			{
+				slug: "promenade",
+				label: "Promenade",
+				categorySlugs: ["parcs", "poussettes-pour-bebe"],
+			},
+			{
+				slug: "securite",
+				label: "Sécurité",
+				categorySlugs: ["moniteurs-video-pour-bebe"],
+			},
+			{
+				slug: "chambre",
+				label: "Chambre",
+				categorySlugs: ["sommeil-de-l-enfant"],
+			},
+			{
+				slug: "enfants",
+				label: "Enfants",
+				categorySlugs: ["kits-de-loisirs-creatifs-et-artistiques-pour-enfants", "bebe-enfants", "sieges-auto-bebe", "bain-de-bebe", "coffrets-pour-les-bebes", "aspirateurs-nasaux-pour-bebe", "bains-de-bebe", "vehicules-pour-enfants"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["tires-lait", "chaises-hautes", "tetes-de-rechange"],
+			},
+		],
+	},
+	{
+		slug: "sport-fitness",
+		label: "Sport & Fitness",
+		tagline: "Fitness · Sports · Outdoor",
+		popular: ["Fitness", "Sports", "Outdoor"],
+		subUniverses: [
+			{
+				slug: "fitness",
+				label: "Fitness",
+				categorySlugs: ["halteres", "accessoires-de-musculation-des-mains", "alimentation-du-sportif", "bancs-de-musculation", "equipements-de-fitness"],
+			},
+			{
+				slug: "sports",
+				label: "Sports",
+				categorySlugs: ["equipement-pour-sports-de-raquette", "kits-de-natation", "ballons-de-football", "equipement-pour-sports-nautiques"],
+			},
+			{
+				slug: "outdoor",
+				label: "Outdoor",
+				categorySlugs: ["velos-d-appartement", "velos-et-accessoires", "trottinettes-electriques", "scooters", "scooters-electriques"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["tapis-de-course", "gants-de-sport", "chaussures-d-athletisme", "tenus-et-vetements-de-sport", "sports-loisirs"],
+			},
+		],
+	},
+	{
+		slug: "bureau-papeterie",
+		label: "Bureau & Papeterie",
+		tagline: "Fournitures · Matériel · Organisation",
+		popular: ["Fournitures", "Matériel de bureau", "Organisation"],
+		subUniverses: [
+			{
+				slug: "fournitures",
+				label: "Fournitures",
+				categorySlugs: ["agrafeuses", "stylos-a-bille", "crayons-de-couleur", "stylos-feutres", "ciseaux-a-bouts-ronds", "agrafes", "stylos-fins", "marqueurs", "livres", "compas-a-secteur", "trousses-a-crayons", "livres-et-pages-a-colorier"],
+			},
+			{
+				slug: "materiel-bureau",
+				label: "Matériel de bureau",
+				categorySlugs: ["calculatrices", "destructeur-de-papier", "caisses-enregistreuses", "relieuses", "tableaux-blancs", "tableaux-d-affichage-accessoires"],
+			},
+			{
+				slug: "organisation",
+				label: "Organisation",
+				categorySlugs: ["systemes-de-reliure-pour-maintenir-les-papiers-et-les-documents", "produits-d-archivage"],
+			},
+			{
+				slug: "mobilier-bureau",
+				label: "Mobilier bureau",
+				categorySlugs: ["organiseurs-de-bureau", "fournitures-de-bureau"],
+			},
+			{
+				slug: "autres",
+				label: "Autres",
+				categorySlugs: ["accessoires-de-systeme-de-paiement-en-point-de-vente", "blocs-notes", "laminateurs-et-fournitures"],
+			},
+		],
+	},
+	{
+		slug: "animaux",
+		label: "Animaux",
+		tagline: "Chiens · Chats · Alimentation",
+		popular: ["Chiens", "Chats", "Alimentation"],
+		subUniverses: [
+			{
+				slug: "chiens",
+				label: "Chiens",
+				categorySlugs: ["nourriture-pour-chiens-et-chats", "litieres-et-effractions-pour-chiens-et-chats", "colliers-harnais-et-laisses-pour-chiens-et-chats"],
+			},
+			{
+				slug: "alimentation",
+				label: "Alimentation",
+				categorySlugs: ["gamelles"],
+			},
+		],
+	},
+];
+
+// Lookup helpers
+export function getUniverse(slug: string) {
+	return CATALOG_UNIVERSES.find((u) => u.slug === slug) ?? null;
+}
+
+export function universeForCategory(categorySlug: string): CatalogUniverse | null {
+	for (const universe of CATALOG_UNIVERSES) {
+		for (const sub of universe.subUniverses) {
+			if (sub.categorySlugs.includes(categorySlug)) return universe;
+		}
+	}
+	return null;
+}
+
+export function subUniverseForCategory(categorySlug: string) {
+	for (const universe of CATALOG_UNIVERSES) {
+		for (const sub of universe.subUniverses) {
+			if (sub.categorySlugs.includes(categorySlug)) return sub;
+		}
+	}
+	return null;
+}

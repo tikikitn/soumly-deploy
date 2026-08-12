@@ -2171,3 +2171,274 @@ select:focus-visible,
 	margin: 0 -16px;
 	padding: 4px 16px 8px;
 }
+/* Homepage universe pills */
+.family-universe-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+.family-universe-pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 7px 14px;
+	border-radius: 999px;
+	background: rgba(99, 71, 245, 0.08);
+	border: 1px solid rgba(99, 71, 245, 0.18);
+	color: var(--sm-violet, #6347f5);
+	font-size: 12px;
+	font-weight: 700;
+	transition:
+		background 160ms ease,
+		transform 160ms ease;
+}
+.family-universe-pill:hover {
+	background: rgba(99, 71, 245, 0.16);
+	transform: translateY(-1px);
+}
+/* Homepage universe cards — photo-backed (user-designed renders) */
+.family-card.uni-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	background-image: var(--family-img);
+	background-size: cover;
+	background-position: center;
+}
+.family-card.uni-tone-1 {
+	background-color: #6347f5;
+}
+.family-card.uni-tone-2 {
+	background-color: #ff4757;
+}
+.family-card.uni-tone-3 {
+	background-color: #1e9e6a;
+}
+.family-card.uni-tone-4 {
+	background-color: #f59e0b;
+}
+.family-card .uni-card-tagline {
+	display: none;
+}
+.family-card .family-card-label-icon svg {
+	color: var(--violet, #6347f5);
+}
+.family-card.uni-card .family-card-label {
+	background: rgba(255, 255, 255, 0.88);
+	color: #171236;
+}
+/* darken bottom slightly for label contrast on light photos */
+.family-card.uni-card::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(0deg, rgba(9, 11, 42, 0.18) 0%, rgba(9, 11, 42, 0) 45%);
+	pointer-events: none;
+}
+.family-card.uni-card > * {
+	position: relative;
+	z-index: 1;
+}
+
+/* Guides d'achat promo card — fills the last grid row after Animaux */
+.guides-promo-card {
+	grid-column: span 3;
+	min-width: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 16px;
+	background: linear-gradient(
+		135deg,
+		#efecff 0%,
+		#e3ddff 45%,
+		#d9d0ff 100%
+	);
+	border: 1px solid rgba(99, 71, 245, 0.18);
+	box-shadow: 0 6px 22px rgba(99, 71, 245, 0.12);
+	overflow: hidden;
+	min-height: 190px;
+	padding: 14px 18px;
+}
+.guides-promo-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 16px 36px rgba(99, 71, 245, 0.22);
+}
+.guides-promo-visual {
+	position: relative;
+	display: flex;
+	flex: none;
+	width: 84px;
+	height: 84px;
+	align-items: center;
+	justify-content: center;
+}
+.guides-promo-glass {
+	position: relative;
+	z-index: 2;
+	display: grid;
+	width: 52px;
+	height: 52px;
+	place-items: center;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 6px 18px rgba(99, 71, 245, 0.25);
+	color: var(--violet, #6347f5);
+}
+.guides-promo-shapes {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.g-shape {
+	position: absolute;
+	display: block;
+	border-radius: 6px;
+	background: rgba(99, 71, 245, 0.35);
+}
+.g-shape-1 {
+	width: 14px;
+	height: 10px;
+	top: 6px;
+	right: 6px;
+	border-radius: 3px;
+}
+.g-shape-2 {
+	width: 12px;
+	height: 12px;
+	bottom: 4px;
+	left: 0;
+	border-radius: 50%;
+	background: rgba(255, 71, 87, 0.4);
+}
+.g-shape-3 {
+	width: 10px;
+	height: 16px;
+	top: 20px;
+	left: 8px;
+	border-radius: 5px;
+	background: rgba(255, 255, 255, 0.75);
+}
+.guides-promo-body {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4px;
+}
+.guides-promo-title {
+	color: var(--navy, #171236);
+	font-size: 17px;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+.guides-promo-desc {
+	color: rgba(23, 18, 54, 0.72);
+	font-size: 12.5px;
+	line-height: 1.45;
+}
+.guides-promo-cta {
+	display: inline-flex;
+	align-items: center;
+	margin-top: 4px;
+	padding: 6px 14px;
+	border-radius: 999px;
+	background: var(--violet, #6347f5);
+	color: #fff;
+	font-size: 11.5px;
+	font-weight: 700;
+	box-shadow: 0 4px 12px rgba(99, 71, 245, 0.3);
+	transition:
+		transform 160ms ease,
+		box-shadow 160ms ease;
+}
+.guides-promo-card:hover .guides-promo-cta {
+	transform: translateX(2px);
+	box-shadow: 0 6px 16px rgba(99, 71, 245, 0.4);
+}
+/* hide arrow default (card uses its own CTA) — keep round arrow for mobile parity */
+.guides-promo-card .family-card-arrow {
+	display: grid;
+}
+@media (max-width: 768px) {
+	.guides-promo-card {
+		grid-column: span 1;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 10px;
+		min-height: 140px;
+	}
+	.guides-promo-visual {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 40px;
+		height: 40px;
+		display: flex;
+	}
+	.guides-promo-glass {
+		width: 32px;
+		height: 32px;
+	}
+	.guides-promo-glass svg {
+		width: 15px;
+		height: 15px;
+	}
+	.guides-promo-shapes {
+		display: block;
+		position: absolute;
+		inset: 0;
+		opacity: 0.65;
+	}
+	.guides-promo-shapes .g-shape {
+		position: absolute;
+		border-radius: 5px;
+		background: rgba(99, 71, 245, 0.32);
+	}
+	.guides-promo-shapes .g-shape-1 {
+		width: 16px;
+		height: 11px;
+		top: 20px;
+		left: 12px;
+		border-radius: 3px;
+	}
+	.guides-promo-shapes .g-shape-2 {
+		width: 13px;
+		height: 13px;
+		top: 42px;
+		right: 52px;
+		border-radius: 50%;
+		background: rgba(255, 71, 87, 0.4);
+	}
+	.guides-promo-shapes .g-shape-3 {
+		width: 11px;
+		height: 17px;
+		top: 66px;
+		left: 24px;
+		border-radius: 4px;
+		background: rgba(255, 255, 255, 0.7);
+	}
+	.guides-promo-card .family-card-arrow {
+		display: none;
+	}
+	.guides-promo-desc {
+		display: none;
+	}
+	.guides-promo-cta {
+		display: none;
+	}
+	.guides-promo-title {
+		font-size: 13px;
+		padding: 7px 10px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.82);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		border: 1px solid rgba(255, 255, 255, 0.7);
+		box-shadow: 0 4px 14px rgba(20, 16, 55, 0.1);
+	}
+}
+
