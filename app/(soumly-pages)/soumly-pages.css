@@ -4059,3 +4059,38 @@
 .sm-drawer-sub a:hover {
 	color: var(--sm-violet);
 }
+/* Fix mobile search layout: form must be flex like its container */
+.sm-mobile-search form {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	gap: 8px;
+}
+.sm-mobile-search form > svg {
+	flex: none;
+	color: var(--sm-muted, #7a7aa8);
+}
+.sm-mobile-search form input {
+	flex: 1;
+	min-width: 0;
+}
+.sm-mobile-search form button {
+	flex: none;
+}
+/* same for desktop header search */
+.sm-header-search form {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	gap: 8px;
+}
+.sm-header-search form > svg {
+	flex: none;
+	color: var(--sm-muted, #7a7aa8);
+}
+.sm-header-search form input {
+	flex: 1;
+	min-width: 0;
+}
