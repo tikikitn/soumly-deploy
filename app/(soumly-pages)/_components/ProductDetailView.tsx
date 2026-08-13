@@ -171,10 +171,7 @@ function ProductDetails({
 			const current = Array.isArray(parsed)
 				? parsed.filter((item): item is string => typeof item === "string")
 				: [];
-			const next = [product.id, ...current.filter((id) => id !== product.id)].slice(
-				0,
-				RECENT_MAX,
-			);
+			const next = [product.id, ...current.filter((id) => id !== product.id)].slice(0, RECENT_MAX);
 			window.localStorage.setItem(RECENT_KEY, JSON.stringify(next));
 			window.dispatchEvent(new Event("soumly:recents"));
 		} catch {
@@ -391,6 +388,7 @@ function ProductDetails({
 										price: bestOffer.price,
 										category: product.category,
 										destination_url: bestOffer.url,
+										source_location: "product_detail",
 									});
 								}}
 							>
@@ -468,6 +466,7 @@ function ProductDetails({
 													price: offer.price,
 													category: product.category,
 													destination_url: offer.url,
+													source_location: "product_detail",
 												});
 											}}
 										>

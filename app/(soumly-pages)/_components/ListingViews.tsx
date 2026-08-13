@@ -39,10 +39,7 @@ function sortProducts(items: ProductSummary[], sort: string) {
 	if (sort === "discount") return result.sort((a, b) => b.discount - a.discount);
 	if (sort === "popular") {
 		return result.sort(
-			(a, b) =>
-				b.stores - a.stores ||
-				b.discount - a.discount ||
-				a.price - b.price,
+			(a, b) => b.stores - a.stores || b.discount - a.discount || a.price - b.price,
 		);
 	}
 	return result.sort((a, b) => a.name.localeCompare(b.name, "fr"));

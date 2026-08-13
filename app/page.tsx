@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 	title: "Soumly – Comparateur de prix en Tunisie",
 	description:
 		"Comparez les prix des smartphones, ordinateurs, électroménager et produits du quotidien auprès des boutiques tunisiennes.",
-	alternates: { canonical: BASE_URL + "/" },
+	alternates: { canonical: `${BASE_URL}/` },
 	openGraph: {
 		title: "Soumly – Comparateur de prix en Tunisie",
 		description:
 			"Comparez les prix des smartphones, ordinateurs, électroménager et produits du quotidien auprès des boutiques tunisiennes.",
-		url: BASE_URL + "/",
+		url: `${BASE_URL}/`,
 		siteName: "Soumly",
 		locale: "fr_TN",
 		type: "website",

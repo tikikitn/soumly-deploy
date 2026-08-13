@@ -3,7 +3,7 @@
 // via /api/products/by-ids (never loads the full catalog client-side).
 "use client";
 
-import { Bell, ChevronRight, Clock, Heart, Info, Search, Sparkles } from "lucide-react";
+import { Bell, ChevronRight, Clock, Heart, Info, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "../../components/NativeLink";
 import type { Product, ProductSummary } from "../_data/content.shared";
@@ -146,13 +146,6 @@ export function AccountScreen() {
 		window.dispatchEvent(new Event("soumly:soumly-alerts"));
 	};
 
-	const removeFavorite = (id: string) => {
-		const next = favoriteIds.filter((item) => item !== id);
-		setFavoriteIds(next);
-		writeIds("soumly-favorites", next);
-		window.dispatchEvent(new Event("soumly:favorites"));
-	};
-
 	return (
 		<section className="sm-page-shell sm-account-page">
 			{/* Intro — compact */}
@@ -163,8 +156,7 @@ export function AccountScreen() {
 				<div>
 					<h1>Mon espace</h1>
 					<p>
-						Vos favoris, alertes de prix et produits récemment consultés, réunis au même
-						endroit.
+						Vos favoris, alertes de prix et produits récemment consultés, réunis au même endroit.
 					</p>
 				</div>
 			</div>
@@ -250,11 +242,7 @@ export function AccountScreen() {
 								</Link>
 								<Link className="sm-alert-info" href={`/produit/${summary.id}`}>
 									<strong>{summary.name}</strong>
-									<span>
-										{summary.stores > 1
-											? `${summary.stores} boutiques`
-											: "1 boutique"}
-									</span>
+									<span>{summary.stores > 1 ? `${summary.stores} boutiques` : "1 boutique"}</span>
 								</Link>
 								<strong className="sm-alert-price">
 									{new Intl.NumberFormat("fr-FR").format(summary.price)} DT
@@ -310,4 +298,4 @@ export function AccountScreen() {
 	);
 }
 
-export { readRecents, RECENT_KEY, RECENT_MAX };
+export { RECENT_KEY, RECENT_MAX, readRecents };

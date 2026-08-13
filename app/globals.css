@@ -2249,12 +2249,7 @@ select:focus-visible,
 	align-items: center;
 	justify-content: flex-start;
 	gap: 16px;
-	background: linear-gradient(
-		135deg,
-		#efecff 0%,
-		#e3ddff 45%,
-		#d9d0ff 100%
-	);
+	background: linear-gradient(135deg, #efecff 0%, #e3ddff 45%, #d9d0ff 100%);
 	border: 1px solid rgba(99, 71, 245, 0.18);
 	box-shadow: 0 6px 22px rgba(99, 71, 245, 0.12);
 	overflow: hidden;

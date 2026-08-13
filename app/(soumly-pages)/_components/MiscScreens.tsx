@@ -192,6 +192,7 @@ export function StoresScreen({ stores }: { stores: StoreSummary[] }) {
 									trackOutboundStoreClick({
 										store_name: storeItem.name,
 										destination_url: storeItem.url,
+										source_location: "stores",
 									});
 								}}
 							>

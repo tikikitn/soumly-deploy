@@ -41,17 +41,6 @@ import {
 	type ProductSummary,
 } from "./(soumly-pages)/_data/content.shared";
 
-const FAMILY_IMAGES: Record<string, string> = {
-	informatique: "/assets/families/informatique-v3.webp",
-	telephonie: "/assets/families/telephonie-v3.webp",
-	"sante-beaute": "/assets/families/sante-beaute-v3.webp",
-	electromenager: "/assets/families/electromenager-v3.webp",
-	"petit-electromenager": "/assets/families/petit-electromenager-v3.webp",
-	cuisine: "/assets/families/cuisine-v3.webp",
-	"maison-jardin": "/assets/families/maison-jardin-v3.webp",
-	"bebe-enfants": "/assets/families/bebe-enfants-v3.webp",
-};
-
 const UNIVERSE_IMAGES: Record<string, string> = {
 	"high-tech": "/assets/universes/01-high-tech.webp",
 	electromenager: "/assets/universes/02-electromenager.webp",
@@ -517,7 +506,11 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 							className={`family-card uni-card uni-tone-${(index % 4) + 1}`}
 							key={universe.slug}
 							href={`/univers/${universe.slug}`}
-							style={{ "--family-img": `url(${UNIVERSE_IMAGES[universe.slug] ?? ""})` } as React.CSSProperties}
+							style={
+								{
+									"--family-img": `url(${UNIVERSE_IMAGES[universe.slug] ?? ""})`,
+								} as React.CSSProperties
+							}
 						>
 							<span className="family-card-arrow">→</span>
 							<span className="family-card-label">

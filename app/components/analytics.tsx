@@ -24,6 +24,11 @@ import { useEffect } from "react";
 
 const GA_ID = "G-GWRZRHR8FV";
 
+// Canonical outbound click schema. Every merchant click from Soumly sends
+// these parameters; a value is omitted (never faked) when the component
+// does not have it. source_location is a normalized component identifier:
+//   product_detail | homepage | category_listing | search_results |
+//   favorites | stores | guides | other
 export type OutboundStoreClickParams = {
 	product_id?: string;
 	product_name?: string;
@@ -31,7 +36,21 @@ export type OutboundStoreClickParams = {
 	price?: number;
 	category?: string;
 	destination_url: string;
+	merchant_domain?: string;
+	source_location?: string;
 };
+
+// Derive a normalized merchant domain from a destination URL:
+// lowercase, strip leading "www.", hostname only (no path/query/hash).
+// Returns undefined when parsing fails — never invents a value.
+function merchantDomainFromUrl(rawUrl: string): string | undefined {
+	try {
+		const hostname = new URL(rawUrl).hostname.toLowerCase();
+		return hostname.startsWith("www.") ? hostname.slice(4) : hostname;
+	} catch {
+		return undefined;
+	}
+}
 
 // Reusable typed helper: fire outbound_store_click with only defined
 // values (gtag drops undefined keys, but we build the payload explicitly
@@ -43,10 +62,13 @@ export function trackOutboundStoreClick(params: OutboundStoreClickParams) {
 		store_name: params.store_name,
 		destination_url: params.destination_url,
 	};
+	const domain = merchantDomainFromUrl(params.destination_url);
+	if (domain !== undefined) payload.merchant_domain = domain;
 	if (params.product_id !== undefined) payload.product_id = params.product_id;
 	if (params.product_name !== undefined) payload.product_name = params.product_name;
 	if (params.price !== undefined && Number.isFinite(params.price)) payload.price = params.price;
 	if (params.category !== undefined) payload.category = params.category;
+	if (params.source_location !== undefined) payload.source_location = params.source_location;
 	gtag("event", "outbound_store_click", payload);
 }
 
