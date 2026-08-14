@@ -7,6 +7,7 @@ import {
 	Grid3X3,
 	Heart,
 	Home,
+	Instagram,
 	Menu,
 	Search,
 	ShoppingBag,
@@ -16,6 +17,7 @@ import {
 import { usePathname } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { CATALOG_UNIVERSES } from "../../../lib/catalog-navigation";
+import { guardSocialClick, trackSocialLinkClick } from "../../components/analytics";
 import Link from "../../components/NativeLink";
 
 const navItems = [
@@ -229,6 +231,23 @@ export default function SoumlyShell({ children }: { children: React.ReactNode })
 				</div>
 				<div className="sm-page-shell sm-footer-bottom">
 					<span>© 2026 Soumly. Tous droits réservés.</span>
+					<Link
+						className="sm-footer-social"
+						href="https://www.instagram.com/soumly.online"
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label="Suivre Soumly sur Instagram"
+						onClick={(event) => {
+							if (guardSocialClick(event.currentTarget)) return;
+							trackSocialLinkClick({
+								platform: "instagram",
+								destination_url: "https://www.instagram.com/soumly.online",
+								source_location: "footer",
+							});
+						}}
+					>
+						<Instagram size={15} aria-hidden="true" /> Instagram
+					</Link>
 					<span>Prix du dernier relevé · À confirmer chez le marchand</span>
 				</div>
 			</footer>

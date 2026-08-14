@@ -240,6 +240,17 @@
 .sm-footer-grid a:hover {
 	color: #fff;
 }
+.sm-footer-social {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+}
+.sm-footer-bottom a {
+	color: #b9bbca;
+}
+.sm-footer-bottom a:hover {
+	color: #fff;
+}
 .sm-footer-bottom {
 	display: flex;
 	margin-top: 48px;
@@ -3259,7 +3270,12 @@
 	}
 	.sm-footer-bottom {
 		display: grid;
+		justify-content: center;
+		gap: 8px;
 		text-align: center;
+	}
+	.sm-footer-bottom a {
+		justify-content: center;
 	}
 	.sm-bottom-nav {
 		position: fixed;

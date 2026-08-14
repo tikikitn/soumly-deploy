@@ -16,6 +16,10 @@
 //     GA4's built-in outbound "click" event does not include.
 //     Navigation is NEVER blocked; if gtag is missing the click still
 //     proceeds normally.
+//   - social_link_click: fired when a visitor clicks a Soumly social
+//     profile link (Instagram). Parameters: platform, destination_url,
+//     source_location. Exactly ONE event per physical click
+//     (guardSocialClick dataset flag).
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
@@ -77,6 +81,36 @@ export function trackOutboundStoreClick(params: OutboundStoreClickParams) {
 export function guardOutboundClick(element: HTMLElement | null): boolean {
 	if (!element || element.dataset.gaOutboundTracked === "1") return true;
 	element.dataset.gaOutboundTracked = "1";
+	return false;
+}
+
+// Canonical social link click schema. Fired when a visitor clicks a Soumly
+// social profile link (Instagram, etc.). source_location is a normalized
+// component identifier: footer | homepage_cta | other
+export type SocialLinkClickParams = {
+	platform: string;
+	destination_url: string;
+	source_location: string;
+};
+
+// Reusable typed helper: fire social_link_click with the exact parameters
+// expected by GA4. Navigation is NEVER blocked; if gtag is missing the
+// click still proceeds normally.
+export function trackSocialLinkClick(params: SocialLinkClickParams) {
+	const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+	if (typeof gtag !== "function") return; // never block navigation
+	gtag("event", "social_link_click", {
+		platform: params.platform,
+		destination_url: params.destination_url,
+		source_location: params.source_location,
+	});
+}
+
+// Guard against double-firing from one physical click: exactly ONE
+// social_link_click event per click on a given anchor.
+export function guardSocialClick(element: HTMLElement | null): boolean {
+	if (!element || element.dataset.gaSocialTracked === "1") return true;
+	element.dataset.gaSocialTracked = "1";
 	return false;
 }
 

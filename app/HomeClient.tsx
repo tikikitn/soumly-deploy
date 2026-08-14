@@ -14,6 +14,7 @@ import {
 	Grid3X3,
 	Heart,
 	Home,
+	Instagram,
 	Laptop,
 	Menu,
 	Microwave,
@@ -40,6 +41,7 @@ import {
 	type Product,
 	type ProductSummary,
 } from "./(soumly-pages)/_data/content.shared";
+import { guardSocialClick, trackSocialLinkClick } from "./components/analytics";
 
 const UNIVERSE_IMAGES: Record<string, string> = {
 	"high-tech": "/assets/universes/01-high-tech.webp",
@@ -824,6 +826,52 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 				</a>
 			</section>
 
+			<section className="instagram-cta page-shell" aria-label="Suivre Soumly sur Instagram">
+				<div className="instagram-cta-inner">
+					<div className="instagram-cta-brand">
+						<span className="instagram-cta-icon">
+							<Instagram size={22} aria-hidden="true" />
+						</span>
+						<div className="instagram-cta-text">
+							<span className="section-kicker">Communauté</span>
+							<h2>Suivez Soumly sur Instagram</h2>
+							<a
+								className="instagram-cta-handle"
+								href="https://www.instagram.com/soumly.online"
+								target="_blank"
+								rel="noopener noreferrer"
+								onClick={(event) => {
+									if (guardSocialClick(event.currentTarget)) return;
+									trackSocialLinkClick({
+										platform: "instagram",
+										destination_url: "https://www.instagram.com/soumly.online",
+										source_location: "homepage_cta",
+									});
+								}}
+							>
+								@soumly.online
+							</a>
+						</div>
+					</div>
+					<a
+						className="instagram-cta-button"
+						href="https://www.instagram.com/soumly.online"
+						target="_blank"
+						rel="noopener noreferrer"
+						onClick={(event) => {
+							if (guardSocialClick(event.currentTarget)) return;
+							trackSocialLinkClick({
+								platform: "instagram",
+								destination_url: "https://www.instagram.com/soumly.online",
+								source_location: "homepage_cta",
+							});
+						}}
+					>
+						Nous suivre <ArrowRight size={17} />
+					</a>
+				</div>
+			</section>
+
 			<footer className="site-footer">
 				<div className="page-shell footer-grid">
 					<div className="footer-brand">
@@ -838,6 +886,23 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 						<a href="/categories">Catégories</a>
 
 						<a href="/guides">Guides d’achat</a>
+						<a
+							className="footer-social"
+							href="https://www.instagram.com/soumly.online"
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="Suivre Soumly sur Instagram"
+							onClick={(event) => {
+								if (guardSocialClick(event.currentTarget)) return;
+								trackSocialLinkClick({
+									platform: "instagram",
+									destination_url: "https://www.instagram.com/soumly.online",
+									source_location: "footer",
+								});
+							}}
+						>
+							<Instagram size={15} aria-hidden="true" /> Instagram
+						</a>
 					</div>
 					<div>
 						<h3>Aide</h3>
