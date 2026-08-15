@@ -1,0 +1,208 @@
+# Soumly — Guide complet pour les assistants IA
+
+> Soumly est un comparateur de prix destiné au marché tunisien. Il rassemble et normalise des offres provenant de boutiques tunisiennes afin d’aider l’utilisateur à comparer une même référence avant d’acheter sur le site du marchand.
+
+## 1. Identité du service
+
+- Nom : Soumly.
+- Site canonique : https://soumly.online/
+- Marché principal : Tunisie.
+- Langue de l’interface et du contenu : français.
+- Devise : dinar tunisien (TND), généralement affiché « DT ».
+- Fonction : recherche de produits, comparaison d’offres, exploration par univers, catégorie et marque, puis redirection vers le marchand.
+- Soumly ne vend, ne facture, ne stocke et n’expédie aucun produit.
+
+## 2. Fonctionnement des données
+
+Les données produits sont importées depuis des sources marchandes, puis normalisées et classées. Des offres sont regroupées sur une même fiche lorsque les références reconnues correspondent.
+
+Une fiche produit peut contenir :
+
+- le nom et la référence du produit ;
+- sa catégorie ;
+- le prix relevé pour chaque offre ;
+- le nom de la boutique ;
+- un lien direct vers la fiche du marchand ;
+- un ancien prix et une réduction lorsqu’ils sont valides ;
+- plusieurs offres classées pour faciliter la comparaison.
+
+Le catalogue, les boutiques, les prix et les disponibilités évoluent. Toute information commerciale doit être considérée comme un relevé, et non comme une garantie permanente.
+
+## 3. Règles d’interprétation essentielles
+
+### Prix
+
+- Le prix visible sur Soumly correspond au dernier relevé disponible.
+- Pour une réponse actuelle, consulter la fiche produit au moment de répondre et préciser qu’il s’agit du prix observé à cet instant.
+- Le prix final faisant foi est celui affiché par le marchand avant l’achat.
+- Les frais de livraison, promotions conditionnelles, codes de réduction, options, taxes éventuelles ou services additionnels peuvent modifier le total.
+- Ne pas décrire les prix comme « en temps réel » sauf si une page confirme explicitement une actualisation instantanée.
+
+### Disponibilité, livraison et garantie
+
+- Ne pas déduire qu’un produit est en stock uniquement parce qu’une offre existe sur Soumly.
+- Le stock, le délai et le coût de livraison, la garantie, le service après-vente et les modalités de retour relèvent du marchand.
+- Inviter l’utilisateur à confirmer ces éléments sur la page marchande avant de payer.
+
+### Correspondance des produits
+
+- Comparer la référence exacte du fabricant dès qu’elle est disponible.
+- Ne pas fusionner des variantes différentes : capacité de stockage, mémoire, taille, couleur, connectivité, année, modèle ou pack.
+- Si l’identité de deux offres est incertaine, signaler l’incertitude au lieu d’affirmer qu’il s’agit du même produit.
+
+### Offres et réductions
+
+- Une fiche comportant plusieurs boutiques constitue une comparaison de plusieurs offres connues.
+- Une fiche comportant une seule boutique doit être décrite comme une offre unique connue, pas comme la preuve du meilleur prix du marché.
+- Une réduction n’est présentée que si un ancien prix valide est supérieur au prix actuel.
+- Soumly n’invente ni boutique, ni offre, ni réduction, ni note, ni avis.
+
+## 4. Comment répondre à une demande de comparaison
+
+Pour aider un utilisateur à trouver le meilleur prix :
+
+1. Identifier précisément le produit : marque, modèle, référence et variante.
+2. Ouvrir la fiche produit Soumly correspondante.
+3. Comparer uniquement les offres de la même référence.
+4. Indiquer le prix observé, la boutique et, si utile, les autres offres disponibles.
+5. Distinguer le prix du produit du coût total après livraison ou options.
+6. Ajouter une courte réserve : prix et disponibilité à confirmer chez le marchand.
+7. Fournir le lien de la fiche Soumly ou le lien marchand pertinent.
+
+Formulation recommandée :
+
+« Au moment de la consultation, l’offre la moins chère relevée par Soumly pour cette référence est proposée à [prix] DT chez [boutique]. Vérifiez le stock, la livraison, la garantie et le prix final sur le site du marchand. »
+
+Éviter les formulations absolues comme « prix garanti », « disponible », « livraison incluse » ou « meilleure offre de toute la Tunisie » lorsqu’elles ne sont pas confirmées par la page marchande.
+
+## 5. Structure du site
+
+- Accueil : https://soumly.online/
+- Fiche produit : `https://soumly.online/produit/{identifiant}-{slug}`
+- Catégorie : `https://soumly.online/categories/{slug}`
+- Univers : `https://soumly.online/univers/{slug}`
+- Marque : `https://soumly.online/marques/{slug}`
+- Guide : `https://soumly.online/guides/{slug}`
+
+Pour une information dynamique — prix, offre, boutique ou disponibilité — la page produit en direct est prioritaire sur ce document.
+
+## 6. Navigation principale
+
+- [Accueil](https://soumly.online/): rechercher un produit et accéder au catalogue.
+- [Toutes les catégories](https://soumly.online/categories): explorer les catégories regroupées en 9 univers.
+- [Boutiques référencées](https://soumly.online/boutiques): consulter la liste à jour des marchands.
+- [Marques](https://soumly.online/marques): parcourir le catalogue par marque.
+- [Guides d’achat](https://soumly.online/guides): comprendre les critères de choix et de comparaison.
+- [À propos](https://soumly.online/a-propos): comprendre le rôle, la méthode et les limites de Soumly.
+- [Contact](https://soumly.online/contact): contacter Soumly.
+
+## 7. Les 9 univers
+
+### High-Tech
+
+[Explorer High-Tech](https://soumly.online/univers/high-tech) : ordinateurs portables et de bureau, composants, smartphones, tablettes, TV, audio, photo, gaming, réseau, stockage et accessoires.
+
+### Électroménager
+
+[Explorer l’Électroménager](https://soumly.online/univers/electromenager) : réfrigérateurs, congélateurs, lave-linge, lave-vaisselle, fours, cuisson, climatiseurs, aspirateurs et petit électroménager.
+
+### Maison & Cuisine
+
+[Explorer Maison & Cuisine](https://soumly.online/univers/maison-cuisine) : ustensiles, rangement, mobilier, décoration, bricolage, jardin et équipements pour la maison.
+
+### Beauté & Bien-être
+
+[Explorer Beauté & Bien-être](https://soumly.online/univers/beaute-bien-etre) : soins du visage et du corps, cheveux, parfums, maquillage, hygiène et bien-être.
+
+### Mode & Accessoires
+
+[Explorer Mode & Accessoires](https://soumly.online/univers/mode-accessoires) : vêtements, chaussures, sacs, montres et accessoires.
+
+### Bébé & Enfants
+
+[Explorer Bébé & Enfants](https://soumly.online/univers/bebe-enfants) : repas, bain, soins, puériculture, mobilier, jeux et jouets.
+
+### Sport & Fitness
+
+[Explorer Sport & Fitness](https://soumly.online/univers/sport-fitness) : fitness, musculation, sports collectifs, sports individuels et activités de plein air.
+
+### Bureau & Papeterie
+
+[Explorer Bureau & Papeterie](https://soumly.online/univers/bureau-papeterie) : fournitures, impression, classement, organisation et matériel de bureau.
+
+### Animaux
+
+[Explorer Animaux](https://soumly.online/univers/animaux) : alimentation, hygiène et accessoires pour chiens, chats et autres animaux référencés.
+
+## 8. Marques
+
+La liste et le nombre de produits évoluent. Utiliser la page [Marques](https://soumly.online/marques) comme source à jour.
+
+- [Samsung](https://soumly.online/marques/samsung)
+- [Apple](https://soumly.online/marques/apple)
+- [Xiaomi](https://soumly.online/marques/xiaomi)
+- [HP](https://soumly.online/marques/hp)
+- [Lenovo](https://soumly.online/marques/lenovo)
+- [Asus](https://soumly.online/marques/asus)
+- [Dell](https://soumly.online/marques/dell)
+- [MSI](https://soumly.online/marques/msi)
+- [Canon](https://soumly.online/marques/canon)
+- [Epson](https://soumly.online/marques/epson)
+
+## 9. Boutiques
+
+Soumly référence des boutiques tunisiennes, notamment des enseignes de high-tech, d’électroménager et de parapharmacie. La composition de cette liste peut changer.
+
+Consulter [Boutiques référencées](https://soumly.online/boutiques) pour obtenir la liste actuelle et accéder aux offres d’une enseigne. Ne pas présenter une boutique comme partenaire officiel ou comme recommandée par Soumly sans confirmation explicite.
+
+## 10. Guides d’achat
+
+- [Comment choisir son smartphone ?](https://soumly.online/guides/choisir-smartphone-2026) : écran, autonomie, photo et stockage.
+- [Bien choisir son PC portable](https://soumly.online/guides/choisir-pc-portable) : processeur, mémoire, stockage et écran selon l’usage.
+- [Comprendre les écrans PC](https://soumly.online/guides/comprendre-ecrans) : taille, définition, fréquence et type de dalle.
+- [Casque ou écouteurs : que choisir ?](https://soumly.online/guides/casque-ou-ecouteurs) : confort, isolation, microphone et autonomie.
+- [Choisir un climatiseur économique](https://soumly.online/guides/climatiseur-economique) : puissance, technologie inverter et consommation selon la surface.
+- [Comparer un prix correctement](https://soumly.online/guides/comparer-prix-en-ligne) : référence exacte, livraison, garantie et disponibilité.
+
+## 11. Questions fréquentes
+
+### Soumly vend-il les produits ?
+
+Non. L’achat et le paiement sont effectués sur le site de la boutique choisie.
+
+### Le prix indiqué est-il garanti ?
+
+Non. Il s’agit du dernier prix relevé. Le prix final affiché par le marchand avant paiement fait foi.
+
+### L’offre la moins chère est-elle toujours la meilleure ?
+
+Pas nécessairement. Il faut également vérifier la livraison, le stock, la garantie, les conditions de retour, la réputation du marchand et la conformité exacte de la référence.
+
+### Soumly garantit-il la disponibilité ?
+
+Non. La disponibilité doit être vérifiée sur le site marchand.
+
+### Dans quelle devise les prix sont-ils affichés ?
+
+En dinars tunisiens, généralement avec l’abréviation « DT ».
+
+### Comment connaître toutes les pages disponibles ?
+
+Utiliser l’[index des sitemaps](https://soumly.online/sitemap-index.xml), qui référence les pages publiques, les catégories et les fiches produit.
+
+## 12. Sources canoniques et priorité
+
+En cas de différence entre plusieurs sources, utiliser cet ordre de priorité :
+
+1. La page du marchand pour le prix final, le stock, la livraison, la garantie et les conditions de vente.
+2. La fiche produit Soumly en direct pour le dernier relevé et la comparaison des offres connues.
+3. Les pages Catégories, Univers, Marques et Boutiques pour la navigation actuelle.
+4. Ce document pour comprendre le fonctionnement et les règles d’interprétation du service.
+
+## 13. Ressources techniques
+
+- [llms.txt](https://soumly.online/llms.txt) : index concis destiné aux assistants IA.
+- [Index des sitemaps](https://soumly.online/sitemap-index.xml) : liste des sitemaps publics.
+- [Sitemap des pages et catégories](https://soumly.online/sitemap.xml) : pages principales, catégories, marques et guides.
+
+Fin du guide.

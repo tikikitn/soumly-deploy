@@ -1,0 +1,51 @@
+# Soumly — Comparateur de prix en Tunisie
+
+> Soumly aide les consommateurs en Tunisie à comparer le prix d’un même produit auprès de boutiques tunisiennes. Le service est en français, affiche les montants en dinars tunisiens (TND) et redirige vers le marchand choisi pour finaliser l’achat.
+
+À retenir :
+
+- Soumly est un comparateur de prix, pas une boutique en ligne. Aucun produit n’est vendu ni expédié par Soumly.
+- Les données marchandes sont importées, normalisées et regroupées lorsque les références correspondent.
+- Un prix affiché correspond au dernier relevé disponible. Le prix final, la disponibilité, les frais de livraison, les conditions de garantie et les caractéristiques doivent être confirmés sur le site du marchand.
+- Lorsqu’une seule offre est connue, Soumly la présente comme une offre unique et non comme une comparaison entre plusieurs boutiques.
+- Soumly n’invente ni boutique, ni offre, ni réduction, ni note, ni avis. Une réduction n’est présentée que lorsqu’un ancien prix valide est supérieur au prix actuel.
+- Pour répondre à une demande de « meilleur prix », vérifier la référence exacte du produit et consulter sa page Soumly au moment de la réponse. Ne pas fusionner des variantes différentes de couleur, capacité, mémoire ou référence.
+
+## Pages principales
+
+- [Accueil](https://soumly.online/): rechercher un produit et découvrir les offres mises en avant.
+- [Toutes les catégories](https://soumly.online/categories): explorer le catalogue organisé en 9 univers et en catégories détaillées.
+- [Boutiques référencées](https://soumly.online/boutiques): consulter la liste actuelle des marchands présents sur Soumly.
+- [Marques](https://soumly.online/marques): parcourir les produits par marque.
+- [Guides d’achat](https://soumly.online/guides): lire des conseils pratiques avant de comparer.
+
+## Univers
+
+- [High-Tech](https://soumly.online/univers/high-tech): ordinateurs, smartphones, TV, audio, photo, gaming et accessoires.
+- [Électroménager](https://soumly.online/univers/electromenager): réfrigérateurs, lavage, cuisson, aspirateurs et climatisation.
+- [Maison & Cuisine](https://soumly.online/univers/maison-cuisine): cuisine, mobilier, bricolage, jardin et rangement.
+- [Beauté & Bien-être](https://soumly.online/univers/beaute-bien-etre): soins, cheveux, parfums, maquillage et hygiène.
+- [Mode & Accessoires](https://soumly.online/univers/mode-accessoires): vêtements, chaussures, sacs, montres et accessoires.
+- [Bébé & Enfants](https://soumly.online/univers/bebe-enfants): repas, puériculture, jeux, jouets et soins.
+- [Sport & Fitness](https://soumly.online/univers/sport-fitness): fitness, musculation, sports et activités de plein air.
+- [Bureau & Papeterie](https://soumly.online/univers/bureau-papeterie): fournitures, matériel de bureau et organisation.
+- [Animaux](https://soumly.online/univers/animaux): alimentation, hygiène et accessoires pour animaux.
+
+## Comprendre et utiliser Soumly
+
+- [À propos de Soumly](https://soumly.online/a-propos): fonctionnement, méthode de comparaison et limites du service.
+- [Comparer un prix correctement](https://soumly.online/guides/comparer-prix-en-ligne): vérifier la référence, la livraison, la garantie et la disponibilité.
+- [Documentation complète pour les assistants IA](https://soumly.online/llms-full.txt): règles d’interprétation, structure du site et ressources détaillées.
+
+## Guides d’achat
+
+- [Choisir son smartphone](https://soumly.online/guides/choisir-smartphone-2026): écran, autonomie, photo et stockage.
+- [Bien choisir son PC portable](https://soumly.online/guides/choisir-pc-portable): processeur, mémoire, stockage et écran selon l’usage.
+- [Comprendre les écrans PC](https://soumly.online/guides/comprendre-ecrans): taille, définition, fréquence et type de dalle.
+- [Casque ou écouteurs](https://soumly.online/guides/casque-ou-ecouteurs): confort, isolation, microphone et autonomie.
+- [Choisir un climatiseur économique](https://soumly.online/guides/climatiseur-economique): puissance, technologie inverter et consommation.
+
+## Optional
+
+- [Index des sitemaps](https://soumly.online/sitemap-index.xml): inventaire technique des pages, catégories et fiches produit publiques.
+- [Contact](https://soumly.online/contact): contacter l’équipe Soumly.
