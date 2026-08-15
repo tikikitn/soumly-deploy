@@ -20,6 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html lang="fr" dir="ltr" suppressHydrationWarning>
 			<head>
 				<meta name="codex-preview" content="development" />
+				<link rel="preconnect" href="https://cdn.primini.tn" crossOrigin="anonymous" />
 			</head>
 			<body suppressHydrationWarning>
 				{children}
