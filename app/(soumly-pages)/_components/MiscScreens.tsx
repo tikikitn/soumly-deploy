@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { guardOutboundClick, trackOutboundStoreClick } from "../../components/analytics";
+import { withMerchantUtm } from "../../components/merchant-utm";
 import Link from "../../components/NativeLink";
 import { guides, type Product, type ProductSummary } from "../_data/content.client";
 import { EmptyState, ProductCard, SoumlyIcon } from "./ui";
@@ -189,9 +190,11 @@ export function StoresScreen({ stores }: { stores: StoreSummary[] }) {
 								rel="noopener noreferrer"
 								onClick={(event) => {
 									if (guardOutboundClick(event.currentTarget)) return;
+									const finalUrl = withMerchantUtm(storeItem.url);
+									event.currentTarget.href = finalUrl;
 									trackOutboundStoreClick({
 										store_name: storeItem.name,
-										destination_url: storeItem.url,
+										destination_url: finalUrl,
 										source_location: "stores",
 									});
 								}}

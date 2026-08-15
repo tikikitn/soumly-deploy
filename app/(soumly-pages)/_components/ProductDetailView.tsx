@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { guardOutboundClick, trackOutboundStoreClick } from "../../components/analytics";
+import { withMerchantUtm } from "../../components/merchant-utm";
 import Link from "../../components/NativeLink";
 import { formatPrice, type Product } from "../_data/content.shared";
 import { ProductCard, Stars, useFavorite } from "./ui";
@@ -381,13 +382,15 @@ function ProductDetails({
 								aria-label={`Voir ${product.name} chez ${bestOffer.store}`}
 								onClick={(event) => {
 									if (guardOutboundClick(event.currentTarget)) return;
+									const finalUrl = withMerchantUtm(bestOffer.url);
+									event.currentTarget.href = finalUrl;
 									trackOutboundStoreClick({
 										product_id: product.id,
 										product_name: product.name,
 										store_name: bestOffer.store,
 										price: bestOffer.price,
 										category: product.category,
-										destination_url: bestOffer.url,
+										destination_url: finalUrl,
 										source_location: "product_detail",
 									});
 								}}
@@ -459,13 +462,15 @@ function ProductDetails({
 											aria-label={`Voir ${product.name} chez ${offer.store}`}
 											onClick={(event) => {
 												if (guardOutboundClick(event.currentTarget)) return;
+												const finalUrl = withMerchantUtm(offer.url);
+												event.currentTarget.href = finalUrl;
 												trackOutboundStoreClick({
 													product_id: product.id,
 													product_name: product.name,
 													store_name: offer.store,
 													price: offer.price,
 													category: product.category,
-													destination_url: offer.url,
+													destination_url: finalUrl,
 													source_location: "product_detail",
 												});
 											}}
