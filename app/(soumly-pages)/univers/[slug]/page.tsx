@@ -22,7 +22,7 @@ export async function generateMetadata({
 	const universe = getUniverse(params.slug);
 	if (!universe) return { title: "Univers introuvable" };
 	return {
-		title: `${universe.label} — Comparer les prix | Soumly`,
+		title: `${universe.label} — Comparer les prix`,
 		description: `Retrouvez les produits ${universe.label} des boutiques tunisiennes : ${universe.tagline}.`,
 		alternates: { canonical: `https://soumly.online/univers/${universe.slug}` },
 	};

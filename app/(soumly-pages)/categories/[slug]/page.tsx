@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryListingView, FamilyListingView } from "../../_components/ListingViews";
+import type { PaginatedProducts } from "../../_data/content.shared";
 import {
 	getCategory,
 	getCategoryProducts,
@@ -31,6 +32,53 @@ function parseSort(value: unknown): string {
 		return value;
 	}
 	return "popular";
+}
+
+function listingJsonLd(slug: string, label: string, result: PaginatedProducts, page: number) {
+	const BASE_URL = "https://soumly.online";
+	const breadcrumb = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: [
+			{ "@type": "ListItem", position: 1, name: "Accueil", item: `${BASE_URL}/` },
+			{
+				"@type": "ListItem",
+				position: 2,
+				name: label,
+				item:
+					page > 1
+						? `${BASE_URL}/categories/${slug}?page=${page}`
+						: `${BASE_URL}/categories/${slug}`,
+			},
+		],
+	};
+	const itemList = {
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		name: label,
+		url: page > 1 ? `${BASE_URL}/categories/${slug}?page=${page}` : `${BASE_URL}/categories/${slug}`,
+		mainEntity: {
+			"@type": "ItemList",
+			itemListOrder: "https://schema.org/ItemListOrderDescending",
+			numberOfItems: result.products.length,
+			itemListElement: result.products.map((p, i) => ({
+				"@type": "ListItem",
+				position: i + 1,
+				url: `${BASE_URL}/produit/${p.id}`,
+				name: p.name,
+			})),
+		},
+	};
+	return { breadcrumb, itemList };
+}
+
+function JsonLd({ data }: { data: object }) {
+	return (
+		<script
+			type="application/ld+json"
+			dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+		/>
+	);
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
@@ -78,7 +126,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 		// Out-of-range pages must not create duplicate crawlable URLs:
 		// page > totalPages → real 404 (prevents ?page=999 clones).
 		if (page > result.totalPages) notFound();
-		return <FamilyListingView family={family} result={result} slug={slug} />;
+		const { breadcrumb, itemList } = listingJsonLd(family.slug, family.label, result, page);
+		return (
+			<>
+				<JsonLd data={breadcrumb} />
+				<JsonLd data={itemList} />
+				<FamilyListingView family={family} result={result} slug={slug} />
+			</>
+		);
 	}
 
 	const category = getCategory(slug);
@@ -86,5 +141,12 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
 	const result = getCategoryProducts({ slug, page, sort });
 	if (page > result.totalPages) notFound();
-	return <CategoryListingView category={category} result={result} slug={slug} />;
+	const { breadcrumb, itemList } = listingJsonLd(category.slug, category.label, result, page);
+	return (
+		<>
+			<JsonLd data={breadcrumb} />
+			<JsonLd data={itemList} />
+			<CategoryListingView category={category} result={result} slug={slug} />
+		</>
+	);
 }

@@ -27,7 +27,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 	if (!data) return { title: "Marque introuvable" };
 	const url = page > 1 ? `${BASE}/marques/${brand}?page=${page}` : `${BASE}/marques/${brand}`;
 	return {
-		title: `Prix ${data.label} en Tunisie – Comparateur de prix | Soumly`,
+		title: `Prix ${data.label} en Tunisie – Comparateur de prix`,
 		description: `Comparez les prix ${data.label} en Tunisie sur Soumly. Découvrez les offres disponibles auprès de ${data.storeCount} boutiques et trouvez le meilleur prix.`,
 		alternates: { canonical: url },
 	};

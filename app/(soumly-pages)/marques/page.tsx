@@ -3,7 +3,7 @@ import { BrandIndexView } from "../_components/BrandViews";
 import { getApprovedBrands } from "../_data/products.server";
 
 export const metadata: Metadata = {
-	title: "Marques – Comparateur de prix | Soumly",
+	title: "Marques – Comparateur de prix",
 	description:
 		"Découvrez toutes les marques comparées par Soumly : Samsung, Apple, Xiaomi, HP, Lenovo et plus. Comparez les prix en Tunisie.",
 	alternates: { canonical: "https://soumly.online/marques" },

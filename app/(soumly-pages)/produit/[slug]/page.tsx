@@ -25,11 +25,11 @@ export async function generateMetadata({
 		`${product.name} — Comparez les prix chez ${product.stores} boutiques tunisiennes.`;
 
 	return {
-		title: `${product.name} – Comparer les prix | Soumly`,
+		title: `${product.name} – Comparer les prix`,
 		description,
 		alternates: { canonical: url },
 		openGraph: {
-			title: `${product.name} à partir de ${product.price} DT | Soumly`,
+			title: `${product.name} à partir de ${product.price} DT`,
 			description,
 			url,
 			type: "website",
@@ -39,7 +39,7 @@ export async function generateMetadata({
 		},
 		twitter: {
 			card: "summary_large_image",
-			title: `${product.name} | Soumly`,
+			title: `${product.name}`,
 			description,
 			images: product.image ? [product.image] : [],
 		},
