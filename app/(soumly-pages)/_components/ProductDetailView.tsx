@@ -525,6 +525,37 @@ function ProductDetails({
 					))}
 				</div>
 			</section>
+
+			{/* Sticky mobile buy bar — best price + merchant always one tap away */}
+			<div className="sm-buybar">
+				<div className="sm-buybar-info">
+					<small>Meilleur prix · {bestOffer.store}</small>
+					<strong>{formatPrice(bestOffer.price)}</strong>
+				</div>
+				<a
+					href={bestOffer.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					className="sm-buybar-cta"
+					aria-label={`Voir l’offre à ${formatPrice(bestOffer.price)} chez ${bestOffer.store}`}
+					onClick={(event) => {
+						if (guardOutboundClick(event.currentTarget)) return;
+						const finalUrl = withMerchantUtm(bestOffer.url);
+						event.currentTarget.href = finalUrl;
+						trackOutboundStoreClick({
+							product_id: product.id,
+							product_name: product.name,
+							store_name: bestOffer.store,
+							price: bestOffer.price,
+							category: product.category,
+							destination_url: finalUrl,
+							source_location: "mobile_buy_bar",
+						});
+					}}
+				>
+					Voir l’offre <ExternalLink size={15} />
+				</a>
+			</div>
 		</>
 	);
 }

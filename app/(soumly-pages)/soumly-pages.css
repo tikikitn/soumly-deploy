@@ -3873,7 +3873,7 @@
 	}
 }
 .soumly-pages main {
-	animation: smPageIn 0.35s ease both;
+	animation: smPageIn 0.35s ease;
 }
 @media (prefers-reduced-motion: reduce) {
 	.soumly-pages main {
@@ -4382,5 +4382,63 @@ a.sm-espace-summary-card:hover {
 	}
 	.sm-alert-price {
 		font-size: 13px;
+	}
+}
+/* Sticky mobile buy bar (product page) — matches the CURRENT violet/lavender design */
+.sm-buybar {
+	display: none;
+}
+@media (max-width: 620px) {
+	.sm-buybar {
+		position: fixed;
+		right: 10px;
+		bottom: calc(76px + env(safe-area-inset-bottom));
+		left: 10px;
+		z-index: 120;
+		display: grid;
+		padding: 10px 12px;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: 12px;
+		border-radius: 16px;
+		background: rgba(255, 255, 255, 0.98);
+		box-shadow:
+			0 0 0 1px var(--sm-line),
+			0 18px 40px -14px rgba(9, 11, 42, 0.35);
+	}
+	.sm-buybar-info {
+		display: grid;
+		min-width: 0;
+		gap: 1px;
+	}
+	.sm-buybar-info small {
+		overflow: hidden;
+		color: var(--sm-muted);
+		font-size: 9.5px;
+		font-weight: 700;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.sm-buybar-info strong {
+		color: var(--sm-navy);
+		font-size: 17px;
+		letter-spacing: -0.02em;
+	}
+	.sm-buybar-cta {
+		display: inline-flex;
+		min-height: 46px;
+		padding: 0 16px;
+		cursor: pointer;
+		align-items: center;
+		justify-content: center;
+		gap: 7px;
+		flex: none;
+		border: 0;
+		border-radius: 12px;
+		background: var(--sm-green);
+		color: #fff !important;
+		font-size: 12px;
+		font-weight: 900;
+		box-shadow: 0 10px 22px -10px rgba(16, 140, 103, 0.55);
 	}
 }
