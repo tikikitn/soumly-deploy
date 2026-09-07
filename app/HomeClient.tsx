@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { CATALOG_UNIVERSES } from "../lib/catalog-navigation";
+import { loadHomepageOffers } from "../lib/homepage-offers";
 import {
 	type Family,
 	formatPrice,
@@ -271,7 +272,25 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 	const offersRail = useRef<HTMLDivElement>(null);
 	const familyRails = useRef<Record<string, HTMLDivElement | null>>({});
 	const popularRail = useRef<HTMLDivElement>(null);
-	const { familyRails: rails, offersByCategory, popular, maximumDiscount } = data;
+	const { familyRails: rails, popular, maximumDiscount } = data;
+	const [offersByCategory, setOffersByCategory] = useState(
+		() => new Map(Object.entries(data.offersByCategory)),
+	);
+	const [offersError, setOffersError] = useState<string | null>(null);
+	const [offersRetry, setOffersRetry] = useState(0);
+	const offersRequest = useRef<AbortController | null>(null);
+	const offersLoading = !offersByCategory.has(activeFilter) && offersError !== activeFilter;
+
+	useEffect(() => {
+		if (offersByCategory.has(activeFilter)) return;
+		const controller = new AbortController();
+		offersRequest.current = controller;
+		void loadHomepageOffers(activeFilter, controller.signal, (products) => {
+			setOffersByCategory((previous) => new Map(previous).set(activeFilter, products));
+			setOffersError(null);
+		}, () => setOffersError(activeFilter));
+		return () => controller.abort();
+	}, [activeFilter, offersByCategory, offersRetry]);
 
 	useEffect(() => {
 		const frame = window.requestAnimationFrame(() => setFavorites(readFavorites()));
@@ -313,7 +332,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 	}, [query]);
 
 	const filteredOffers = useMemo(() => {
-		const pool = offersByCategory[activeFilter] ?? offersByCategory.Tout ?? [];
+		const pool = offersByCategory.get(activeFilter) ?? [];
 		return pool.map(summaryToProduct);
 	}, [activeFilter, offersByCategory]);
 
@@ -478,7 +497,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 				<div className="hero-visual" role="img" aria-label="Produits populaires sur Soumly">
 					{/* Local approved Soumly visual reference. */}
 					{}
-					<img src="/assets/hero-products.png" alt="Téléphone, casque, ordinateur et air fryer" />
+					<img src="/assets/hero-products.png" alt="Téléphone, casque, ordinateur et air fryer" fetchPriority="high" loading="eager" />
 					<div className="hero-price-note">
 						<TrendingPriceIcon />
 						<span>
@@ -641,14 +660,30 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 							type="button"
 							key={filter}
 							className={activeFilter === filter ? "is-active" : ""}
-							onClick={() => setActiveFilter(filter)}
+							onClick={() => {
+								if (filter === activeFilter) return;
+								offersRequest.current?.abort();
+								setOffersError(null);
+								setActiveFilter(filter);
+							}}
+							aria-pressed={activeFilter === filter}
 						>
 							{filter}
 						</button>
 					))}
 				</section>
 
-				<div className="product-rail" ref={offersRail}>
+				{offersLoading && <p role="status">Chargement des offres…</p>}
+				{offersError === activeFilter && (
+					<p role="alert">
+						Impossible de charger les offres. {" "}
+						<button type="button" onClick={() => {
+							setOffersError(null);
+							setOffersRetry((value) => value + 1);
+						}}>Réessayer</button>
+					</p>
+				)}
+				<div className="product-rail" ref={offersRail} aria-busy={offersLoading}>
 					{filteredOffers.map((product) => (
 						<ProductCard
 							key={product.id}

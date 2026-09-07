@@ -2712,7 +2712,21 @@ const HOMEPAGE_FAMILIES = [
 	"bebe-enfants",
 ];
 
+// Process-local cache only: rebuilt with the immutable catalog on deploy/restart.
+// Never caches HTTP responses, cookies, or RSC payloads.
+let homepageData: ReturnType<typeof buildHomepageData> | undefined;
+const homepageOffers = new Map<string, ProductSummary[]>();
+
 export function getHomepageData() {
+	return (homepageData ??= buildHomepageData());
+}
+
+export function getHomepageOffers(category: string): ProductSummary[] | null {
+	getHomepageData();
+	return homepageOffers.get(category) ?? null;
+}
+
+function buildHomepageData() {
 	const families = getFamilies();
 	const catalogCategories = categories;
 	// Rails: for each featured family, rank products like the old client logic.
@@ -2768,13 +2782,13 @@ export function getHomepageData() {
 		...new Set(catalogCategories.filter((c) => familySlugs.has(c.family)).map((c) => c.label)),
 	];
 
-	// Offers by category: keep the client filter working WITHOUT the full catalog.
+	// Precompute once on the server; only the initially visible Tout crosses RSC.
 	const promoted = [...products].sort((a, b) => (b.discount || 0) - (a.discount || 0));
-	const offersByCategory: Record<string, ProductSummary[]> = {};
 	for (const label of offerFilters) {
 		const pool = label === "Tout" ? promoted : promoted.filter((p) => p.category === label);
-		offersByCategory[label] = pool.slice(0, 12).map(toSummary);
+		homepageOffers.set(label, pool.slice(0, 12).map(toSummary));
 	}
+	const offersByCategory = { Tout: homepageOffers.get("Tout")! };
 
 	// Popular rail: multi-store products.
 	const popular = products
