@@ -123,10 +123,12 @@ function ProductDetails({
 			highPrice: highestPrice,
 			priceCurrency: "TND",
 			offerCount: offers.length,
+			availability: "https://schema.org/InStock",
 			offers: offers.slice(0, 20).map((offer) => ({
 				"@type": "Offer",
 				price: offer.price,
 				priceCurrency: "TND",
+				availability: "https://schema.org/InStock",
 				seller: { "@type": "Organization", name: offer.store },
 				url: offer.url,
 			})),

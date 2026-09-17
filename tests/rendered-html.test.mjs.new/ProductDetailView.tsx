@@ -122,14 +122,14 @@ function ProductDetails({
 			lowPrice: bestOffer?.price ?? product.price,
 			highPrice: highestPrice,
 			priceCurrency: "TND",
-			offerCount: offers.length,
-			offers: offers.slice(0, 20).map((offer) => ({
-				"@type": "Offer",
-				price: offer.price,
-				priceCurrency: "TND",
-				seller: { "@type": "Organization", name: offer.store },
-				url: offer.url,
-			})),
+					offerCount: offers.length,
+					offers: offers.slice(0, 20).map((offer) => ({
+						"@type": "Offer",
+						price: offer.price,
+						priceCurrency: "TND",
+						seller: { "@type": "Organization", name: offer.store },
+						url: offer.url,
+					})),
 		},
 	};
 

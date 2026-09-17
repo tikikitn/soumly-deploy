@@ -285,15 +285,10 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 		if (offersByCategory.has(activeFilter)) return;
 		const controller = new AbortController();
 		offersRequest.current = controller;
-		void loadHomepageOffers(
-			activeFilter,
-			controller.signal,
-			(products) => {
-				setOffersByCategory((previous) => new Map(previous).set(activeFilter, products));
-				setOffersError(null);
-			},
-			() => setOffersError(activeFilter),
-		);
+		void loadHomepageOffers(activeFilter, controller.signal, (products) => {
+			setOffersByCategory((previous) => new Map(previous).set(activeFilter, products));
+			setOffersError(null);
+		}, () => setOffersError(activeFilter));
 		return () => controller.abort();
 	}, [activeFilter, offersByCategory, offersRetry]);
 
@@ -502,12 +497,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 				<div className="hero-visual" role="img" aria-label="Produits populaires sur Soumly">
 					{/* Local approved Soumly visual reference. */}
 					{}
-					<img
-						src="/assets/hero-products.png"
-						alt="Téléphone, casque, ordinateur et air fryer"
-						fetchPriority="high"
-						loading="eager"
-					/>
+					<img src="/assets/hero-products.png" alt="Téléphone, casque, ordinateur et air fryer" fetchPriority="high" loading="eager" />
 					<div className="hero-price-note">
 						<TrendingPriceIcon />
 						<span>
@@ -686,16 +676,11 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 				{offersLoading && <p role="status">Chargement des offres…</p>}
 				{offersError === activeFilter && (
 					<p role="alert">
-						Impossible de charger les offres.{" "}
-						<button
-							type="button"
-							onClick={() => {
-								setOffersError(null);
-								setOffersRetry((value) => value + 1);
-							}}
-						>
-							Réessayer
-						</button>
+						Impossible de charger les offres. {" "}
+						<button type="button" onClick={() => {
+							setOffersError(null);
+							setOffersRetry((value) => value + 1);
+						}}>Réessayer</button>
 					</p>
 				)}
 				<div className="product-rail" ref={offersRail} aria-busy={offersLoading}>
@@ -794,28 +779,28 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 			</section>
 
 			<section className="stores-section page-shell" aria-labelledby="stores-title">
-				<div className="section-heading">
-					<div>
-						<span className="section-kicker">Sources référencées</span>
-						<h2 id="stores-title">Boutiques comparées par Soumly</h2>
-						<p>Les offres proviennent de {data.storeCount} sources référencées cette semaine.</p>
-					</div>
-				</div>
-				<div className="store-grid">
-					{data.storeSummaries.map((store) => (
-						<div className="store-logo" key={store.name}>
-							<span>{store.name.slice(0, 1)}</span>
-							<strong>{store.name}</strong>
-							<small>{store.count} produits</small>
-						</div>
-					))}
-				</div>
-				<a className="text-link" href="/boutiques">
-					Voir toutes les boutiques <ChevronRight size={17} />
-				</a>
-			</section>
+							<div className="section-heading">
+								<div>
+									<span className="section-kicker">Sources référencées</span>
+									<h2 id="stores-title">Boutiques comparées par Soumly</h2>
+									<p>Les offres proviennent de {data.storeCount} sources référencées cette semaine.</p>
+								</div>
+							</div>
+							<div className="store-grid">
+								{data.storeSummaries.map((store) => (
+									<div className="store-logo" key={store.name}>
+										<span>{store.name.slice(0, 1)}</span>
+										<strong>{store.name}</strong>
+										<small>{store.count} produits</small>
+									</div>
+								))}
+							</div>
+							<a className="text-link" href="/boutiques">
+								Voir toutes les boutiques <ChevronRight size={17} />
+							</a>
+						</section>
 
-			<section className="guides-section page-shell" id="guides" aria-labelledby="guides-title">
+						<section className="guides-section page-shell" id="guides" aria-labelledby="guides-title">
 				<div className="section-heading">
 					<div>
 						<span className="section-kicker">Conseils pratiques</span>

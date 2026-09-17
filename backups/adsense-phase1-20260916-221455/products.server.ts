@@ -19,12 +19,6 @@ import {
 	type StoreOffer,
 } from "./content.shared";
 
-// Snapshot date of the current imported product catalog (the weekly artifact).
-// This is set from the products.ts artifact's capture date at import time.
-// TODO(Phase 3): stamp automatically in the weekly merge pipeline.
-const CATALOG_IMPORTED_AT = "2026-09-13";
-const CATALOG_UPDATED_LABEL = `Prix issu du relevé du ${CATALOG_IMPORTED_AT}`;
-
 // Category definition used for both curated and generated categories.
 type AnyCategoryDefinition = {
 	raw?: readonly string[];
@@ -2151,99 +2145,14 @@ const GENERIC_TOKENS = new Set([
 	"avec",
 	"sans",
 	"pour",
-	"par",
-	"sur",
-	"au",
-	"aux",
-	"et",
-	"ou",
-	"un",
-	"une",
-	"des",
 	"noir",
-	"noire",
-	"noirs",
 	"blanc",
-	"blanche",
-	"blancs",
 	"silver",
 	"gris",
-	"grise",
 	"blue",
 	"bleu",
-	"bleue",
-	"bleues",
 	"red",
 	"rouge",
-	"rouges",
-	"rose",
-	"verte",
-	"vert",
-	"jaune",
-	"orange",
-	"violet",
-	"violette",
-	"marron",
-	"beige",
-	"turquoise",
-	"multicolore",
-	"transparent",
-	"argent",
-	"argente",
-	"dore",
-	"doree",
-	"acier",
-	"inox",
-	"inoxydable",
-	"verre",
-	"plastique",
-	"bois",
-	"cuir",
-	"metal",
-	"ceramique",
-	"cristal",
-	"ml",
-	"litre",
-	"litres",
-	"l",
-	"kg",
-	"g",
-	"gr",
-	"gramme",
-	"watt",
-	"watts",
-	"w",
-	"cm",
-	"mm",
-	"pouce",
-	"pouces",
-	"dpi",
-	"ghz",
-	"mhz",
-	"hz",
-	"go",
-	"to",
-	"rem",
-	"electrique",
-	"electriques",
-	"multifonction",
-	"multifonctions",
-	"professionnel",
-	"professionnelle",
-	"universel",
-	"universelle",
-	"compatible",
-	"originale",
-	"original",
-	"authentique",
-	"nouveau",
-	"nouvelle",
-	"neuf",
-	"neufs",
-	"modele",
-	"serie",
-	"porte",
-	"economique",
 	"gaming",
 	"gamer",
 ]);
@@ -2388,31 +2297,12 @@ function similarity(first: string, second: string) {
 	return shared / Math.max(firstTokens.size, secondTokens.size, 1);
 }
 
-// Canonical merchant display names for known label variants (casing/shorthand/spacing).
-// Key = simplified(offer.store) with non-alphanumerics squeezed to single spaces.
-const MERCHANT_ALIASES: Record<string, string> = {
-	spacenet: "SpaceNet",
-	"spacenet tunisie": "SpaceNet",
-	tunisianet: "Tunisianet",
-	"tunisianet tunisie": "Tunisianet",
-	mytek: "MyTEK",
-	"gamer shop": "Gamer Shop",
-	tdiscount: "Tdiscount",
-	parahouse: "PARAHOUSE",
-	qsnet: "QSNET",
-	iminfo: "Iminfo",
-	"best buy tunisie": "Best Buy Tunisie",
-	"carthago informatique": "Carthago Informatique",
-	"fk informatique": "FK Informatique",
-	"ma para tunisie": "MaPara Tunisie",
-	"pcomme para": "Pcomme Para",
-};
-
 function storeName(offer: SourceOffer): string | null {
-	const value = simplify(offer.store).replace(/[^a-z0-9]+/g, " ").trim();
+	const value = simplify(offer.store);
 	if (!value) return null;
-	const alias = MERCHANT_ALIASES[value];
-	if (alias) return alias;
+	if (value.includes("tunisianet")) return "Tunisianet";
+	if (value.includes("spacenet")) return "Spacenet";
+	// Any other merchant: keep its display name (title-cased first word-ish)
 	return offer.store;
 }
 
@@ -2453,36 +2343,18 @@ function inferBrand(name: string) {
 	return candidate || "Autre marque";
 }
 
-// Number of distinctive (non-generic) tokens shared between a product id
-// and an offer URL slug. A higher count = stronger evidence the offer is
-// the SAME product/variant, not just the same broad category or color.
-function sharedDistinctiveCount(productId: string, url: string): number {
-	const slug = offerSlug(url);
-	if (!slug) return 0;
-	const a = comparisonTokens(productId);
-	const b = comparisonTokens(slug);
-	let count = 0;
-	for (const token of a) {
-		if (b.has(token)) count += 1;
-	}
-	return count;
-}
-
 function normalizeOffer(
 	source: SourceOffer,
 	productId: string,
-): (StoreOffer & { similarity: number; sharedTokens: number }) | null {
+): (StoreOffer & { similarity: number }) | null {
 	const merchant = storeName(source);
 	if (!merchant || !validMerchantUrl(source.url)) return null;
+	const match = similarity(productId, offerSlug(source.url));
+	if (match < 0.2) return null;
 
 	const price = merchantPrice(source.price);
 	if (!Number.isFinite(price) || price <= 0) return null;
-
-	const slug = offerSlug(source.url);
-	const match = similarity(productId, slug);
-	const sharedTokens = sharedDistinctiveCount(productId, source.url);
 	const details = getStoreDetails(merchant);
-
 	return {
 		store: merchant,
 		price,
@@ -2492,52 +2364,40 @@ function normalizeOffer(
 		logo: details.logo,
 		delivery: details.delivery,
 		availability: details.availability,
-		updatedAt: CATALOG_UPDATED_LABEL,
+		updatedAt: "Prix issu du dernier relevé importé",
 		similarity: match,
-		sharedTokens,
 	};
 }
 
 function productOffers(group: SourceProduct[]) {
 	const productId = group[0].id;
-	// Accepted offers: strong matches only (>= 2 distinctive shared tokens).
-	// A single shared token (e.g. "manette" or a common color) is NOT enough
-	// to count as a real offer — otherwise an accessory can be shown as an
-	// offer for a different product and inflate the "X boutiques" count.
-	const bestByStore = new Map<string, StoreOffer & { similarity: number; sharedTokens: number }>();
-	const weak: Array<StoreOffer & { similarity: number; sharedTokens: number }> = [];
-
+	const bestByStore = new Map<string, StoreOffer & { similarity: number }>();
+	const rejected: SourceOffer[] = [];
 	for (const rawOffer of group.flatMap((product) => product.offers ?? [])) {
 		const offer = normalizeOffer(rawOffer, productId);
-		if (!offer) continue;
-		if (offer.sharedTokens >= 2) {
-			// Strong match: >= 2 distinctive shared tokens — a real same-product offer.
-			const current = bestByStore.get(offer.store);
-			if (
-				!current ||
-				offer.similarity > current.similarity ||
-				(offer.similarity === current.similarity && offer.price < current.price)
-			) {
-				bestByStore.set(offer.store, offer);
-			}
-		} else if (offer.sharedTokens === 1) {
-			// Weak, but with one distinctive shared token — only used as a
-			// single-offer fallback so sparse merchant slugs don't vanish.
-			weak.push(offer);
+		if (!offer) {
+			rejected.push(rawOffer);
+			continue;
 		}
-		// sharedTokens === 0: shares no distinctive token with the title →
-		// unrelated/inconclusive; never kept.
+		const current = bestByStore.get(offer.store);
+		if (
+			!current ||
+			offer.similarity > current.similarity ||
+			(offer.similarity === current.similarity && offer.price < current.price)
+		) {
+			bestByStore.set(offer.store, offer);
+		}
 	}
-
-	// Safe single-offer fallback: when no offer meets the strong bar, keep the
-	// single best weak offer (strongest shared-token evidence, then lowest price).
-	// This preserves genuine single-shop products whose merchant URLs are sparse,
-	// without accepting an offer that shares ZERO distinctive tokens with the title.
-	if (bestByStore.size === 0 && weak.length > 0) {
-		weak.sort((first, second) => second.sharedTokens - first.sharedTokens || first.price - second.price);
-		bestByStore.set(weak[0].store, weak[0]);
+	// Fallback: if every offer was rejected by the URL-similarity guard
+	// (merchant URLs often use their own naming), keep the cheapest one
+	// so the product does not silently disappear from the catalog.
+	if (bestByStore.size === 0 && rejected.length > 0) {
+		const fallback = rejected.reduce((cheapest, offer) =>
+			(offer.price ?? Infinity) < (cheapest.price ?? Infinity) ? offer : cheapest,
+		);
+		const normalized = normalizeOffer(fallback, productId);
+		if (normalized) bestByStore.set(normalized.store, normalized);
 	}
-
 	return [...bestByStore.values()]
 		.map(
 			(offer): StoreOffer => ({
@@ -2637,28 +2497,34 @@ export function getFamilyCategories(familySlug: string) {
 	return categories.filter((category) => category.family === familySlug);
 }
 
-// ---- Runtime merchant registry ----
-// Derived from the validated offers actually displayed on product pages.
-// This is the single source of truth for /boutiques and the homepage
-// "sources" section. Merchants with zero current offers are excluded
-// automatically, so the count can never drift from the real catalog.
-
-// Reviewed homepage overrides for merchants whose clean public homepage
-// differs from the observed offer domain key (hostname without www).
-// When absent, the homepage is derived from the merchant's most common
-// observed offer host — never synthesized from the merchant name.
-const MERCHANT_HOMEPAGES: Record<string, string> = {
-	"tunisianet.com.tn": "https://www.tunisianet.com.tn/",
-	spacenet: "https://spacenet.tn/",
-	mytek: "https://www.mytek.tn/",
-	"technopro-online.com": "https://www.technopro-online.com/",
-	tunewtec: "https://tunewtec.com/",
-	"paraelfarabi.com": "https://www.paraelfarabi.com/",
-	paraessentiel: "https://www.paraessentiel.com/",
-	"fk-info.com": "https://fk-info.com/",
-	gamershop: "https://gamershop.tn/",
-	"bestbuytunisie.tn": "https://bestbuytunisie.tn/",
-};
+// Top stores by offer count (drives the /boutiques page).
+// Order = commercial relevance; logos come from STORE_DETAILS when available.
+export const TOP_STORES = [
+	"SpaceNet",
+	"MyTEK",
+	"Tunisianet",
+	"Best Buy Tunisie",
+	"Carthago Informatique",
+	"Tdiscount",
+	"Batam",
+	"Oxtek",
+	"Gamer Shop",
+	"Tunewtec",
+	"QSNET",
+	"PARAHOUSE",
+	"Iminfo",
+	"MaPara Tunisie",
+	"Parashop",
+	"Paraelfarabi",
+	"Jumbo",
+	"Bill",
+	"Paraessentiel",
+	"Pcomme Para",
+	"Paraexpert",
+	"Eden Pharma",
+	"Techgate",
+	"FK Informatique",
+] as const;
 
 function storeInitials(name: string): string {
 	const words = name.split(/[ &+.-]+/).filter(Boolean);
@@ -2666,99 +2532,31 @@ function storeInitials(name: string): string {
 	return name.slice(0, 2).toUpperCase();
 }
 
-function hostnameOf(url: string): string | null {
-	try {
-		return new URL(url).hostname.replace(/^www\./, "");
-	} catch {
-		return null;
-	}
+function storeUrl(name: string): string {
+	const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+	return `https://www.${slug}.tn/`;
 }
 
-interface MerchantSummary {
-	name: string;
-	initials: string;
-	color: string;
-	offers: number;
-	categories: string[];
-	categoryCount: number;
-	url: string;
-	logo?: string;
-}
-
-function merchantHomepage(store: string): string {
-	const counts = new Map<string, number>();
-	for (const product of products) {
-		for (const offer of product.offers) {
-			if (offer.store !== store) continue;
-			const host = hostnameOf(offer.url);
-			if (!host) continue;
-			counts.set(host, (counts.get(host) || 0) + 1);
-		}
-	}
-	let bestHost: string | null = null;
-	let bestCount = 0;
-	for (const [host, count] of counts) {
-		if (count > bestCount) {
-			bestCount = count;
-			bestHost = host;
-		}
-	}
-	if (bestHost) {
-		const reviewed = MERCHANT_HOMEPAGES[bestHost];
-		if (reviewed) return reviewed;
-		return `https://${bestHost}/`;
-	}
-	// No offer URL parsed defensively (shouldn't happen); neutral internal link.
-	return `/recherche?boutique=${encodeURIComponent(store)}`;
-}
-
-export const stores: MerchantSummary[] = (() => {
-	const records = new Map<string, MerchantSummary>();
-	const categorySets = new Map<string, Set<string>>();
-	const productSets = new Map<string, Set<string>>();
-
-	for (const product of products) {
-		for (const offer of product.offers) {
-			const store = offer.store;
-			if (!records.has(store)) {
-				const details = getStoreDetails(store);
-				records.set(store, {
-					name: store,
-					initials: storeInitials(store),
-					color: details.color,
-					logo: details.logo,
-					offers: 0,
-					categories: [],
-					categoryCount: 0,
-					url: "",
-				});
-			}
-			if (!categorySets.has(store)) categorySets.set(store, new Set());
-			if (!productSets.has(store)) productSets.set(store, new Set());
-			categorySets.get(store).add(product.category);
-			productSets.get(store).add(product.id);
-		}
-	}
-
-	for (const [store, record] of records) {
-		const cats = [...(categorySets.get(store) ?? [])];
-		record.offers = (productSets.get(store) ?? new Set()).size;
-		record.categoryCount = cats.length;
-		record.categories = cats.slice(0, 4);
-		record.url = merchantHomepage(store);
-	}
-
-	return [...records.values()].sort((a, b) => b.offers - a.offers || a.name.localeCompare(b.name));
-})();
-
-// Homepage "sources" summary: current merchants with at least one offer,
-// ordered by product count. `limit` optionally caps a teaser grid.
-function getActiveStoreSummaries(limit = 0): Array<{ name: string; count: number }> {
-	const list = stores
-		.map((record) => ({ name: record.name, count: record.offers }))
-		.sort((a, b) => b.count - a.count);
-	return limit > 0 ? list.slice(0, limit) : list;
-}
+export const stores = TOP_STORES.map((name) => {
+	const storeProducts = products.filter((product) =>
+		product.offers.some((offer) => offer.store === name),
+	);
+	const representedCategories = [...new Set(storeProducts.map((product) => product.category))];
+	const chips = representedCategories.slice(0, 4);
+	const categoryCount = representedCategories.length;
+	return {
+		name,
+		initials: storeInitials(name),
+		color: getStoreDetails(name).color,
+		logo: getStoreDetails(name).logo,
+		rating: 0,
+		reviews: 0,
+		offers: storeProducts.length,
+		categories: chips,
+		categoryCount,
+		url: storeUrl(name),
+	};
+});
 
 export function getCategory(slug?: string) {
 	return categories.find((category) => category.slug === slug) ?? null;
@@ -3001,11 +2799,6 @@ function buildHomepageData() {
 	// Max discount for the hero badge.
 	const maximumDiscount = Math.max(0, ...products.map((product) => product.discount));
 
-	// Live "sources" summary for the homepage: current merchants ordered by
-	// product count (teaser of the full runtime registry in /boutiques).
-	const storeCount = stores.length;
-	const storeSummaries = getActiveStoreSummaries(12);
-
 	return {
 		families,
 		familyRails,
@@ -3013,8 +2806,6 @@ function buildHomepageData() {
 		offersByCategory,
 		popular,
 		maximumDiscount,
-		storeCount,
-		storeSummaries,
 	};
 }
 

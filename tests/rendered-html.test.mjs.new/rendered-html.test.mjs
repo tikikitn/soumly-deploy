@@ -75,7 +75,9 @@ test("PS5 console does not accept an accessory controller as a merchant offer", 
 	// Regression: a PS5 controller (289 DT from Promouv) used to pass the weak
 	// URL-similarity guard and appear as an offer for the PS5 console bundle
 	// (3169 DT from SpaceNet), producing a false "2 boutiques" + "saving".
-	const response = await request("/produit/93432-playstation-5-edition-standard-avec-2eme-manette");
+	const response = await request(
+		"/produit/93432-playstation-5-edition-standard-avec-2eme-manette",
+	);
 	const html = await response.text();
 	assert.equal(response.status, 200);
 	// The only accepted offer is the real console bundle from SpaceNet.

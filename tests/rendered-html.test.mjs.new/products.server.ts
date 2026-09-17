@@ -22,8 +22,8 @@ import {
 // Snapshot date of the current imported product catalog (the weekly artifact).
 // This is set from the products.ts artifact's capture date at import time.
 // TODO(Phase 3): stamp automatically in the weekly merge pipeline.
-const CATALOG_IMPORTED_AT = "2026-09-13";
-const CATALOG_UPDATED_LABEL = `Prix issu du relevé du ${CATALOG_IMPORTED_AT}`;
+export const CATALOG_IMPORTED_AT = "2026-09-13";
+export const CATALOG_UPDATED_LABEL = `Prix issu du relevé du ${CATALOG_IMPORTED_AT}`;
 
 // Category definition used for both curated and generated categories.
 type AnyCategoryDefinition = {
@@ -2510,23 +2510,20 @@ function productOffers(group: SourceProduct[]) {
 	for (const rawOffer of group.flatMap((product) => product.offers ?? [])) {
 		const offer = normalizeOffer(rawOffer, productId);
 		if (!offer) continue;
-		if (offer.sharedTokens >= 2) {
-			// Strong match: >= 2 distinctive shared tokens — a real same-product offer.
-			const current = bestByStore.get(offer.store);
-			if (
-				!current ||
-				offer.similarity > current.similarity ||
-				(offer.similarity === current.similarity && offer.price < current.price)
-			) {
-				bestByStore.set(offer.store, offer);
-			}
-		} else if (offer.sharedTokens === 1) {
-			// Weak, but with one distinctive shared token — only used as a
-			// single-offer fallback so sparse merchant slugs don't vanish.
+		if (offer.sharedTokens < 2) {
+			// Weak, but with at least one distinctive shared token — only used
+			// as a single-offer fallback so sparse merchant slugs don't vanish.
 			weak.push(offer);
+			continue;
 		}
-		// sharedTokens === 0: shares no distinctive token with the title →
-		// unrelated/inconclusive; never kept.
+		const current = bestByStore.get(offer.store);
+		if (
+			!current ||
+			offer.similarity > current.similarity ||
+			(offer.similarity === current.similarity && offer.price < current.price)
+		) {
+			bestByStore.set(offer.store, offer);
+		}
 	}
 
 	// Safe single-offer fallback: when no offer meets the strong bar, keep the
@@ -2674,7 +2671,7 @@ function hostnameOf(url: string): string | null {
 	}
 }
 
-interface MerchantSummary {
+export interface MerchantSummary {
 	name: string;
 	initials: string;
 	color: string;
@@ -2753,7 +2750,7 @@ export const stores: MerchantSummary[] = (() => {
 
 // Homepage "sources" summary: current merchants with at least one offer,
 // ordered by product count. `limit` optionally caps a teaser grid.
-function getActiveStoreSummaries(limit = 0): Array<{ name: string; count: number }> {
+export function getActiveStoreSummaries(limit = 0): Array<{ name: string; count: number }> {
 	const list = stores
 		.map((record) => ({ name: record.name, count: record.offers }))
 		.sort((a, b) => b.count - a.count);
