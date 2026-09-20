@@ -19,7 +19,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 	return (
 		<html lang="fr" dir="ltr" suppressHydrationWarning>
 			<head>
-				<meta name="google-adsense-account" content="ca-pub-4923213531979104" />
 				<link rel="preconnect" href="https://cdn.primini.tn" crossOrigin="anonymous" />
 			</head>
 			<body suppressHydrationWarning>

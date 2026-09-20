@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryListingView, FamilyListingView } from "../../_components/ListingViews";
 import { formatPrice, type PaginatedProducts } from "../../_data/content.shared";
-import { getCategoryEditorial } from "../../_data/category-editorial";
 import {
 	getCategory,
 	getCategoryInsights,
@@ -101,17 +100,6 @@ function CategoryFacts({ label, insight }: { label: string; insight: ReturnType<
 	);
 }
 
-function CategoryEditorial({ slug }: { slug: string }) {
-	const editorial = getCategoryEditorial(slug);
-	if (!editorial) return null;
-	return <section className="sm-page-shell sm-category-editorial" aria-label={`Conseils pour ${editorial.title}`}>
-		<span className="sm-section-kicker">Repères d’achat</span>
-		<h2>{editorial.title}</h2>
-		<p>{editorial.text}</p>
-		<a href={`/guides/${editorial.guideSlug ?? "comparer-prix-en-ligne-tunisie"}`}>Lire le guide associé →</a>
-	</section>;
-}
-
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
 	const { slug } = await params;
 	const sp = await searchParams;
@@ -165,7 +153,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 			<>
 				<JsonLd data={breadcrumb} />
 				<JsonLd data={itemList} />
-				<CategoryEditorial slug={slug} />
 				<CategoryFacts label={family.label} insight={insight} />
 				<FamilyListingView family={family} result={result} slug={slug} />
 			</>
@@ -183,7 +170,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 		<>
 			<JsonLd data={breadcrumb} />
 			<JsonLd data={itemList} />
-			<CategoryEditorial slug={slug} />
 			<CategoryFacts label={category.label} insight={insight} />
 			<CategoryListingView category={category} result={result} slug={slug} />
 		</>

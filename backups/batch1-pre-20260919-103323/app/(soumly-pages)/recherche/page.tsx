@@ -27,7 +27,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
 	const rawQuery = typeof sp.q === "string" ? sp.q : "";
 	const merchant = typeof sp.boutique === "string" ? sp.boutique : "";
 	const page = parsePage(sp.page);
-	const result = searchProductsPaginated({ query: rawQuery, merchant, page, pageSize: 36 });
+	const result = searchProductsPaginated({ query: rawQuery, page, pageSize: 36 });
 
 	return (
 		<SearchResultsView

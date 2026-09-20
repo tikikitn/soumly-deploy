@@ -417,15 +417,63 @@ export const FAMILY_DEFINITIONS: Family[] = [
 	{ slug: "bureau", label: "Bureau & Papeterie", icon: "FolderOpen" },
 	{ slug: "animaux", label: "Animaux", icon: "PawPrint" },
 ];
-export const guides: Array<{
-	slug: string;
-	title: string;
-	excerpt: string;
-	category: string;
-	readTime: string;
-	icon: string;
-	tone: number;
-}> = [];
+export const guides = [
+	{
+		slug: "choisir-smartphone-2026",
+		title: "Comment choisir son smartphone ?",
+		excerpt: "Les critères utiles pour comparer l’écran, l’autonomie, la photo et le stockage.",
+		category: "Smartphones",
+		readTime: "7 min",
+		icon: "Smartphone",
+		tone: 1,
+	},
+	{
+		slug: "choisir-pc-portable",
+		title: "Bien choisir son PC portable",
+		excerpt: "Processeur, mémoire, stockage et écran : adaptez la configuration à votre usage.",
+		category: "Informatique",
+		readTime: "8 min",
+		icon: "Laptop",
+		tone: 2,
+	},
+	{
+		slug: "comprendre-ecrans",
+		title: "Comprendre les écrans PC",
+		excerpt: "Taille, définition, fréquence et type de dalle expliqués simplement.",
+		category: "Informatique",
+		readTime: "6 min",
+		icon: "MonitorPlay",
+		tone: 3,
+	},
+	{
+		slug: "casque-ou-ecouteurs",
+		title: "Casque ou écouteurs : que choisir ?",
+		excerpt: "Confort, isolation, microphone et autonomie selon votre quotidien.",
+		category: "Audio",
+		readTime: "5 min",
+		icon: "Headphones",
+		tone: 4,
+	},
+	{
+		slug: "climatiseur-economique",
+		title: "Choisir un climatiseur économique",
+		excerpt: "Puissance, technologie inverter et consommation selon la surface.",
+		category: "Maison",
+		readTime: "7 min",
+		icon: "AirVent",
+		tone: 1,
+	},
+	{
+		slug: "comparer-prix-en-ligne",
+		title: "Comparer un prix correctement",
+		excerpt:
+			"Référence exacte, livraison, garantie et disponibilité : les vérifications essentielles.",
+		category: "Conseils",
+		readTime: "4 min",
+		icon: "BadgeCheck",
+		tone: 2,
+	},
+];
 
 export function formatPrice(value: number) {
 	const hasCents = Math.abs(value - Math.round(value)) > 0.0001;

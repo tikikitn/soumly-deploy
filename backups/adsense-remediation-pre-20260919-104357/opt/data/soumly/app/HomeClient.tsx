@@ -258,8 +258,6 @@ type HomepageData = {
 	maximumDiscount: number;
 	storeCount: number;
 	storeSummaries: Array<{ name: string; count: number }>;
-	productCount: number;
-	categoryCount: number;
 };
 
 export default function HomeClient({ data }: { data: HomepageData }) {
@@ -274,7 +272,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 	const offersRail = useRef<HTMLDivElement>(null);
 	const familyRails = useRef<Record<string, HTMLDivElement | null>>({});
 	const popularRail = useRef<HTMLDivElement>(null);
-	const { familyRails: rails, popular, maximumDiscount, productCount, categoryCount } = data;
+	const { familyRails: rails, popular, maximumDiscount } = data;
 	const [offersByCategory, setOffersByCategory] = useState(
 		() => new Map(Object.entries(data.offersByCategory)),
 	);
@@ -498,11 +496,6 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 								{term}
 							</button>
 						))}
-					</section>
-					<section className="homepage-catalog-facts" aria-label="Chiffres actuels de Soumly">
-						<strong>{productCount.toLocaleString("fr-FR")} produits suivis</strong>
-						<span>{data.storeCount} boutiques référencées</span>
-						<span>{categoryCount} catégories actives</span>
 					</section>
 				</div>
 
@@ -919,10 +912,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 					</div>
 					<div>
 						<h3>Aide</h3>
-						<a href="/guides">Guides d’achat</a>
-						<a href="/comment-ca-marche">Comment ça marche ?</a>
-						<a href="/methodologie">Méthodologie</a>
-						<a href="/a-propos">À propos</a>
+						<a href="/a-propos">Comment ça marche ?</a>
 						<a href="/boutiques">Boutiques référencées</a>
 						<a href="/contact">Nous contacter</a>
 					</div>

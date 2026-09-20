@@ -2751,24 +2751,6 @@ export const stores: MerchantSummary[] = (() => {
 	return [...records.values()].sort((a, b) => b.offers - a.offers || a.name.localeCompare(b.name));
 })();
 
-// Resolve boutique query values only against merchant names that are backed by
-// current offer data. Normalization makes URL/user casing, accents, spaces and
-// punctuation harmless without maintaining or inventing a separate alias list.
-function normalizeMerchantName(value: string): string {
-	return value
-		.trim()
-		.toLowerCase()
-		.normalize("NFD")
-		.replace(/[\u0300-\u036f]/g, "")
-		.replace(/[^a-z0-9]+/g, " ")
-		.trim()
-		.replace(/\s+/g, " ");
-}
-
-const MERCHANT_NAME_BY_NORMALIZED = new Map(
-	stores.map((store) => [normalizeMerchantName(store.name), store.name]),
-);
-
 // Homepage "sources" summary: current merchants with at least one offer,
 // ordered by product count. `limit` optionally caps a teaser grid.
 function getActiveStoreSummaries(limit = 0): Array<{ name: string; count: number }> {
@@ -2918,45 +2900,6 @@ export function getCategoryStats() {
 	};
 }
 
-// Factual category signals derived from the same validated product/offer set
-// used by listings. These values are intentionally computed at build/runtime,
-// never hard-coded into SEO copy.
-export function getCategoryInsights(slug: string) {
-	return getListingInsights((product) => product.categorySlug === slug);
-}
-
-export function getFamilyInsights(slug: string) {
-	return getListingInsights((product) => product.categorySlug.length > 0 && categories.some((category) => category.slug === product.categorySlug && category.family === slug));
-}
-
-function getListingInsights(predicate: (product: Product) => boolean) {
-	const matching = products.filter(predicate);
-	const merchantNames = new Set(matching.flatMap((product) => product.offers.map((offer) => offer.store)));
-	const prices = matching.flatMap((product) => product.offers.map((offer) => offer.price)).filter((price) => price > 0);
-	const brands = new Map<string, number>();
-	for (const product of matching) {
-		if (product.brand) brands.set(product.brand, (brands.get(product.brand) ?? 0) + 1);
-	}
-	return {
-		productCount: matching.length,
-		boutiqueCount: merchantNames.size,
-		minPrice: prices.length ? Math.min(...prices) : null,
-		maxPrice: prices.length ? Math.max(...prices) : null,
-		topBrands: [...brands.entries()]
-			.sort((first, second) => second[1] - first[1])
-			.slice(0, 5)
-			.map(([name]) => name),
-	};
-}
-
-export function getCatalogTrustStats() {
-	return {
-		productCount: products.length,
-		categoryCount: categories.length,
-		boutiqueCount: stores.length,
-	};
-}
-
 // ---- Phase 2C: homepage server data ----
 
 // Homepage featured families (order matters — matches the current UI).
@@ -3072,8 +3015,6 @@ function buildHomepageData() {
 		maximumDiscount,
 		storeCount,
 		storeSummaries,
-		productCount: products.length,
-		categoryCount: catalogCategories.length,
 	};
 }
 
@@ -3211,44 +3152,25 @@ export function searchProducts(query: string, limit = 8) {
 // Paginated search for the /recherche results page (server-side slicing).
 export function searchProductsPaginated({
 	query,
-	merchant = "",
 	page = 1,
 	pageSize = 36,
 	sort = "relevance",
 }: {
 	query: string;
-	merchant?: string;
 	page?: number;
 	pageSize?: number;
 	sort?: string;
 }): PaginatedProducts {
 	const normalized = normalizeSearch(correctQueryTypos(query));
-	const requestedMerchant = normalizeMerchantName(merchant);
-	const merchantName = requestedMerchant
-		? MERCHANT_NAME_BY_NORMALIZED.get(requestedMerchant)
-		: undefined;
-	if (requestedMerchant && !merchantName) {
+	if (normalized.length < 2) {
 		return { products: [], total: 0, page: 1, pageSize, totalPages: 1 };
 	}
-	const merchantProducts = merchantName
-		? products.filter((product) => product.offers.some((offer) => offer.store === merchantName))
-		: products;
-	let all: Product[];
-	if (normalized.length < 2) {
-		if (!merchantName) {
-			return { products: [], total: 0, page: 1, pageSize, totalPages: 1 };
-		}
-		all = merchantProducts;
-	} else {
-		const starts = merchantProducts.filter((product) =>
-			product.name.toLowerCase().startsWith(normalized),
-		);
-		const contains = merchantProducts.filter(
-			(product) =>
-				!product.name.toLowerCase().startsWith(normalized) && searchMatches(product, normalized),
-		);
-		all = starts.concat(contains);
-	}
+	const starts = products.filter((product) => product.name.toLowerCase().startsWith(normalized));
+	const contains = products.filter(
+		(product) =>
+			!product.name.toLowerCase().startsWith(normalized) && searchMatches(product, normalized),
+	);
+	let all = starts.concat(contains);
 	if (sort === "price-asc") all = [...all].sort((a, b) => a.price - b.price);
 	else if (sort === "price-desc") all = [...all].sort((a, b) => b.price - a.price);
 	else if (sort === "discount") all = [...all].sort((a, b) => b.discount - a.discount);

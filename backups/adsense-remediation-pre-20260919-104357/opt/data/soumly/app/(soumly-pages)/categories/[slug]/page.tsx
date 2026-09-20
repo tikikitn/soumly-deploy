@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryListingView, FamilyListingView } from "../../_components/ListingViews";
-import { formatPrice, type PaginatedProducts } from "../../_data/content.shared";
-import { getCategoryEditorial } from "../../_data/category-editorial";
+import type { PaginatedProducts } from "../../_data/content.shared";
 import {
 	getCategory,
-	getCategoryInsights,
 	getCategoryProducts,
 	getFamilies,
-	getFamilyInsights,
 	getFamilyProducts,
 } from "../../_data/products.server";
 
@@ -84,34 +81,6 @@ function JsonLd({ data }: { data: object }) {
 	);
 }
 
-function CategoryFacts({ label, insight }: { label: string; insight: ReturnType<typeof getCategoryInsights> }) {
-	if (insight.productCount === 0) return null;
-	return (
-		<section className="sm-page-shell sm-category-facts" aria-label={`Données actuelles de la catégorie ${label}`}>
-			<span className="sm-section-kicker">Données actuelles</span>
-			<h2>{label} sur Soumly</h2>
-			<p>
-				Cette catégorie contient actuellement <strong>{insight.productCount} produits</strong> proposés par <strong>{insight.boutiqueCount} boutiques</strong>
-				{insight.minPrice !== null && insight.maxPrice !== null
-					? <> , avec des prix allant de <strong>{formatPrice(insight.minPrice)}</strong> à <strong>{formatPrice(insight.maxPrice)}</strong>.</>
-					: "."}
-			</p>
-			{insight.topBrands.length > 0 ? <p>Marques les plus représentées : {insight.topBrands.join(", ")}.</p> : null}
-		</section>
-	);
-}
-
-function CategoryEditorial({ slug }: { slug: string }) {
-	const editorial = getCategoryEditorial(slug);
-	if (!editorial) return null;
-	return <section className="sm-page-shell sm-category-editorial" aria-label={`Conseils pour ${editorial.title}`}>
-		<span className="sm-section-kicker">Repères d’achat</span>
-		<h2>{editorial.title}</h2>
-		<p>{editorial.text}</p>
-		<a href={`/guides/${editorial.guideSlug ?? "comparer-prix-en-ligne-tunisie"}`}>Lire le guide associé →</a>
-	</section>;
-}
-
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
 	const { slug } = await params;
 	const sp = await searchParams;
@@ -127,7 +96,6 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 			title: `${family.label} – Comparer les prix`,
 			description: `${family.label} : ${family.categoryCount} catégories, ${family.productCount} produits.`,
 			alternates: { canonical: url },
-			robots: page > 1 ? { index: false, follow: true } : { index: true, follow: true },
 		};
 	}
 	const category = getCategory(slug);
@@ -140,7 +108,6 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 		title: `${category.label} – Comparer les prix`,
 		description: category.note,
 		alternates: { canonical: url },
-		robots: page > 1 ? { index: false, follow: true } : { index: true, follow: true },
 	};
 }
 
@@ -160,13 +127,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 		// page > totalPages → real 404 (prevents ?page=999 clones).
 		if (page > result.totalPages) notFound();
 		const { breadcrumb, itemList } = listingJsonLd(family.slug, family.label, result, page);
-		const insight = getFamilyInsights(family.slug);
 		return (
 			<>
 				<JsonLd data={breadcrumb} />
 				<JsonLd data={itemList} />
-				<CategoryEditorial slug={slug} />
-				<CategoryFacts label={family.label} insight={insight} />
 				<FamilyListingView family={family} result={result} slug={slug} />
 			</>
 		);
@@ -178,13 +142,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 	const result = getCategoryProducts({ slug, page, sort });
 	if (page > result.totalPages) notFound();
 	const { breadcrumb, itemList } = listingJsonLd(category.slug, category.label, result, page);
-	const insight = getCategoryInsights(category.slug);
 	return (
 		<>
 			<JsonLd data={breadcrumb} />
 			<JsonLd data={itemList} />
-			<CategoryEditorial slug={slug} />
-			<CategoryFacts label={category.label} insight={insight} />
 			<CategoryListingView category={category} result={result} slug={slug} />
 		</>
 	);

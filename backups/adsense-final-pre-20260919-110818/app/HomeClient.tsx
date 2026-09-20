@@ -919,7 +919,6 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 					</div>
 					<div>
 						<h3>Aide</h3>
-						<a href="/guides">Guides d’achat</a>
 						<a href="/comment-ca-marche">Comment ça marche ?</a>
 						<a href="/methodologie">Méthodologie</a>
 						<a href="/a-propos">À propos</a>

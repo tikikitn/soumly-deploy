@@ -47,13 +47,11 @@ function SearchPagination({
 	page,
 	totalPages,
 	query,
-	merchant,
 	sort,
 }: {
 	page: number;
 	totalPages: number;
 	query: string;
-	merchant: string;
 	sort: string;
 }) {
 	if (totalPages <= 1) return null;
@@ -62,10 +60,7 @@ function SearchPagination({
 	const end = Math.min(totalPages, page + 2);
 	for (let i = start; i <= end; i += 1) pages.push(i);
 	const sortPart = sort !== "relevance" ? `&sort=${sort}` : "";
-	const params = new URLSearchParams();
-	if (query) params.set("q", query);
-	if (merchant) params.set("boutique", merchant);
-	const base = `/recherche?${params.toString()}`;
+	const base = `/recherche?q=${encodeURIComponent(query)}`;
 	return (
 		<nav className="sm-pagination" aria-label="Pagination">
 			{page > 1 ? (
@@ -171,13 +166,7 @@ export function SearchResultsView({
 								<SummaryCard product={product} key={product.id} />
 							))}
 						</div>
-						<SearchPagination
-							page={page}
-							totalPages={totalPages}
-							query={query}
-							merchant={merchant}
-							sort={sort}
-						/>
+						<SearchPagination page={page} totalPages={totalPages} query={query} sort={sort} />
 					</div>
 				</section>
 			) : (

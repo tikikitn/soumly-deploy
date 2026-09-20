@@ -106,8 +106,6 @@ function ProductDetails({
 	const bestOffer = offers[0];
 	const highestPrice = Math.max(...offers.map((offer) => offer.price));
 	const maximumSaving = highestPrice - bestOffer.price;
-	const priceGapPercent = bestOffer.price > 0 ? (maximumSaving / bestOffer.price) * 100 : 0;
-	const lastUpdate = offers.find((offer) => offer.updatedAt.trim())?.updatedAt ?? "";
 
 	// ---- Schema.org structured data (JSON-LD) for rich Google results ----
 	const productJsonLd = {
@@ -452,7 +450,7 @@ function ProductDetails({
 														: "Même prix"}
 											</em>
 											<strong>{formatPrice(offer.price)}</strong>
-											<small>{offer.updatedAt}</small>
+											<small>Dernier relevé importé</small>
 										</div>
 										<a
 											href={offer.url}
@@ -480,24 +478,6 @@ function ProductDetails({
 									</article>
 								);
 							})}
-						</div>
-						<div className="sm-price-insight" aria-label="Synthèse de la comparaison">
-							<strong>Lecture Soumly</strong>
-							<p>
-								{offers.length > 1
-									? `Le prix le plus bas actuellement détecté par Soumly est ${formatPrice(bestOffer.price)} chez ${bestOffer.store}.`
-									: `Une offre actuellement référencée chez ${bestOffer.store}, au prix de ${formatPrice(bestOffer.price)}.`}
-							</p>
-							{offers.length > 1 ? (
-								<p>
-									L’écart entre l’offre la moins chère et la plus chère est de {formatPrice(maximumSaving)}
-									{priceGapPercent > 0 ? ` (${priceGapPercent.toFixed(1).replace(".", ",")} %)` : ""}.
-								</p>
-							) : null}
-							<p>
-								{offers.length} offre{offers.length > 1 ? "s" : ""} actuellement référencée{offers.length > 1 ? "s" : ""}.
-							</p>
-							{lastUpdate ? <small>Prix vérifiés / dernière mise à jour : {lastUpdate}</small> : null}
 						</div>
 						<p className="sm-offer-disclaimer">
 							Soumly affiche les données du dernier relevé disponible. Le stock, les frais de

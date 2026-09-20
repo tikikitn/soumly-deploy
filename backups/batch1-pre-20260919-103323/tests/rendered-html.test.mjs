@@ -27,11 +27,11 @@ async function request(path) {
 	);
 }
 
-test("does not expose development-only preview metadata in production", async () => {
+test("renders development preview metadata", async () => {
 	const response = await request("/");
 	assert.equal(response.status, 200);
 	assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-	assert.doesNotMatch(await response.text(), developmentPreviewMeta);
+	assert.match(await response.text(), developmentPreviewMeta);
 });
 
 test("homepage exposes the cleaned French catalog", async () => {

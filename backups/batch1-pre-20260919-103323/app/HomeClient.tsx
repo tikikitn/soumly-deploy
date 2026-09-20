@@ -258,8 +258,6 @@ type HomepageData = {
 	maximumDiscount: number;
 	storeCount: number;
 	storeSummaries: Array<{ name: string; count: number }>;
-	productCount: number;
-	categoryCount: number;
 };
 
 export default function HomeClient({ data }: { data: HomepageData }) {
@@ -274,7 +272,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 	const offersRail = useRef<HTMLDivElement>(null);
 	const familyRails = useRef<Record<string, HTMLDivElement | null>>({});
 	const popularRail = useRef<HTMLDivElement>(null);
-	const { familyRails: rails, popular, maximumDiscount, productCount, categoryCount } = data;
+	const { familyRails: rails, popular, maximumDiscount } = data;
 	const [offersByCategory, setOffersByCategory] = useState(
 		() => new Map(Object.entries(data.offersByCategory)),
 	);
@@ -498,11 +496,6 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 								{term}
 							</button>
 						))}
-					</section>
-					<section className="homepage-catalog-facts" aria-label="Chiffres actuels de Soumly">
-						<strong>{productCount.toLocaleString("fr-FR")} produits suivis</strong>
-						<span>{data.storeCount} boutiques référencées</span>
-						<span>{categoryCount} catégories actives</span>
 					</section>
 				</div>
 
@@ -822,6 +815,53 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 				</a>
 			</section>
 
+			<section className="guides-section page-shell" id="guides" aria-labelledby="guides-title">
+				<div className="section-heading">
+					<div>
+						<span className="section-kicker">Conseils pratiques</span>
+						<h2 id="guides-title">Guides pour mieux acheter</h2>
+						<p>Des repères simples avant de choisir votre prochain produit.</p>
+					</div>
+					<a className="text-link" href="/guides">
+						Tous les guides <ChevronRight size={17} />
+					</a>
+				</div>
+				<div className="guide-grid">
+					<article className="guide-card guide-card--violet">
+						<span>
+							<Smartphone size={24} />
+						</span>
+						<small>Smartphones · 6 min</small>
+						<h3>Comment choisir un smartphone en 2026 ?</h3>
+						<p>Écran, autonomie, photo et stockage : les critères vraiment utiles.</p>
+						<a href="/guides/choisir-smartphone-2026">
+							Lire le guide <ArrowRight size={17} />
+						</a>
+					</article>
+					<article className="guide-card guide-card--coral">
+						<span>
+							<Laptop size={24} />
+						</span>
+						<small>Informatique · 5 min</small>
+						<h3>Quel PC portable pour vos besoins ?</h3>
+						<p>Études, travail ou création : trouvez la configuration la plus cohérente.</p>
+						<a href="/guides/choisir-pc-portable">
+							Lire le guide <ArrowRight size={17} />
+						</a>
+					</article>
+					<article className="guide-card guide-card--navy">
+						<span>
+							<BookOpen size={24} />
+						</span>
+						<small>Conseils · 4 min</small>
+						<h3>Reconnaître une vraie bonne affaire</h3>
+						<p>Comparez le prix, le vendeur et les conditions avant de décider.</p>
+						<a href="/guides/comparer-prix-en-ligne">
+							Lire le guide <ArrowRight size={17} />
+						</a>
+					</article>
+				</div>
+			</section>
 
 			<section className="alert-section page-shell">
 				<div>
@@ -919,10 +959,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 					</div>
 					<div>
 						<h3>Aide</h3>
-						<a href="/guides">Guides d’achat</a>
-						<a href="/comment-ca-marche">Comment ça marche ?</a>
-						<a href="/methodologie">Méthodologie</a>
-						<a href="/a-propos">À propos</a>
+						<a href="/a-propos">Comment ça marche ?</a>
 						<a href="/boutiques">Boutiques référencées</a>
 						<a href="/contact">Nous contacter</a>
 					</div>

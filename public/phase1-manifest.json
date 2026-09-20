@@ -1,8 +1,12 @@
 {
- "valid_products": 31911,
- "dropped": 936,
- "categories": 549,
+ "valid_products": 32622,
+ "dropped": 225,
+ "categories": 552,
  "chunks": 4,
+ "generated_at": "2026-09-19T10:44:52.777561+00:00",
+ "source_products": "/opt/data/soumly/app/products.ts",
+ "duplicate_rows": 41,
+ "duplicate_ids": 39,
  "missing_cat_examples": [
   "vitamines-et-complements-alimentaires",
   "webcams",

@@ -34,9 +34,16 @@
 ## Comprendre et utiliser Soumly
 
 - [À propos de Soumly](https://soumly.online/a-propos): fonctionnement, méthode de comparaison et limites du service.
-
+- [Comparer un prix correctement](https://soumly.online/guides/comparer-prix-en-ligne): vérifier la référence, la livraison, la garantie et la disponibilité.
 - [Documentation complète pour les assistants IA](https://soumly.online/llms-full.txt): règles d’interprétation, structure du site et ressources détaillées.
 
+## Guides d’achat
+
+- [Choisir son smartphone](https://soumly.online/guides/choisir-smartphone-2026): écran, autonomie, photo et stockage.
+- [Bien choisir son PC portable](https://soumly.online/guides/choisir-pc-portable): processeur, mémoire, stockage et écran selon l’usage.
+- [Comprendre les écrans PC](https://soumly.online/guides/comprendre-ecrans): taille, définition, fréquence et type de dalle.
+- [Casque ou écouteurs](https://soumly.online/guides/casque-ou-ecouteurs): confort, isolation, microphone et autonomie.
+- [Choisir un climatiseur économique](https://soumly.online/guides/climatiseur-economique): puissance, technologie inverter et consommation.
 
 ## Optional
 

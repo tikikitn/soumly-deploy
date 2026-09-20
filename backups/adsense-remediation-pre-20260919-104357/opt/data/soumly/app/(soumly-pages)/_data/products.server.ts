@@ -2918,45 +2918,6 @@ export function getCategoryStats() {
 	};
 }
 
-// Factual category signals derived from the same validated product/offer set
-// used by listings. These values are intentionally computed at build/runtime,
-// never hard-coded into SEO copy.
-export function getCategoryInsights(slug: string) {
-	return getListingInsights((product) => product.categorySlug === slug);
-}
-
-export function getFamilyInsights(slug: string) {
-	return getListingInsights((product) => product.categorySlug.length > 0 && categories.some((category) => category.slug === product.categorySlug && category.family === slug));
-}
-
-function getListingInsights(predicate: (product: Product) => boolean) {
-	const matching = products.filter(predicate);
-	const merchantNames = new Set(matching.flatMap((product) => product.offers.map((offer) => offer.store)));
-	const prices = matching.flatMap((product) => product.offers.map((offer) => offer.price)).filter((price) => price > 0);
-	const brands = new Map<string, number>();
-	for (const product of matching) {
-		if (product.brand) brands.set(product.brand, (brands.get(product.brand) ?? 0) + 1);
-	}
-	return {
-		productCount: matching.length,
-		boutiqueCount: merchantNames.size,
-		minPrice: prices.length ? Math.min(...prices) : null,
-		maxPrice: prices.length ? Math.max(...prices) : null,
-		topBrands: [...brands.entries()]
-			.sort((first, second) => second[1] - first[1])
-			.slice(0, 5)
-			.map(([name]) => name),
-	};
-}
-
-export function getCatalogTrustStats() {
-	return {
-		productCount: products.length,
-		categoryCount: categories.length,
-		boutiqueCount: stores.length,
-	};
-}
-
 // ---- Phase 2C: homepage server data ----
 
 // Homepage featured families (order matters — matches the current UI).
@@ -3072,8 +3033,6 @@ function buildHomepageData() {
 		maximumDiscount,
 		storeCount,
 		storeSummaries,
-		productCount: products.length,
-		categoryCount: catalogCategories.length,
 	};
 }
 

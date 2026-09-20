@@ -1,0 +1,13 @@
+{
+ "valid_products": 31911,
+ "dropped": 936,
+ "categories": 549,
+ "chunks": 4,
+ "missing_cat_examples": [
+  "vitamines-et-complements-alimentaires",
+  "webcams",
+  "wireless-access-points",
+  "yaourtieres",
+  "zone-de-la-bouche-et-des-levres"
+ ]
+}
