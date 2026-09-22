@@ -18,6 +18,7 @@ import {
 	type ProductSummary,
 	type StoreOffer,
 } from "./content.shared";
+import { isIndexationExperimentTreatment } from "./indexation-experiment";
 
 // Snapshot date of the current imported product catalog (the weekly artifact).
 // This is set from the products.ts artifact's capture date at import time.
@@ -2735,8 +2736,8 @@ export const stores: MerchantSummary[] = (() => {
 			}
 			if (!categorySets.has(store)) categorySets.set(store, new Set());
 			if (!productSets.has(store)) productSets.set(store, new Set());
-			categorySets.get(store).add(product.category);
-			productSets.get(store).add(product.id);
+			categorySets.get(store)?.add(product.category);
+			productSets.get(store)?.add(product.id);
 		}
 	}
 
@@ -2796,6 +2797,17 @@ export function relatedProducts(product: Product, limit = 4) {
 			(candidate) => candidate.id !== product.id && candidate.categorySlug === product.categorySlug,
 		)
 		.slice(0, limit);
+}
+
+export function treatmentProductsForCategory(categorySlug: string, limit = 4): ProductSummary[] {
+	return products
+		.filter((product) => product.categorySlug === categorySlug && isIndexationExperimentTreatment(product.id))
+		.slice(0, limit)
+		.map(toSummary);
+}
+
+export function treatmentProductsForExperiment(limit = 12): ProductSummary[] {
+	return products.filter((product) => isIndexationExperimentTreatment(product.id)).slice(0, limit).map(toSummary);
 }
 
 // ---- Phase 2B: category/listing server queries ----

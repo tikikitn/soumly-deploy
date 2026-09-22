@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { guardOutboundClick, trackOutboundStoreClick } from "../../components/analytics";
 import { withMerchantUtm } from "../../components/merchant-utm";
 import Link from "../../components/NativeLink";
+import type { TreatmentContent } from "../_data/indexation-experiment";
 import { formatPrice, type Product } from "../_data/content.shared";
 import { ProductCard, Stars, useFavorite } from "./ui";
 
@@ -73,11 +74,13 @@ export function ProductDetailView({
 	related,
 	brandSlug,
 	brandLabel,
+	treatment,
 }: {
 	product: Product;
 	related: Product[];
 	brandSlug?: string | null;
 	brandLabel?: string | null;
+	treatment: TreatmentContent | null;
 }) {
 	return (
 		<ProductDetails
@@ -85,6 +88,7 @@ export function ProductDetailView({
 			related={related}
 			brandSlug={brandSlug}
 			brandLabel={brandLabel}
+			treatment={treatment}
 		/>
 	);
 }
@@ -94,11 +98,13 @@ function ProductDetails({
 	related,
 	brandSlug,
 	brandLabel,
+	treatment,
 }: {
 	product: Product;
 	related: Product[];
 	brandSlug?: string | null;
 	brandLabel?: string | null;
+	treatment: TreatmentContent | null;
 }) {
 	const { favorite, toggle } = useFavorite(product.id);
 	const [alertEnabled, setAlertEnabled] = useState(false);
@@ -116,6 +122,7 @@ function ProductDetails({
 		name: product.name,
 		image: product.image ? [product.image] : undefined,
 		description:
+			treatment?.summary ||
 			product.description ||
 			`${product.name} — comparez les prix chez ${product.stores} boutiques tunisiennes.`,
 		sku: product.id,
@@ -315,6 +322,20 @@ function ProductDetails({
 					</aside>
 				</div>
 			</section>
+
+			{treatment ? (
+				<section className="sm-page-shell sm-experiment-insight" data-seo-experiment="treatment">
+					<span className="sm-section-kicker">Lecture Soumly</span>
+					<h2>Ce que montre la comparaison pour cette référence</h2>
+					<p>{treatment.summary}</p>
+					<p><strong>{treatment.priceInsight}</strong> {treatment.merchantInsight}</p>
+					<nav aria-label="Liens utiles pour cette comparaison">
+						<Link href={`/categories/${treatment.categorySlug}`}>Voir toute la catégorie {treatment.category} →</Link>
+						<Link href="/guides">Lire les guides d’achat Soumly →</Link>
+						{related.slice(0, 3).map((item) => <Link href={`/produit/${item.id}`} key={item.id}>Comparer aussi {item.name} →</Link>)}
+					</nav>
+				</section>
+			) : null}
 
 			<div className="sm-product-tabs">
 				<div className="sm-page-shell">

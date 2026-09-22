@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "../../components/NativeLink";
 import { editorialGuides } from "../_data/guide-content";
+import { treatmentProductsForExperiment } from "../_data/products.server";
 
 export const metadata: Metadata = {
  title: "Guides d’achat en Tunisie – Conseils pratiques | Soumly",
@@ -18,5 +19,6 @@ export default function GuidesPage() {
     <div><span className="sm-guide-time">{guide.readTime} de lecture</span><h2>{guide.title}</h2><p>{guide.excerpt}</p><Link href={`/guides/${guide.slug}`}>Lire le guide →</Link></div>
    </article>)}
   </div>
+  {(() => { const products = treatmentProductsForExperiment(12); return products.length > 0 ? <section className="sm-page-shell sm-experiment-links" data-seo-experiment="treatment"><span className="sm-section-kicker">Sélection Soumly</span><h2>Références à comparer</h2><nav aria-label="Références sélectionnées pour l’expérience"><Link href="/guides">Guides d’achat Soumly →</Link>{products.map((product) => <Link href={`/produit/${product.id}`} key={product.id}>{product.name} →</Link>)}</nav></section> : null; })()}
  </main>;
 }

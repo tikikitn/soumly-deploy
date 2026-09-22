@@ -7,6 +7,7 @@ import {
 	getProduct,
 	relatedProducts,
 } from "../../_data/products.server";
+import { getTreatmentContent } from "../../_data/indexation-experiment";
 
 const BASE = "https://soumly.online";
 
@@ -20,13 +21,15 @@ export async function generateMetadata({
 	if (!product) return { title: "Produit introuvable" };
 
 	const url = `${BASE}/produit/${slug}`;
-	const description =
+	const treatment = getTreatmentContent(product);
+	const description = treatment?.metaDescription ||
 		product.description ||
 		`${product.name} — Comparez les prix chez ${product.stores} boutiques tunisiennes.`;
 
 	return {
-		title: `${product.name} – Comparer les prix`,
+		title: treatment ? `${product.name} – ${product.category}` : `${product.name} – Comparer les prix`,
 		description,
+		robots: treatment ? { index: true, follow: true } : undefined,
 		alternates: { canonical: url },
 		openGraph: {
 			title: `${product.name} à partir de ${product.price} DT`,
@@ -53,12 +56,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 	const related = relatedProducts(product, 4);
 	const brandSlug = detectBrand(product.name);
 	const brandLabel = brandSlug ? APPROVED_BRANDS[brandSlug].label : null;
+	const treatment = getTreatmentContent(product);
 	return (
 		<ProductDetailView
 			product={product}
 			related={related}
 			brandSlug={brandSlug}
 			brandLabel={brandLabel}
+			treatment={treatment}
 		/>
 	);
 }

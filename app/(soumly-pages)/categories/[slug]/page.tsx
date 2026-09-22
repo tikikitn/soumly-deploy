@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "../../../components/NativeLink";
 import { CategoryListingView, FamilyListingView } from "../../_components/ListingViews";
 import { formatPrice, type PaginatedProducts } from "../../_data/content.shared";
 import { getCategoryEditorial } from "../../_data/category-editorial";
@@ -10,6 +11,7 @@ import {
 	getFamilies,
 	getFamilyInsights,
 	getFamilyProducts,
+	treatmentProductsForCategory,
 } from "../../_data/products.server";
 
 const BASE = "https://soumly.online";
@@ -101,6 +103,18 @@ function CategoryFacts({ label, insight }: { label: string; insight: ReturnType<
 	);
 }
 
+function TreatmentCategoryLinks({ slug, label }: { slug: string; label: string }) {
+	const products = treatmentProductsForCategory(slug, 4);
+	if (products.length === 0) return null;
+	return <section className="sm-page-shell sm-experiment-links" data-seo-experiment="treatment">
+		<span className="sm-section-kicker">Sélection Soumly</span>
+		<h2>Références à comparer dans {label}</h2>
+		<nav aria-label={`Produits sélectionnés dans ${label}`}>
+			{products.map((product) => <Link href={`/produit/${product.id}`} key={product.id}>{product.name} →</Link>)}
+		</nav>
+	</section>;
+}
+
 function CategoryEditorial({ slug }: { slug: string }) {
 	const editorial = getCategoryEditorial(slug);
 	if (!editorial) return null;
@@ -185,6 +199,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 			<JsonLd data={itemList} />
 			<CategoryEditorial slug={slug} />
 			<CategoryFacts label={category.label} insight={insight} />
+			<TreatmentCategoryLinks slug={category.slug} label={category.label} />
 			<CategoryListingView category={category} result={result} slug={slug} />
 		</>
 	);
