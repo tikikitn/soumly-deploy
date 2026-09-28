@@ -2308,6 +2308,8 @@ const BRAND_NAMES = [
 	"Lexar",
 	"Kingston",
 	"Sandisk",
+	"Pharmaceris",
+	"Prima",
 ].sort((first, second) => second.length - first.length);
 
 const BRAND_STOP_WORDS = new Set([
@@ -2439,19 +2441,18 @@ function merchantOldPrice(value: number, price: number) {
 }
 
 function inferBrand(name: string) {
-	const normalized = simplify(name);
-	const known = BRAND_NAMES.find((brand) => normalized.includes(simplify(brand)));
-	if (known) return known === "Hewlett Packard" ? "HP" : known;
-
-	const candidate = name
-		.replace(/[|/()[\],:;+]/g, " ")
-		.split(/\s+/)
-		.map((word) => word.replace(/[^\p{L}\p{N}-]/gu, ""))
-		.find((word) => {
-			const token = simplify(word);
-			return token.length > 2 && !BRAND_STOP_WORDS.has(token) && !/^\d/.test(token);
-		});
-	return candidate || "Autre marque";
+	// Only accept an explicit, token-bounded brand from the source title.
+	// Substring matching made Pharmaceris look like Acer and the fallback
+	// made category words such as Parc look like brands.
+	const tokens = simplify(name).split(/[^a-z0-9]+/).filter(Boolean);
+	for (const brand of BRAND_NAMES) {
+		const brandTokens = simplify(brand).split(/[^a-z0-9]+/).filter(Boolean);
+		const found = brandTokens.length > 0 && tokens.some((_, index) =>
+			brandTokens.every((token, offset) => tokens[index + offset] === token),
+		);
+		if (found) return brand === "Hewlett Packard" ? "HP" : brand;
+	}
+	return "Marque non identifiée";
 }
 
 // Number of distinctive (non-generic) tokens shared between a product id
@@ -2578,6 +2579,16 @@ export const products: Product[] = [...groupedProducts.values()].flatMap((group)
 		oldPrice > bestOffer.price ? Math.round(((oldPrice - bestOffer.price) / oldPrice) * 100) : 0;
 	const discount = computedDiscount;
 	const brand = inferBrand(source.name);
+	const prices = offers.map((offer) => offer.price);
+	const lowPrice = Math.min(...prices);
+	const highPrice = Math.max(...prices);
+	const merchants = offers.map((offer) => offer.store).join(", ");
+	const brandSentence = brand === "Marque non identifiée"
+		? "La marque n’est pas identifiée dans le titre source."
+		: `Marque identifiée : ${brand}.`;
+	const comparisonSentence = offers.length > 1
+		? `Cette référence est relevée chez ${offers.length} boutiques (${merchants}), de ${lowPrice} à ${highPrice} DT.`
+		: `Une seule offre est relevée chez ${merchants}, à ${lowPrice} DT.`;
 	const product: Product = {
 		id: source.id,
 		name: source.name,
@@ -2593,10 +2604,7 @@ export const products: Product[] = [...groupedProducts.values()].flatMap((group)
 		discount,
 		badge: discount > 0 ? "Promotion" : undefined,
 		tag: offers.length > 1 ? "Prix comparé" : undefined,
-		description:
-			offers.length > 1
-				? `${source.name} est actuellement référencé chez ${offers.length} boutiques. Comparez les prix et ouvrez directement l’offre du marchand.`
-				: `${source.name} est actuellement référencé chez une boutique. Consultez le prix et les conditions du marchand avant l’achat.`,
+		description: `${source.name}. ${brandSentence} ${comparisonSentence} Relevé importé le ${CATALOG_IMPORTED_AT} ; le prix final, le stock, la livraison et la garantie doivent être confirmés sur la fiche du marchand.`,
 		specs: [
 			["Marque", brand],
 			["Catégorie", category.label],
@@ -2629,7 +2637,7 @@ export const categories: Category[] = allDefinitions
 export function getFamilies() {
 	return FAMILY_DEFINITIONS.map((family) => {
 		const familyCategories = categories.filter((category) => category.family === family.slug);
-		const familyProducts = familyCategories.reduce((sum, category) => sum + category.count, 0);
+		const familyProducts = products.filter((product) => familyCategorySlugs(family.slug).has(product.categorySlug)).length;
 		return { ...family, categoryCount: familyCategories.length, productCount: familyProducts };
 	}).filter((family) => family.productCount > 0);
 }
@@ -2868,6 +2876,17 @@ export function getProductsByCategories(categorySlugs: string[], limit = 4): Pro
 }
 
 // All products of a family (group cards + first page).
+function familyCategorySlugs(slug: string) {
+	const groups = FAMILY_GROUPS[slug] ?? [];
+	const groupSlugs = new Set(groups.flatMap((group) => group.categories.map((c) => c.slug)));
+	if (groupSlugs.size === 0) {
+		for (const category of categories) {
+			if (category.family === slug) groupSlugs.add(category.slug);
+		}
+	}
+	return groupSlugs;
+}
+
 export function getFamilyProducts({
 	slug,
 	page = 1,
@@ -2879,15 +2898,7 @@ export function getFamilyProducts({
 	pageSize?: number;
 	sort?: string;
 }): PaginatedProducts {
-	const groups = FAMILY_GROUPS[slug] ?? [];
-	const groupSlugs = new Set(groups.flatMap((group) => group.categories.map((c) => c.slug)));
-	// Fallback: when a family has no FAMILY_GROUPS entry (e.g. bebe-enfants),
-	// derive its category slugs from the generated categories (same as homepage).
-	if (groupSlugs.size === 0) {
-		for (const category of categories) {
-			if (category.family === slug) groupSlugs.add(category.slug);
-		}
-	}
+	const groupSlugs = familyCategorySlugs(slug);
 	const all = products.filter((product) => groupSlugs.has(product.categorySlug));
 	const total = all.length;
 	const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -2938,7 +2949,8 @@ export function getCategoryInsights(slug: string) {
 }
 
 export function getFamilyInsights(slug: string) {
-	return getListingInsights((product) => product.categorySlug.length > 0 && categories.some((category) => category.slug === product.categorySlug && category.family === slug));
+	const groupSlugs = familyCategorySlugs(slug);
+	return getListingInsights((product) => groupSlugs.has(product.categorySlug));
 }
 
 function getListingInsights(predicate: (product: Product) => boolean) {

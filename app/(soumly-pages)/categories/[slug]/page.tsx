@@ -180,7 +180,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 				<JsonLd data={breadcrumb} />
 				<JsonLd data={itemList} />
 				<CategoryEditorial slug={slug} />
-				<CategoryFacts label={family.label} insight={insight} />
 				<FamilyListingView family={family} result={result} slug={slug} />
 			</>
 		);

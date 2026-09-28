@@ -518,7 +518,7 @@ function ProductDetails({
 							<p>
 								{offers.length} offre{offers.length > 1 ? "s" : ""} actuellement référencée{offers.length > 1 ? "s" : ""}.
 							</p>
-							{lastUpdate ? <small>Prix vérifiés / dernière mise à jour : {lastUpdate}</small> : null}
+							{lastUpdate ? <small>Relevé importé le {lastUpdate}. Ce n’est pas une vérification effectuée aujourd’hui.</small> : null}
 						</div>
 						<p className="sm-offer-disclaimer">
 							Soumly affiche les données du dernier relevé disponible. Le stock, les frais de

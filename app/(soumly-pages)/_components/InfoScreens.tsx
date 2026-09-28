@@ -36,7 +36,7 @@ const content: Record<
 		eyebrow: "Contact",
 		title: "Parler avec l’équipe Soumly.",
 		intro:
-			"Cette version est prête à recevoir les coordonnées officielles du propriétaire avant sa mise en ligne publique.",
+			"Soumly présente des comparaisons de produits et des liens vers les boutiques référencées.",
 		sections: [
 			{
 				title: "Demande utilisateur",
@@ -47,8 +47,6 @@ const content: Record<
 				text: "Une boutique peut demander la correction de ses informations ou proposer un flux officiel de catalogue.",
 			},
 			{
-				title: "Configuration requise",
-				text: "Ajoutez ici l’adresse e-mail professionnelle, le numéro de téléphone et l’adresse de l’entreprise avant le lancement commercial.",
 			},
 		],
 	},

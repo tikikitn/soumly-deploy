@@ -135,7 +135,7 @@ export function CategoryListingView({
 							<p>{category.note}. Comparez uniquement des références équivalentes.</p>
 						</div>
 					</div>
-					<span className="sm-result-pill">{result.total} produits</span>
+					<span className="sm-result-pill">{result.total} produits dans cette sélection</span>
 				</div>
 			</section>
 			<Catalog
@@ -169,12 +169,11 @@ export function FamilyListingView({
 						<div>
 							<h1>{family.label}</h1>
 							<p>
-								{family.categoryCount} catégories,{" "}
-								{new Intl.NumberFormat("fr-FR").format(family.productCount)} produits.
+									{family.categoryCount} catégories, {new Intl.NumberFormat("fr-FR").format(result.total)} produits dans cette sélection.
 							</p>
 						</div>
 					</div>
-					<span className="sm-result-pill">{result.total} produits</span>
+					<span className="sm-result-pill">{result.total} produits dans cette sélection</span>
 				</div>
 			</section>
 			<Catalog
