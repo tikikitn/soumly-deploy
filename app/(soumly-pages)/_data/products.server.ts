@@ -2646,7 +2646,7 @@ function sourceTitleSpecs(name: string, categorySlug: string): Array<[string, st
 		fields.push(["Résolution mentionnée", unavailable(resolution)]);
 		fields.push(["Fréquence mentionnée", refresh ? `${refresh} Hz` : "Information indisponible"]);
 	} else {
-		fields.push(["Marque", unavailable(name.match(/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ -]{1,24}(?=\s)/)?.[0])]);
+		fields.push(["Marque", "Information indisponible"]);
 	}
 	return fields;
 }
