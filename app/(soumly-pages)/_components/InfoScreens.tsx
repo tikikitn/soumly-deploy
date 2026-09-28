@@ -67,8 +67,8 @@ const content: Record<
 				text: "Les boutons marchands ouvrent des sites tiers. Leurs propres politiques de confidentialité et cookies s’appliquent alors.",
 			},
 			{
-				title: "Mesure d’audience",
-				text: "Aucun outil de suivi supplémentaire n’est configuré dans le projet livré. Toute future solution d’analyse devra être documentée ici.",
+				title: "Mesure d’audience avec Google Analytics",
+				text: "Soumly utilise Google Analytics 4 pour mesurer les consultations de pages et améliorer le service. La propriété de mesure utilisée est G-GWRZRHR8FV. Le site peut également transmettre à Google des événements liés aux clics vers les boutiques, avec les informations disponibles comme le produit, la boutique, le prix, la catégorie, l’URL de destination et l’emplacement du clic. Les paramètres et les conditions de Google Analytics s’appliquent à ce traitement.",
 			},
 		],
 	},

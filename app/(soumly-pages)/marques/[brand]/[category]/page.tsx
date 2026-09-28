@@ -32,7 +32,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 			? `${BASE}/marques/${brand}/${category}?page=${page}`
 			: `${BASE}/marques/${brand}/${category}`;
 	return {
-		title: `Prix des ${data.categoryLabel.toLowerCase()} ${data.brandLabel} en Tunisie – Soumly`,
+		title: `Prix des ${data.categoryLabel.toLowerCase()} ${data.brandLabel} en Tunisie`,
 		description: `Comparez les prix des ${data.categoryLabel.toLowerCase()} ${data.brandLabel} en Tunisie sur Soumly. Découvrez les meilleures offres et trouvez le meilleur prix.`,
 		alternates: { canonical: url },
 	};

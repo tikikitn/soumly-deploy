@@ -96,7 +96,12 @@ Pour une information dynamique — prix, offre, boutique ou disponibilité — l
 - [À propos](https://soumly.online/a-propos): comprendre le rôle, la méthode et les limites de Soumly.
 - [Contact](https://soumly.online/contact): contacter Soumly.
 
-## 7. Les 9 univers
+## 7. Guides d’achat utiles
+
+- [Choisir un smartphone en Tunisie](https://soumly.online/guides/choisir-smartphone-tunisie) : critères de comparaison et points à vérifier avant l’achat.
+- [Choisir un smartphone selon son budget](https://soumly.online/guides/choisir-smartphone-budget) : repères pour comparer les modèles par budget.
+- [Choisir un ordinateur portable](https://soumly.online/guides/choisir-ordinateur-portable) : critères essentiels pour comparer un laptop.
+
 
 ### High-Tech
 
