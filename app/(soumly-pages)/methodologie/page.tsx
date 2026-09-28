@@ -18,7 +18,9 @@ export default function MethodologyPage() {
       <p>Nous associons une offre à un produit lorsqu’elle présente suffisamment d’éléments distinctifs en commun avec la référence du produit. Les associations insuffisamment fiables sont exclues de la comparaison plutôt que présentées comme certaines.</p>
       <h2>Mise à jour et disponibilité</h2>
       <p>Chaque fiche affiche la date du relevé disponible lorsqu’elle est connue. Soumly ne garantit pas manuellement le stock : la disponibilité affichée est une information de référence et doit être confirmée auprès du marchand.</p>
-      <h2>Classement</h2>
+      <h2>Contrôle des variantes et écarts</h2>
+       <p>Une correspondance forte exige au moins deux éléments distinctifs communs entre le titre de la référence et l’URL de l’offre. Les correspondances limitées sont signalées. Un écart de prix supérieur à 30 % est signalé comme inhabituel : il peut refléter une variante, un pack, une erreur de source ou une condition différente. Soumly ne transforme pas ce signal en avis sur le produit.</p>
+       <h2>Classement</h2>
       <p>Sur une fiche produit, les offres sont classées du prix le plus bas au plus élevé. Dans les listings, le tri par défaut privilégie les produits présents chez plusieurs boutiques, puis la réduction calculée à partir des prix disponibles, puis le prix. Les filtres permettent d’utiliser d’autres tris.</p>
       <h2>Relations commerciales</h2>
       <p>Les liens vers les marchands servent à visiter l’offre source et à mesurer les clics sortants. Le classement des offres affichées sur la fiche est basé sur les données de prix, pas sur un placement éditorial payé.</p>

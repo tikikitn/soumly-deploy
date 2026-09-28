@@ -2551,6 +2551,8 @@ function productOffers(group: SourceProduct[]) {
 				delivery: offer.delivery,
 				availability: offer.availability,
 				updatedAt: offer.updatedAt,
+				matchStrength: offer.sharedTokens >= 2 ? "forte" : "limitée",
+				matchTokens: offer.sharedTokens,
 			}),
 		)
 		.sort((first, second) => first.price - second.price);
@@ -2615,6 +2617,83 @@ export const products: Product[] = [...groupedProducts.values()].flatMap((group)
 	};
 	return [product];
 });
+
+function unavailable(value: string | undefined) {
+	return value?.trim() ? value.trim() : "Information indisponible";
+}
+
+function sourceTitleSpecs(name: string, categorySlug: string): Array<[string, string]> {
+	const fields: Array<[string, string]> = [];
+	const network = name.match(/\b(?:2G|3G|4G|5G)\b/i)?.[0];
+	const screen = name.match(/\b(\d+(?:[.,]\d+)?)\s*(?:"|pouces|inch)\b/i)?.[1];
+	const resolution = name.match(/\b(4K|8K|QHD|WQHD|Full\s*HD|FHD|HD)\b/i)?.[1];
+	const refresh = name.match(/\b(\d{2,3})\s*Hz\b/i)?.[1];
+	const processor = name.match(/\b((?:Intel\s+)?Core\s+i[3579](?:[- ]\d+[A-Z0-9]*)?|Ryzen\s+[3579](?:\s*\d+[A-Z0-9]*)?|Snapdragon\s+[A-Za-z0-9-]+|Helio\s+[A-Za-z0-9-]+)\b/i)?.[1];
+	const ram = name.match(/\b(?:RAM|mémoire vive|memory)\s*[:/]?\s*(\d+)\s*Go\b/i)?.[1];
+	const storage = name.match(/\b(\d+)\s*Go\s*(?:SSD|disque|stockage)\b/i)?.[1];
+	if (["smartphones", "telephone-portables"].includes(categorySlug)) {
+		fields.push(["Réseau mentionné", unavailable(network)]);
+		fields.push(["Processeur mentionné", unavailable(processor)]);
+		fields.push(["RAM explicitement indiquée", ram ? `${ram} Go` : "Information indisponible"]);
+		fields.push(["Stockage explicitement indiqué", storage ? `${storage} Go` : "Information indisponible"]);
+	} else if (["ordinateurs-portables", "ordinateurs-de-bureau", "tablettes"].includes(categorySlug)) {
+		fields.push(["Processeur mentionné", unavailable(processor)]);
+		fields.push(["RAM explicitement indiquée", ram ? `${ram} Go` : "Information indisponible"]);
+		fields.push(["Stockage explicitement indiqué", storage ? `${storage} Go` : "Information indisponible"]);
+		fields.push(["Taille d’écran mentionnée", screen ? `${screen.replace(",", ".")} pouces` : "Information indisponible"]);
+	} else if (["ecrans", "moniteurs", "televisions"].includes(categorySlug)) {
+		fields.push(["Taille d’écran mentionnée", screen ? `${screen.replace(",", ".")} pouces` : "Information indisponible"]);
+		fields.push(["Résolution mentionnée", unavailable(resolution)]);
+		fields.push(["Fréquence mentionnée", refresh ? `${refresh} Hz` : "Information indisponible"]);
+	} else {
+		fields.push(["Marque", unavailable(name.match(/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ -]{1,24}(?=\s)/)?.[0])]);
+	}
+	return fields;
+}
+
+export function getProductComparison(product: Product, related: Product[]) {
+	const candidates = [product, ...related.filter((item) => item.categorySlug === product.categorySlug)];
+	const unique = [...new Map(candidates.map((item) => [item.id, item])).values()].slice(0, 3);
+	if (unique.length < 2) return null;
+	return {
+		products: unique.map((item) => ({
+			id: item.id,
+			name: item.name,
+			category: item.category,
+			price: item.price,
+			stores: item.stores,
+			specs: sourceTitleSpecs(item.name, item.categorySlug),
+		})),
+	};
+}
+
+export function getGuideEvidence(slug: string) {
+	const categorySlug = slug === "choisir-smartphone-budget"
+		? "smartphones"
+		: slug === "comparer-ordinateurs-portables-tunisie"
+			? "ordinateurs-portables"
+			: slug === "comparer-ecrans-gaming-tunisie"
+				? "ecrans"
+				: null;
+	if (!categorySlug) return null;
+	const selected = products
+		.filter((item) => item.categorySlug === categorySlug)
+		.sort((a, b) => b.stores - a.stores || a.price - b.price)
+		.slice(0, 4);
+	if (!selected.length) return null;
+	return {
+		categorySlug,
+		category: selected[0].category,
+		capturedAt: CATALOG_IMPORTED_AT,
+		products: selected.map((item) => ({
+			id: item.id,
+			name: item.name,
+			price: item.price,
+			stores: item.stores,
+			offers: item.offers.map((offer) => ({ store: offer.store, price: offer.price })),
+		})),
+	};
+}
 
 const allDefinitions = [...CATEGORY_DEFINITIONS, ...[...generatedCategories.values()]];
 

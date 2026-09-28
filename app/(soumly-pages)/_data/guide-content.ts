@@ -93,6 +93,19 @@ export const editorialGuides: EditorialGuide[] = [
   {heading:"Promotions et générations",paragraphs:["Une ancienne génération peut devenir intéressante pendant une baisse réelle, mais vérifiez la durée de support, la batterie et la compatibilité réseau. Comparez la référence exacte et le prix final chez plusieurs boutiques. Une promotion affichée doit toujours être vérifiée sur la page du marchand."]},
   {heading:"La vérification finale",paragraphs:["Avant de commander, confirmez stockage, RAM, couleur, chargeur, garantie et état du produit. Sur Soumly, utilisez le nombre d’offres et l’écart de prix comme aide à la décision, puis consultez la boutique. Le meilleur choix est celui qui respecte le budget tout en couvrant votre usage pendant la durée prévue."]},
  ]},
+
+  {slug:"comparer-ordinateurs-portables-tunisie",title:"Comparer un ordinateur portable en Tunisie",excerpt:"Une méthode concrète pour comparer processeur, mémoire, stockage et prix sans confondre deux configurations.",category:"Ordinateurs portables",readTime:"8 min",sections:[
+   {heading:"Commencer par l’usage",paragraphs:["Pour les études, la bureautique et la navigation, la lisibilité de l’écran, l’autonomie et le clavier comptent autant que le processeur. Pour le développement, la création ou le jeu, la mémoire et le refroidissement deviennent plus importants. Le même budget ne répond pas à tous les usages."]},
+   {heading:"Ne pas confondre une même gamme",paragraphs:["Deux annonces peuvent partager un nom commercial mais différer par le processeur, la mémoire ou le SSD. Vérifiez la référence complète, puis les éléments écrits dans le titre du marchand. Lorsque Soumly ne dispose pas d’un champ, elle l’affiche comme information indisponible plutôt que de le déduire."]},
+   {heading:"Le marché tunisien et le coût réel",paragraphs:["Comparez les offres disponibles chez plusieurs boutiques, puis ouvrez le vendeur pour confirmer la garantie, le clavier, la livraison et l’état de la machine. Un prix inférieur ne compense pas une configuration différente ou une garantie moins claire."]},
+   {heading:"Limites de la comparaison",paragraphs:["Les prix Soumly sont des relevés importés et datés, pas une vérification en temps réel. La sélection chiffrée de cette page utilise les produits effectivement présents dans la catégorie au dernier import et signale la date sous le tableau."]},
+  ]},
+  {slug:"comparer-ecrans-gaming-tunisie",title:"Choisir un écran gaming en Tunisie",excerpt:"Comparer taille, résolution et fréquence à partir des informations réellement écrites dans les références du catalogue.",category:"Écrans",readTime:"7 min",sections:[
+   {heading:"Taille et distance de jeu",paragraphs:["Un écran plus grand n’est pas automatiquement meilleur. La distance de recul, la place sur le bureau et la définition recherchée déterminent le confort. Comparez les tailles explicitement mentionnées et ne supposez pas la résolution lorsqu’elle n’est pas écrite."]},
+   {heading:"Fréquence et résolution",paragraphs:["Une fréquence élevée peut améliorer la fluidité, mais elle doit correspondre à la machine et aux jeux utilisés. La résolution augmente la charge graphique. Sur Soumly, ces champs ne sont montrés que lorsqu’ils apparaissent dans le titre de la référence."]},
+   {heading:"Vérifier les connexions",paragraphs:["Avant l’achat, ouvrez la fiche de la boutique pour vérifier HDMI, DisplayPort, support, garantie et accessoires. Ces informations ne sont pas toujours présentes dans le catalogue Soumly et sont donc indiquées comme indisponibles lorsqu’elles manquent."]},
+   {heading:"Interpréter un écart de prix",paragraphs:["Un grand écart peut venir d’une dalle, d’une fréquence, d’un bundle ou d’une erreur de référence. Il faut comparer la fiche exacte, pas seulement la diagonale ou le prix affiché."]},
+  ]},
 ];
 
 export const guideBySlug = (slug: string) => editorialGuides.find((guide) => guide.slug === slug);

@@ -12,6 +12,8 @@ export type StoreOffer = {
 	delivery: string;
 	availability: string;
 	updatedAt: string;
+	matchStrength?: "forte" | "limitée";
+	matchTokens?: number;
 };
 
 export type Product = {
@@ -32,6 +34,18 @@ export type Product = {
 	description: string;
 	specs: Array<[string, string]>;
 	offers: StoreOffer[];
+};
+
+
+export type ProductComparison = {
+	products: Array<{
+		id: string;
+		name: string;
+		category: string;
+		price: number;
+		stores: number;
+		specs: Array<[string, string]>;
+	}>;
 };
 
 export type Category = {

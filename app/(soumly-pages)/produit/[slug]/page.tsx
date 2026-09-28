@@ -5,6 +5,7 @@ import {
 	APPROVED_BRANDS,
 	detectBrand,
 	getProduct,
+	getProductComparison,
 	relatedProducts,
 } from "../../_data/products.server";
 import { getTreatmentContent } from "../../_data/indexation-experiment";
@@ -54,6 +55,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 	const product = getProduct(slug);
 	if (!product) notFound();
 	const related = relatedProducts(product, 4);
+	const comparison = getProductComparison(product, related);
 	const brandSlug = detectBrand(product.name);
 	const brandLabel = brandSlug ? APPROVED_BRANDS[brandSlug].label : null;
 	const treatment = getTreatmentContent(product);
@@ -61,6 +63,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 		<ProductDetailView
 			product={product}
 			related={related}
+			comparison={comparison}
 			brandSlug={brandSlug}
 			brandLabel={brandLabel}
 			treatment={treatment}

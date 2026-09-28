@@ -21,7 +21,7 @@ import { guardOutboundClick, trackOutboundStoreClick } from "../../components/an
 import { withMerchantUtm } from "../../components/merchant-utm";
 import Link from "../../components/NativeLink";
 import type { TreatmentContent } from "../_data/indexation-experiment";
-import { formatPrice, type Product } from "../_data/content.shared";
+import { formatPrice, type Product, type ProductComparison } from "../_data/content.shared";
 import { ProductCard, Stars, useFavorite } from "./ui";
 
 function Breadcrumbs({ items }: { items: Array<{ label: string; href?: string }> }) {
@@ -72,12 +72,14 @@ function writeIds(key: string, ids: string[]) {
 export function ProductDetailView({
 	product,
 	related,
+	comparison,
 	brandSlug,
 	brandLabel,
 	treatment,
 }: {
 	product: Product;
 	related: Product[];
+	comparison: ProductComparison | null;
 	brandSlug?: string | null;
 	brandLabel?: string | null;
 	treatment: TreatmentContent | null;
@@ -86,6 +88,7 @@ export function ProductDetailView({
 		<ProductDetails
 			product={product}
 			related={related}
+			comparison={comparison}
 			brandSlug={brandSlug}
 			brandLabel={brandLabel}
 			treatment={treatment}
@@ -93,15 +96,26 @@ export function ProductDetailView({
 	);
 }
 
+function capturedDate(updatedAt: string) {
+	return updatedAt.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null;
+}
+
+function isOldCapture(updatedAt: string) {
+	const date = capturedDate(updatedAt);
+	return date ? Date.now() - Date.parse(`${date}T00:00:00Z`) > 7 * 24 * 60 * 60 * 1000 : false;
+}
+
 function ProductDetails({
 	product,
 	related,
+	comparison,
 	brandSlug,
 	brandLabel,
 	treatment,
 }: {
 	product: Product;
 	related: Product[];
+	comparison: ProductComparison | null;
 	brandSlug?: string | null;
 	brandLabel?: string | null;
 	treatment: TreatmentContent | null;
@@ -296,6 +310,14 @@ function ProductDetails({
 						</button>
 					</div>
 
+					<section className="sm-product-verification" aria-label="Vérification des références et des dates">
+						<h2>À vérifier avant de comparer</h2>
+						<p>Soumly rapproche une offre du titre catalogue et de l’URL du marchand. Une correspondance forte partage au moins deux éléments distinctifs ; elle ne remplace pas la vérification de la référence exacte, de la mémoire, de la couleur ou du pack sur le site marchand.</p>
+						{offers.some((offer) => offer.matchStrength === "limitée") ? <p className="sm-warning-text">Au moins une offre a une correspondance limitée : vérifiez particulièrement le modèle et la variante.</p> : null}
+						{offers.some((offer) => isOldCapture(offer.updatedAt)) ? <p className="sm-warning-text">Les prix affichés proviennent d’un relevé ancien selon le seuil de 7 jours ; ils ne constituent pas une vérification actuelle.</p> : null}
+						{priceGapPercent >= 30 ? <p className="sm-warning-text">Écart inhabituel : l’écart observé dépasse 30 % entre l’offre la moins chère et la plus chère. Vérifiez les variantes et les conditions avant de comparer uniquement le prix.</p> : null}
+					</section>
+
 					<aside className="sm-product-assurance">
 						<h2>Avant d’acheter</h2>
 						<div>
@@ -462,6 +484,7 @@ function ProductDetails({
 											<span>
 												<b>{offer.delivery}</b>
 												<small>{offer.availability}</small>
+										<small>{offer.matchStrength === "limitée" ? "Correspondance limitée" : "Correspondance forte"}</small>
 											</span>
 										</div>
 										<div className="sm-offer-price">
@@ -473,7 +496,7 @@ function ProductDetails({
 														: "Même prix"}
 											</em>
 											<strong>{formatPrice(offer.price)}</strong>
-											<small>{offer.updatedAt}</small>
+											<small>{offer.updatedAt}{isOldCapture(offer.updatedAt) ? " · Donnée ancienne" : ""}</small>
 										</div>
 										<a
 											href={offer.url}
@@ -544,6 +567,22 @@ function ProductDetails({
 					</section>
 				</div>
 			</section>
+
+			{comparison ? (
+				<section className="sm-page-shell sm-product-comparison" aria-label="Comparaison côte à côte">
+					<span className="sm-section-kicker">Décision d’achat</span>
+					<h2>Comparer des références proches</h2>
+					<p>Cette comparaison côte à côte utilise uniquement les éléments explicitement présents dans les titres du catalogue. Une information absente est indiquée comme indisponible.</p>
+					<div className="sm-comparison-grid">
+						{comparison.products.map((item) => <article key={item.id} className="sm-comparison-card">
+							<h3>{item.name}</h3>
+							<p><strong>À partir de {formatPrice(item.price)}</strong> · {item.stores} offre{item.stores > 1 ? "s" : ""} référencée{item.stores > 1 ? "s" : ""}</p>
+							<table><tbody>{item.specs.map(([label, value]) => <tr key={label}><th>{label}</th><td>{value}</td></tr>)}</tbody></table>
+							<Link href={`/produit/${item.id}`}>Voir la fiche et les offres →</Link>
+						</article>)}
+					</div>
+				</section>
+			) : null}
 
 			<section className="sm-page-shell sm-section-block sm-related-section">
 				<div className="sm-section-heading">

@@ -47,6 +47,8 @@ const content: Record<
 				text: "Une boutique peut demander la correction de ses informations ou proposer un flux officiel de catalogue.",
 			},
 			{
+				title: "Adresse de contact",
+				text: "Pour toute correction de catalogue ou question sur une comparaison, écrivez à info@soumly.online en indiquant l’URL Soumly et la référence concernée.",
 			},
 		],
 	},
