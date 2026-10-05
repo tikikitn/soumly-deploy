@@ -2625,12 +2625,21 @@ function unavailable(value: string | undefined) {
 function sourceTitleSpecs(name: string, categorySlug: string): Array<[string, string]> {
 	const fields: Array<[string, string]> = [];
 	const network = name.match(/\b(?:2G|3G|4G|5G)\b/i)?.[0];
-	const screen = name.match(/\b(\d+(?:[.,]\d+)?)\s*(?:"|pouces|inch)\b/i)?.[1];
+	const screenMatch = name.match(/\b(\d+(?:[.,]\d+)?)\s*(?:"|”|pouces?|inches?)/i) ?? name.match(/\b(?:écran|screen)\s*[:/-]?\s*(\d+(?:[.,]\d+)?)/i);
+	const screen = screenMatch?.[1];
 	const resolution = name.match(/\b(4K|8K|QHD|WQHD|Full\s*HD|FHD|HD)\b/i)?.[1];
 	const refresh = name.match(/\b(\d{2,3})\s*Hz\b/i)?.[1];
-	const processor = name.match(/\b((?:Intel\s+)?Core\s+i[3579](?:[- ]\d+[A-Z0-9]*)?|Ryzen\s+[3579](?:\s*\d+[A-Z0-9]*)?|Snapdragon\s+[A-Za-z0-9-]+|Helio\s+[A-Za-z0-9-]+)\b/i)?.[1];
-	const ram = name.match(/\b(?:RAM|mémoire vive|memory)\s*[:/]?\s*(\d+)\s*Go\b/i)?.[1];
-	const storage = name.match(/\b(\d+)\s*Go\s*(?:SSD|disque|stockage)\b/i)?.[1];
+	const processorMatch = name.match(/\b((?:Intel\s+)?Core\s+i[3579](?:[- ]\d+[A-Z0-9]*)?|Ryzen\s+[3579](?:\s*\d+[A-Z0-9]*)?|Snapdragon\s+[A-Za-z0-9-]+|Helio\s+[A-Za-z0-9-]+|i[3579](?:[- ]\d+[A-Z0-9]*)?)\b/i);
+	const processor = processorMatch?.[1]
+		? /^i[3579]/i.test(processorMatch[1])
+			? `Intel Core ${processorMatch[1]}`
+			: processorMatch[1]
+		: undefined;
+	const explicitRam = name.match(/\b(?:RAM|mémoire vive|memory)\s*[:/]?\s*(\d+)\s*Go\b/i)?.[1];
+	const explicitStorage = name.match(/\b(\d+)\s*Go\s*(?:SSD|disque|stockage)\b/i)?.[1];
+	const bareCapacities = [...name.matchAll(/\b(\d{1,3})\s*Go\b/gi)].map((match) => match[1]);
+	const ram = explicitRam ?? (bareCapacities.length >= 2 ? bareCapacities[0] : bareCapacities[0] && Number(bareCapacities[0]) <= 32 ? bareCapacities[0] : undefined);
+	const storage = explicitStorage ?? (bareCapacities.length >= 2 ? bareCapacities[1] : bareCapacities[0] && Number(bareCapacities[0]) > 32 ? bareCapacities[0] : undefined);
 	if (["smartphones", "telephone-portables"].includes(categorySlug)) {
 		fields.push(["Réseau mentionné", unavailable(network)]);
 		fields.push(["Processeur mentionné", unavailable(processor)]);

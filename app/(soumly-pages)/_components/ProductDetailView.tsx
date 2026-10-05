@@ -4,15 +4,22 @@
 "use client";
 
 import {
+	BarChart3,
 	Bell,
+	CalendarDays,
 	Check,
 	ChevronRight,
 	ExternalLink,
+	FileText,
+	Grid3X3,
 	Heart,
 	Info,
 	PackageCheck,
 	ShieldCheck,
 	ShoppingBag,
+	Store,
+	Tag,
+	TrendingUp,
 	Trophy,
 	Truck,
 } from "lucide-react";
@@ -67,6 +74,13 @@ function writeIds(key: string, ids: string[]) {
 		// ignore
 	}
 	window.dispatchEvent(new CustomEvent(`soumly:${key}`));
+}
+
+function ProductInfoIcon({ label }: { label: string }) {
+	if (label === "Marque") return <Tag size={18} strokeWidth={2} />;
+	if (label === "Catégorie") return <Grid3X3 size={18} strokeWidth={2} />;
+	if (label === "Boutiques référencées") return <Store size={18} strokeWidth={2} />;
+	return <FileText size={18} strokeWidth={2} />;
 }
 
 export function ProductDetailView({
@@ -525,28 +539,51 @@ function ProductDetails({
 								);
 							})}
 						</div>
-						<div className="sm-price-insight" aria-label="Synthèse de la comparaison">
-							<strong>Lecture Soumly</strong>
-							<p>
-								{offers.length > 1
-									? `Le prix le plus bas actuellement détecté par Soumly est ${formatPrice(bestOffer.price)} chez ${bestOffer.store}.`
-									: `Une offre actuellement référencée chez ${bestOffer.store}, au prix de ${formatPrice(bestOffer.price)}.`}
-							</p>
-							{offers.length > 1 ? (
-								<p>
-									L’écart entre l’offre la moins chère et la plus chère est de {formatPrice(maximumSaving)}
-									{priceGapPercent > 0 ? ` (${priceGapPercent.toFixed(1).replace(".", ",")} %)` : ""}.
-								</p>
-							) : null}
-							<p>
-								{offers.length} offre{offers.length > 1 ? "s" : ""} actuellement référencée{offers.length > 1 ? "s" : ""}.
-							</p>
-							{lastUpdate ? <small>Relevé importé le {lastUpdate}. Ce n’est pas une vérification effectuée aujourd’hui.</small> : null}
+						<div className="sm-price-insight-card">
+						<div className="sm-price-insight-header">
+							<BarChart3 size={18} aria-hidden="true" />
+							<div>
+								<strong>Lecture Soumly</strong>
+								<p>Voici un résumé des informations principales détectées par Soumly pour ce produit.</p>
+							</div>
 						</div>
+						<div className="sm-price-insight-grid">
+							<div className="sm-price-insight-item is-primary">
+								<span className="sm-price-insight-icon" aria-hidden="true"><Tag size={18} /></span>
+								<span className="sm-price-insight-copy">
+									<small>Prix le plus bas détecté</small>
+									<strong>{formatPrice(bestOffer.price)}</strong>
+									<span>chez <b>{bestOffer.store}</b></span>
+								</span>
+							</div>
+							{offers.length > 1 ? (
+								<div className="sm-price-insight-item">
+									<span className="sm-price-insight-icon" aria-hidden="true"><TrendingUp size={18} /></span>
+									<span className="sm-price-insight-copy">
+										<small>Écart entre l’offre la moins chère et la plus chère</small>
+										<strong>{formatPrice(maximumSaving)} <em>{priceGapPercent > 0 ? `(${priceGapPercent.toFixed(1).replace(".", ",")} %)` : ""}</em></strong>
+									</span>
+								</div>
+							) : null}
+							<div className="sm-price-insight-item">
+								<span className="sm-price-insight-icon" aria-hidden="true"><Store size={18} /></span>
+								<span className="sm-price-insight-copy">
+									<small>Offres actuellement référencées</small>
+									<strong>{offers.length} offre{offers.length > 1 ? "s" : ""}</strong>
+								</span>
+							</div>
+						</div>
+						{lastUpdate ? (
+							<div className="sm-price-insight-date">
+								<CalendarDays size={17} aria-hidden="true" />
+								<span><strong>Relevé importé</strong> Prix issu du relevé du <b>{lastUpdate}</b>. Ce n’est pas une vérification effectuée aujourd’hui.</span>
+							</div>
+						) : null}
 						<p className="sm-offer-disclaimer">
 							Soumly affiche les données du dernier relevé disponible. Le stock, les frais de
 							livraison et le prix final sont ceux indiqués par le marchand au moment de l’achat.
 						</p>
+						</div>
 					</section>
 
 					<section className="sm-detail-section" id="specs">
@@ -556,11 +593,20 @@ function ProductDetails({
 								<h2>Informations du produit</h2>
 							</div>
 						</div>
-						<div className="sm-specs-list">
-							{product.specs.map(([label, value]) => (
-								<div key={label}>
-									<span>{label}</span>
-									<strong>{value}</strong>
+						<div className="sm-product-info-card">
+							{[product.specs.slice(0, 2), product.specs.slice(2)].map((column, columnIndex) => (
+								<div className="sm-product-info-column" key={`product-info-column-${columnIndex}`}>
+									{column.map(([label, value]) => (
+										<div className="sm-product-info-item" key={label}>
+											<span className="sm-product-info-icon" aria-hidden="true">
+												<ProductInfoIcon label={label} />
+											</span>
+											<span className="sm-product-info-copy">
+												<span>{label}</span>
+												<strong>{value}</strong>
+											</span>
+										</div>
+									))}
 								</div>
 							))}
 						</div>
@@ -576,9 +622,9 @@ function ProductDetails({
 					<div className="sm-comparison-grid">
 						{comparison.products.map((item) => <article key={item.id} className="sm-comparison-card">
 							<h3>{item.name}</h3>
-							<p><strong>À partir de {formatPrice(item.price)}</strong> · {item.stores} offre{item.stores > 1 ? "s" : ""} référencée{item.stores > 1 ? "s" : ""}</p>
-							<table><tbody>{item.specs.map(([label, value]) => <tr key={label}><th>{label}</th><td>{value}</td></tr>)}</tbody></table>
-							<Link href={`/produit/${item.id}`}>Voir la fiche et les offres →</Link>
+							<p className="sm-comparison-price"><strong>À partir de {formatPrice(item.price)}</strong><span>· {item.stores} offre{item.stores > 1 ? "s" : ""} référencée{item.stores > 1 ? "s" : ""}</span></p>
+							<table><tbody>{item.specs.map(([label, value]) => <tr key={label}><th>{label}</th><td className={value === "Information indisponible" ? "is-unavailable" : ""}>{value}</td></tr>)}</tbody></table>
+							<Link className="sm-comparison-cta" href={`/produit/${item.id}`}>Voir la fiche et les offres →</Link>
 						</article>)}
 					</div>
 				</section>

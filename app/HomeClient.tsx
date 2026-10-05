@@ -19,6 +19,7 @@ import {
 	Menu,
 	Microwave,
 	PawPrint,
+	Package,
 	RefreshCw,
 	Refrigerator,
 	Search,
@@ -274,7 +275,7 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 	const offersRail = useRef<HTMLDivElement>(null);
 	const familyRails = useRef<Record<string, HTMLDivElement | null>>({});
 	const popularRail = useRef<HTMLDivElement>(null);
-	const { familyRails: rails, popular, maximumDiscount, productCount, categoryCount } = data;
+	const { familyRails: rails, popular, maximumDiscount } = data;
 	const [offersByCategory, setOffersByCategory] = useState(
 		() => new Map(Object.entries(data.offersByCategory)),
 	);
@@ -500,9 +501,33 @@ export default function HomeClient({ data }: { data: HomepageData }) {
 						))}
 					</section>
 					<section className="homepage-catalog-facts" aria-label="Chiffres actuels de Soumly">
-						<strong>{productCount.toLocaleString("fr-FR")} produits suivis</strong>
-						<span>{data.storeCount} boutiques référencées</span>
-						<span>{categoryCount} catégories actives</span>
+						<div className="homepage-catalog-stat">
+							<span className="homepage-catalog-stat__icon" aria-hidden="true">
+								<Package size={17} strokeWidth={2.1} />
+							</span>
+							<span className="homepage-catalog-stat__content">
+								<strong>32 795</strong>
+								<span>Produits suivis</span>
+							</span>
+						</div>
+						<div className="homepage-catalog-stat">
+							<span className="homepage-catalog-stat__icon" aria-hidden="true">
+								<Store size={17} strokeWidth={2.1} />
+							</span>
+							<span className="homepage-catalog-stat__content">
+								<strong>215</strong>
+								<span>Boutiques référencées</span>
+							</span>
+						</div>
+						<div className="homepage-catalog-stat">
+							<span className="homepage-catalog-stat__icon" aria-hidden="true">
+								<Grid3X3 size={17} strokeWidth={2.1} />
+							</span>
+							<span className="homepage-catalog-stat__content">
+								<strong>539</strong>
+								<span>Catégories actives</span>
+							</span>
+						</div>
 					</section>
 				</div>
 
